@@ -157,10 +157,40 @@ func (p *Parser) parseFunctionParams() []*ast.Field {
 	for {
 		paramStart := p.peek().Start
 
+		// Safety check: if we're at closing paren or end of file, break
+		if p.check(lexer.CLOSE_PAREN) || p.isAtEnd() {
+			break
+		}
+
+		// Verify we have an identifier before parsing parameter
+		if !p.check(lexer.IDENTIFIER_TOKEN) {
+			p.error("expected parameter name")
+			p.advance() // Prevent infinite loop
+			// Try to recover by skipping to next comma or closing paren
+			for !p.check(lexer.COMMA_TOKEN) && !p.check(lexer.CLOSE_PAREN) && !p.isAtEnd() {
+				p.advance()
+			}
+			if p.match(lexer.COMMA_TOKEN) {
+				continue
+			}
+			break
+		}
+
 		// Parse parameter name
 		name := p.parseIdentifier()
 
 		// Expect colon
+		if !p.check(lexer.COLON_TOKEN) {
+			p.error("expected ':' after parameter name")
+			// Try to recover
+			for !p.check(lexer.COMMA_TOKEN) && !p.check(lexer.CLOSE_PAREN) && !p.isAtEnd() {
+				p.advance()
+			}
+			if p.match(lexer.COMMA_TOKEN) {
+				continue
+			}
+			break
+		}
 		p.expect(lexer.COLON_TOKEN)
 
 		// Parse parameter type
@@ -297,6 +327,13 @@ func (p *Parser) parseBlock() *ast.Block {
 	nodes := []ast.Node{}
 	for !p.check(lexer.CLOSE_CURLY) && !p.isAtEnd() {
 		node := p.parseStmt()
+		if node == nil {
+			// parseStmt() returned nil - this is an error case
+			// Advance to prevent infinite loop and try to recover
+			p.error("unexpected token in block, skipping")
+			p.advance()
+			continue
+		}
 		nodes = append(nodes, node)
 	}
 

@@ -34,10 +34,127 @@
                   "Index": 36
                 }
               },
-              "Type": null,
+              "Type": {
+                "Params": {
+                  "List": [],
+                  "Start": null,
+                  "End": null
+                },
+                "Results": {
+                  "List": [
+                    {
+                      "Name": null,
+                      "Type": {
+                        "Name": "f64",
+                        "Start": {
+                          "Line": 4,
+                          "Column": 15,
+                          "Index": 42
+                        },
+                        "End": {
+                          "Line": 4,
+                          "Column": 18,
+                          "Index": 45
+                        }
+                      },
+                      "Value": null,
+                      "Start": null,
+                      "End": null
+                    }
+                  ],
+                  "Start": null,
+                  "End": null
+                },
+                "Start": {
+                  "Line": 4,
+                  "Column": 9,
+                  "Index": 36
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 18,
+                  "Index": 45
+                }
+              },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 4,
+                "Column": 5,
+                "Index": 32
+              },
+              "End": {
+                "Line": 4,
+                "Column": 19,
+                "Index": 46
+              }
+            },
+            {
+              "Name": {
+                "Name": "perimeter",
+                "Start": {
+                  "Line": 5,
+                  "Column": 5,
+                  "Index": 52
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 14,
+                  "Index": 61
+                }
+              },
+              "Type": {
+                "Params": {
+                  "List": [],
+                  "Start": null,
+                  "End": null
+                },
+                "Results": {
+                  "List": [
+                    {
+                      "Name": null,
+                      "Type": {
+                        "Name": "f64",
+                        "Start": {
+                          "Line": 5,
+                          "Column": 20,
+                          "Index": 67
+                        },
+                        "End": {
+                          "Line": 5,
+                          "Column": 23,
+                          "Index": 70
+                        }
+                      },
+                      "Value": null,
+                      "Start": null,
+                      "End": null
+                    }
+                  ],
+                  "Start": null,
+                  "End": null
+                },
+                "Start": {
+                  "Line": 5,
+                  "Column": 14,
+                  "Index": 61
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 23,
+                  "Index": 70
+                }
+              },
+              "Value": null,
+              "Start": {
+                "Line": 5,
+                "Column": 5,
+                "Index": 52
+              },
+              "End": {
+                "Line": 5,
+                "Column": 24,
+                "Index": 71
+              }
             }
           ],
           "Start": null,
@@ -49,9 +166,9 @@
           "Index": 15
         },
         "End": {
-          "Line": 4,
-          "Column": 9,
-          "Index": 36
+          "Line": 6,
+          "Column": 2,
+          "Index": 74
         }
       },
       "Start": {
@@ -60,9 +177,9 @@
         "Index": 4
       },
       "End": {
-        "Line": 4,
-        "Column": 9,
-        "Index": 36
+        "Line": 6,
+        "Column": 3,
+        "Index": 75
       }
     },
     {

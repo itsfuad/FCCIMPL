@@ -499,13 +499,20 @@ func (p *Parser) parseCompositeLiteralElements(startPos source.Position) []ast.E
 
 	for {
 		elt := p.parseCompositeLiteralElement(startPos)
-		elts = append(elts, elt)
+		if elt != nil {
+			elts = append(elts, elt)
+		}
 
 		if !p.match(lexer.COMMA_TOKEN) {
 			break
 		}
 
 		if p.checkTrailingComma(lexer.CLOSE_CURLY, "composite literal") {
+			break
+		}
+
+		// Safety: if we're at closing brace, break to prevent infinite loop
+		if p.check(lexer.CLOSE_CURLY) {
 			break
 		}
 	}
@@ -628,12 +635,18 @@ func (p *Parser) parseArrayLiteral() *ast.CompositeLit {
 
 	elems := []ast.Expression{}
 	if !p.check(lexer.CLOSE_BRACKET) {
-		elems = append(elems, p.parseExpr())
+		elem := p.parseExpr()
+		if elem != nil {
+			elems = append(elems, elem)
+		}
 		for p.match(lexer.COMMA_TOKEN) {
 			if p.check(lexer.CLOSE_BRACKET) {
 				break
 			}
-			elems = append(elems, p.parseExpr())
+			elem := p.parseExpr()
+			if elem != nil {
+				elems = append(elems, elem)
+			}
 		}
 	}
 

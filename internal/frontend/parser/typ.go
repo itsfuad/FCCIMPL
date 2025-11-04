@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"compiler/internal/diagnostics"
 	"compiler/internal/frontend/ast"
 	"compiler/internal/frontend/lexer"
 	"fmt"
@@ -87,6 +88,13 @@ func (p *Parser) parseStructType() *ast.StructType {
 	}
 
 	for !p.check(lexer.CLOSE_CURLY) && !p.isAtEnd() {
+		// Error recovery: Check if we have a dot token
+		if !p.check(lexer.DOT_TOKEN) {
+			p.error(fmt.Sprintf("expected . for struct field, got %s", p.peek().Value))
+			p.advance() // Advance to prevent infinite loop
+			continue
+		}
+
 		p.expect(lexer.DOT_TOKEN)
 		name := p.parseIdentifier()
 		p.expect(lexer.COLON_TOKEN)
@@ -176,6 +184,24 @@ func (p *Parser) parseFuncType() *ast.FuncType {
 func (p *Parser) parseInterfaceType() *ast.InterfaceType {
 
 	tok := p.expect(lexer.INTERFACE_TOKEN)
+
+	// Interface MUST have braces - reject standalone "interface"
+	if !p.check(lexer.OPEN_CURLY) {
+		//p.error(fmt.Sprintf("expected { after interface, got %s", p.peek().Value))
+		loc := p.makeLocation(tok.Start)
+		p.diagnostics.Add(
+			diagnostics.NewError(fmt.Sprintf("expected { after interface, got %s", p.peek().Value)).
+			WithCode(diagnostics.ErrUnexpectedToken).
+			WithPrimaryLabel(p.filepath, &loc, "here").
+			WithHelp("Interfaces must have a body"),
+		)
+		// Return empty interface to allow parsing to continue
+		return &ast.InterfaceType{
+			Methods:  &ast.FieldList{List: []*ast.Field{}},
+			Location: loc,
+		}
+	}
+
 	p.expect(lexer.OPEN_CURLY)
 
 	methods := &ast.FieldList{
@@ -183,22 +209,42 @@ func (p *Parser) parseInterfaceType() *ast.InterfaceType {
 	}
 
 	for !p.check(lexer.CLOSE_CURLY) && !p.isAtEnd() {
-		p.expect(lexer.DOT_TOKEN)
-		name := p.parseIdentifier()
-		p.expect(lexer.COLON_TOKEN)
-		typ := p.parseType()
+		methodStart := p.peek().Start
 
-		methods.List = append(methods.List, &ast.Field{
-			Name: name,
-			Type: typ,
-		})
-
-		if !p.match(lexer.COMMA_TOKEN) {
-			break
+		// Check if we have an identifier (method name)
+		if !p.check(lexer.IDENTIFIER_TOKEN) {
+			// Error recovery: skip unexpected token and try to continue
+			p.error(fmt.Sprintf("expected method name, got %s", p.peek().Value))
+			p.advance() // CRITICAL: advance to prevent infinite loop
+			continue
 		}
 
-		// Check for trailing comma before closing brace
-		if p.checkTrailingComma(lexer.CLOSE_CURLY, "interface type") {
+		// Parse method name
+		name := p.parseIdentifier()
+
+		// Parse method signature (function type)
+		funcType := p.parseFuncType()
+
+		// Expect semicolon after method signature
+		if !p.match(lexer.SEMICOLON_TOKEN) {
+			p.error("expected ';' after method signature")
+			// Try to recover by skipping to next semicolon or closing brace
+			for !p.check(lexer.SEMICOLON_TOKEN) && !p.check(lexer.CLOSE_CURLY) && !p.isAtEnd() {
+				p.advance()
+			}
+			if p.check(lexer.SEMICOLON_TOKEN) {
+				p.advance()
+			}
+		}
+
+		methods.List = append(methods.List, &ast.Field{
+			Name:     name,
+			Type:     funcType,
+			Location: p.makeLocation(methodStart),
+		})
+
+		// Check if we're at the closing brace
+		if p.check(lexer.CLOSE_CURLY) {
 			break
 		}
 	}
@@ -220,6 +266,13 @@ func (p *Parser) parseEnumType() *ast.EnumType {
 	}
 
 	for !p.check(lexer.CLOSE_CURLY) && !p.isAtEnd() {
+		// Error recovery: Check if we have an identifier
+		if !p.check(lexer.IDENTIFIER_TOKEN) {
+			p.error(fmt.Sprintf("expected enum variant name, got %s", p.peek().Value))
+			p.advance() // Advance to prevent infinite loop
+			continue
+		}
+
 		name := p.parseIdentifier()
 		fields.List = append(fields.List, &ast.Field{
 			Name: name,
