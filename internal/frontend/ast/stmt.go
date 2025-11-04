@@ -16,7 +16,7 @@ type Module struct {
 	Nodes      []Node // top-level declarations and statements
 
 	// Semantic information (populated during type checking)
-	Imports []*Module          // resolved imported modules
+	Imports []*Module // resolved imported modules
 
 	source.Location
 }

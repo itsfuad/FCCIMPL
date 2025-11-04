@@ -46,13 +46,15 @@ type ErrorType struct {
 	Valid Type
 	Error Type
 }
+
 func (e *ErrorType) String() string {
-	return fmt.Sprintf("%s ! %s", e.Valid,  e.Error)
+	return fmt.Sprintf("%s ! %s", e.Valid, e.Error)
 }
 
 type OptionalType struct {
 	Base Type
 }
+
 func (o *OptionalType) String() string {
 	return fmt.Sprintf("%s?", o.Base)
 }
@@ -90,8 +92,8 @@ func (s *StructType) GetFieldType(fieldName string) Type {
 
 // ArrayType represents array types with element type and size
 type ArrayType struct {
-	IsFixed    bool
-	Size       int    // valid if IsFixed is true
+	IsFixed     bool
+	Size        int // valid if IsFixed is true
 	ElementType Type
 }
 

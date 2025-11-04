@@ -21,7 +21,6 @@ func TestNumberTokenization(t *testing.T) {
 		{"1_234.567_89e-10", "Scientific notation with underscores"},
 	}
 
-	
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 

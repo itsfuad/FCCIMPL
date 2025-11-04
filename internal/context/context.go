@@ -189,9 +189,9 @@ func registerBuiltins(scope *semantics.SymbolTable) {
 
 	for _, bt := range builtinTypes {
 		sym := &semantics.Symbol{
-			Name:     bt.name,
-			Kind:     semantics.SymbolType,
-			Type:     bt.typeName,
+			Name: bt.name,
+			Kind: semantics.SymbolType,
+			Type: bt.typeName,
 		}
 		scope.Declare(bt.name, sym)
 	}

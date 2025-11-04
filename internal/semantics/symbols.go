@@ -56,10 +56,10 @@ func (k SymbolKind) String() string {
 // - Decl field links back to the AST node that declared this symbol
 // - No duplication with AST or side maps
 type Symbol struct {
-	Name     string
-	Kind     SymbolKind
-	Type     Type     // Type information (set by type checker, Phase 5)
-	Decl     ast.Node         // Back-reference to the declaration AST node
+	Name string
+	Kind SymbolKind
+	Type Type     // Type information (set by type checker, Phase 5)
+	Decl ast.Node // Back-reference to the declaration AST node
 	// For functions/methods: scope containing local variables
 	SelfScope *SymbolTable
 }
@@ -67,17 +67,17 @@ type Symbol struct {
 // NewSymbol creates a new symbol with the given properties
 func NewSymbol(name string, kind SymbolKind, semanticType Type) *Symbol {
 	return &Symbol{
-		Name:     name,
-		Kind:     kind,
-		Type:     semanticType,
+		Name: name,
+		Kind: kind,
+		Type: semanticType,
 	}
 }
 
 // NewSymbolWithDecl creates a new symbol with declaration node and location
 func NewSymbolWithDecl(name string, kind SymbolKind, decl ast.Node) *Symbol {
 	return &Symbol{
-		Name:     name,
-		Kind:     kind,
-		Decl:     decl,
+		Name: name,
+		Kind: kind,
+		Decl: decl,
 	}
 }

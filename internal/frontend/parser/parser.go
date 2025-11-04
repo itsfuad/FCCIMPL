@@ -467,7 +467,7 @@ func (p *Parser) isCompositeLiteral() bool {
 
 func (p *Parser) parseCompositeLiteralExpr(expr ast.Expression) *ast.CompositeLit {
 	p.advance() // consume {
-	
+
 	var startPos source.Position
 	if expr != nil && expr.Loc() != nil && expr.Loc().Start != nil {
 		startPos = *expr.Loc().Start
@@ -492,7 +492,7 @@ func (p *Parser) parseCompositeLiteralExpr(expr ast.Expression) *ast.CompositeLi
 
 func (p *Parser) parseCompositeLiteralElements(startPos source.Position) []ast.Expression {
 	elts := []ast.Expression{}
-	
+
 	if p.check(lexer.CLOSE_CURLY) {
 		return elts
 	}
