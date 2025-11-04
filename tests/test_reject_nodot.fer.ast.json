@@ -1,0 +1,127 @@
+{
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_reject_nodot.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "P",
+        "Start": {
+          "Line": 3,
+          "Column": 6,
+          "Index": 63
+        },
+        "End": {
+          "Line": 3,
+          "Column": 7,
+          "Index": 64
+        }
+      },
+      "Type": {
+        "Fields": {
+          "List": [
+            {
+              "Name": {
+                "Name": "s",
+                "Start": {
+                  "Line": 4,
+                  "Column": 6,
+                  "Index": 80
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 7,
+                  "Index": 81
+                }
+              },
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 4,
+                  "Column": 9,
+                  "Index": 83
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 12,
+                  "Index": 86
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Start": {
+          "Line": 3,
+          "Column": 8,
+          "Index": 65
+        },
+        "End": {
+          "Line": 5,
+          "Column": 2,
+          "Index": 90
+        }
+      },
+      "Start": {
+        "Line": 3,
+        "Column": 1,
+        "Index": 58
+      },
+      "End": {
+        "Line": 5,
+        "Column": 3,
+        "Index": 91
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "p",
+            "Start": {
+              "Line": 8,
+              "Column": 5,
+              "Index": 141
+            },
+            "End": {
+              "Line": 8,
+              "Column": 6,
+              "Index": 142
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Name": "P",
+            "Start": {
+              "Line": 8,
+              "Column": 10,
+              "Index": 146
+            },
+            "End": {
+              "Line": 8,
+              "Column": 11,
+              "Index": 147
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 8,
+        "Column": 1,
+        "Index": 137
+      },
+      "End": {
+        "Line": 8,
+        "Column": 11,
+        "Index": 147
+      }
+    }
+  ],
+  "Imports": null,
+  "Start": null,
+  "End": null
+}

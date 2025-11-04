@@ -56,9 +56,9 @@ func (e *ErrorType) Loc() *source.Location { return &e.Location }
 
 // Field represents a single field in a struct or parameter in a function
 type Field struct {
-	Names []*IdentifierExpr // field/parameter names (can be nil for anonymous fields)
-	Type  TypeNode          // field type
-	Value Expression        // initial value (for struct literals), nil otherwise
+	Name  *IdentifierExpr // field/parameter names (can be nil for anonymous fields)
+	Type  TypeNode        // field type
+	Value Expression      // initial value (for struct literals), nil otherwise
 	source.Location
 }
 
@@ -113,6 +113,7 @@ type MapType struct {
 }
 
 func (m *MapType) INode()                {} // Implements Node interface
+func (m *MapType) Expr()                 {} // Can be used in expression context (for composite literals)
 func (m *MapType) TypeExpr()             {} // Type nodes implement TypeExpr
 func (m *MapType) Loc() *source.Location { return &m.Location }
 

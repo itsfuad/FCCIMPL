@@ -1,0 +1,32 @@
+// Test file for composite literal parsing
+
+// Named struct type
+type Point struct {
+    .x: i32,
+    .y: i32,
+};
+
+// Struct literal with named type
+let p1: Point = Point{.x = 10, .y = 20};
+
+// Struct literal on single line
+let p2 := Point{.x = 5, .y = 15};
+
+// Anonymous struct type declaration (top-level)
+struct {
+    .name: str,
+    .age: i32,
+};
+
+// If statement at top-level (valid with our new parser)
+let a := 10;
+let b := 20;
+
+if a > b {
+    let max := a;
+}
+
+// Function with struct literal in return
+fn makePoint(x: i32, y: i32) -> Point {
+    return Point{.x = x, .y = y};
+}

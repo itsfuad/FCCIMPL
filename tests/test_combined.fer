@@ -1,0 +1,39 @@
+// Combined test: Structs and Maps together
+
+type Person struct {
+    .name: str,
+    .age: i32,
+};
+
+type Department struct {
+    .name: str,
+    .people: map[str]Person,
+};
+
+// Test: Struct containing a map
+let dept := Department{
+    .name = "Engineering",
+    .people = map[str]Person{
+        "alice" => Person{.name = "Alice", .age = 30},
+        "bob" => Person{.name = "Bob", .age = 25}
+    }
+};
+
+// Test: Map of structs in condition
+if dept == Department{
+    .name = "Engineering",
+    .people = map[str]Person{
+        "alice" => Person{.name = "Alice", .age = 30},
+        "bob" => Person{.name = "Bob", .age = 25}
+    }
+} {
+    let success := 1;
+}
+
+// Test: Map with struct values
+type Config map[str]Person;
+
+let config := Config{
+    "admin" => Person{.name = "Admin", .age = 40},
+    "user" => Person{.name = "User", .age = 20}
+};

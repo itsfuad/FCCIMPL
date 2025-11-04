@@ -24,6 +24,14 @@ func (b *BasicLit) INode()                {} // Implements Node interface
 func (b *BasicLit) Expr()                 {} // Expr is a marker interface for all expressions
 func (b *BasicLit) Loc() *source.Location { return &b.Location }
 
+type Invalid struct {
+	source.Location
+}
+
+func (i *Invalid) INode()                {} // Implements Node interface
+func (i *Invalid) Expr()                 {}	// Expr is a marker interface for all expressions
+func (i *Invalid) Loc() *source.Location { return &i.Location }
+
 // CompositeLit represents a composite literal (array, struct, map, enum)
 // Examples: []i32{1, 2, 3}, Point{.x = 1, .y = 2}, map[str]i32{"a" => 1}
 type CompositeLit struct {

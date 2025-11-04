@@ -91,8 +91,8 @@ const (
 	SEMICOLON_TOKEN TOKEN = ";"
 	ARROW_TOKEN     TOKEN = "->"
 	FAT_ARROW_TOKEN TOKEN = "=>"
-	ELVIS_TOKEN	  	TOKEN = "?:"
-	QUESTION_TOKEN	TOKEN = "?"
+	ELVIS_TOKEN     TOKEN = "?:"
+	QUESTION_TOKEN  TOKEN = "?"
 
 	EOF_TOKEN TOKEN = "end_of_file"
 )
@@ -109,6 +109,7 @@ var keyWordsMap map[TOKEN]bool = map[TOKEN]bool{
 	PRIVATE_TOKEN:   true,
 	INTERFACE_TOKEN: true,
 	ENUM_TOKEN:      true,
+	MAP_TOKEN:       true,
 	CATCH_TOKEN:     true,
 	FUNCTION_TOKEN:  true,
 	RETURN_TOKEN:    true,

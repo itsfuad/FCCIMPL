@@ -1,0 +1,35 @@
+// Test 1: Struct definition WITHOUT dots (should this work?)
+type P1 struct {
+    s: i32,
+    t: i32,
+};
+
+// Test 2: Struct definition WITH dots (official syntax)
+type P2 struct {
+    .x: i32,
+    .y: i32,
+};
+
+// Test 3: Literal without dots
+let p1 := P1{s: 10, t: 20};
+
+// Test 4: Literal with dots (official)
+let p2 := P2{.x = 30, .y = 40};
+
+// Test 5: Literal with shorthand colon (my recent addition)
+let p3 := P2{x: 50, y: 60};
+
+// Test 6: In condition without dots
+if p1 == P1{s: 10, t: 20} {
+    let a := 1;
+}
+
+// Test 7: In condition with dots
+if p2 == P2{.x = 30, .y = 40} {
+    let b := 2;
+}
+
+// Test 8: In condition with shorthand
+if p3 == P2{x: 50, y: 60} {
+    let c := 3;
+}

@@ -8,6 +8,8 @@ const (
 	ErrInvalidNumber       = "L0003"
 	ErrInvalidEscape       = "L0004"
 	ErrUnterminatedComment = "L0005"
+	ErrUnterminatedBlock   = "L0006"
+	ErrUnterminatedExpr    = "L0007"
 
 	// Parser errors (P prefix)
 	ErrUnexpectedToken    = "P0001"
@@ -43,4 +45,8 @@ const (
 	ErrInvalidImportPath = "M0003"
 	ErrSymbolNotExported = "M0004"
 	ErrAmbiguousImport   = "M0005"
+
+	// Style/Info codes (S prefix)
+	InfoTrailingComma        = "S0001"
+	InfoUnnecessarySemicolon = "S0002"
 )

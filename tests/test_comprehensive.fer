@@ -1,0 +1,62 @@
+// Comprehensive test of official Ferret syntax
+// This file demonstrates the ONLY allowed syntax for composite literals
+
+// 1. STRUCT LITERALS - Must use .field = value
+type Point struct {
+    .x: i32,
+    .y: i32,
+};
+
+let p1 := Point{.x = 10, .y = 20};
+let p2 := Point{.x = 5, .y = 15};
+
+// 2. IN CONDITIONS - No parentheses needed, parser is smart!
+if p1 == Point{.x = 10, .y = 20} {
+    let matched := 1;
+}
+
+// 3. NESTED STRUCT LITERALS
+type Line struct {
+    .start: Point,
+    .end: Point,
+};
+
+let line := Line{
+    .start = Point{.x = 0, .y = 0},
+    .end = Point{.x = 100, .y = 100}
+};
+
+if line == Line{.start = Point{.x = 0, .y = 0}, .end = Point{.x = 100, .y = 100}} {
+    let ok := 1;
+}
+
+// 4. EMPTY STRUCT LITERALS
+type Empty struct {
+};
+
+let e1 := Empty{};
+let e2 := Empty{};
+
+if e1 == Empty{} {
+    let empty := 1;
+}
+
+// 5. ARRAY LITERALS
+let arr := [1, 2, 3, 4, 5];
+
+// 6. COMPLEX EXPRESSIONS IN CONDITIONS
+let a := 5;
+let b := 10;
+
+if a < b {
+    let max := b;
+} else if a > b {
+    let max := a;
+} else {
+    let equal := 1;
+}
+
+// All of this works WITHOUT any "messy" lookahead hacks!
+// The parser simply checks: after {, is there a . or } or identifier with =>?
+// If yes, then composite literal
+// If no, then block statement

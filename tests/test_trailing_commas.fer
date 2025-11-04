@@ -1,0 +1,35 @@
+// Test trailing comma info diagnostics
+
+// Test 1: Struct type with trailing comma
+type Point struct {
+    .x: i32,
+    .y: i32,
+};
+
+// Test 2: Struct literal with trailing comma
+let p := Point{.x = 10, .y = 20,};
+
+// Test 3: Map literal with trailing comma
+let m := map[str]i32{
+    "a" => 1,
+    "b" => 2,
+};
+
+// Test 4: Enum with trailing comma
+type Color enum {
+    Red,
+    Green,
+    Blue,
+};
+
+// Test 5: Nested struct with multiple trailing commas
+type Container struct {
+    .items: map[str]Point,
+};
+
+let container := Container{
+    .items = map[str]Point{
+        "origin" => Point{.x = 0, .y = 0,},
+        "end" => Point{.x = 10, .y = 10,},
+    },
+};

@@ -1,0 +1,40 @@
+// Official syntax test - only dots allowed in struct literals
+
+type P struct {
+    .s: i32,
+    .t: i32,
+};
+
+// Test 1: Struct literal with dots (official syntax)
+let p1 := P{.s = 10, .t = 20};
+
+// Test 2: In condition with dots (critical syntax)
+if p1 == P{.s = 10, .t = 20} {
+    let a := 1;
+}
+
+// Test 3: Empty struct
+type Empty struct {
+};
+
+let empty := Empty{};
+
+if empty == Empty{} {
+    let b := 2;
+}
+
+// Test 4: Nested structs
+type Inner struct {
+    .val: i32,
+};
+
+type Outer struct {
+    .inner: Inner,
+    .count: i32,
+};
+
+let obj := Outer{.inner = Inner{.val = 5}, .count = 10};
+
+if obj == Outer{.inner = Inner{.val = 5}, .count = 10} {
+    let c := 3;
+}

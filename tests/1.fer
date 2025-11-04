@@ -9,3 +9,31 @@ struct {
     .name: str,
     .age: i32,
 };
+
+interface {};
+
+enum {
+    RED,
+    GREEN,
+    BLUE,
+};
+
+type Shape interface {
+
+};
+
+type Colors enum {
+    YELLOW,
+    ORANGE,
+    PURPLE,
+};
+
+fn add(x: i32, y: i32) -> i32 {
+    return x + y;
+}
+
+if a > b {
+    let max := a;
+}
+
+let point: P = P{.x = 10, .y = 20};

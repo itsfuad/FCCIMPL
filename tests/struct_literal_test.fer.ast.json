@@ -1,0 +1,262 @@
+{
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\struct_literal_test.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "P",
+        "Start": {
+          "Line": 1,
+          "Column": 6,
+          "Index": 5
+        },
+        "End": {
+          "Line": 1,
+          "Column": 7,
+          "Index": 6
+        }
+      },
+      "Type": {
+        "Fields": {
+          "List": [
+            {
+              "Name": {
+                "Name": "x",
+                "Start": {
+                  "Line": 2,
+                  "Column": 6,
+                  "Index": 22
+                },
+                "End": {
+                  "Line": 2,
+                  "Column": 7,
+                  "Index": 23
+                }
+              },
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 2,
+                  "Column": 9,
+                  "Index": 25
+                },
+                "End": {
+                  "Line": 2,
+                  "Column": 12,
+                  "Index": 28
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            },
+            {
+              "Name": {
+                "Name": "y",
+                "Start": {
+                  "Line": 3,
+                  "Column": 6,
+                  "Index": 36
+                },
+                "End": {
+                  "Line": 3,
+                  "Column": 7,
+                  "Index": 37
+                }
+              },
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 3,
+                  "Column": 9,
+                  "Index": 39
+                },
+                "End": {
+                  "Line": 3,
+                  "Column": 12,
+                  "Index": 42
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Start": {
+          "Line": 1,
+          "Column": 8,
+          "Index": 7
+        },
+        "End": {
+          "Line": 4,
+          "Column": 2,
+          "Index": 46
+        }
+      },
+      "Start": {
+        "Line": 1,
+        "Column": 1,
+        "Index": 0
+      },
+      "End": {
+        "Line": 4,
+        "Column": 3,
+        "Index": 47
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "point",
+            "Start": {
+              "Line": 6,
+              "Column": 5,
+              "Index": 55
+            },
+            "End": {
+              "Line": 6,
+              "Column": 10,
+              "Index": 60
+            }
+          },
+          "Type": {
+            "Name": "P",
+            "Start": {
+              "Line": 6,
+              "Column": 12,
+              "Index": 62
+            },
+            "End": {
+              "Line": 6,
+              "Column": 13,
+              "Index": 63
+            }
+          },
+          "Value": {
+            "Type": {
+              "Name": "P",
+              "Start": {
+                "Line": 6,
+                "Column": 16,
+                "Index": 66
+              },
+              "End": {
+                "Line": 6,
+                "Column": 17,
+                "Index": 67
+              }
+            },
+            "Elts": [
+              {
+                "Key": {
+                  "Name": "x",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 19,
+                    "Index": 69
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 20,
+                    "Index": 70
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "10",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 23,
+                    "Index": 73
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 25,
+                    "Index": 75
+                  }
+                },
+                "Start": {
+                  "Line": 6,
+                  "Column": 16,
+                  "Index": 66
+                },
+                "End": {
+                  "Line": 6,
+                  "Column": 25,
+                  "Index": 75
+                }
+              },
+              {
+                "Key": {
+                  "Name": "y",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 28,
+                    "Index": 78
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 29,
+                    "Index": 79
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "20",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 32,
+                    "Index": 82
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 34,
+                    "Index": 84
+                  }
+                },
+                "Start": {
+                  "Line": 6,
+                  "Column": 16,
+                  "Index": 66
+                },
+                "End": {
+                  "Line": 6,
+                  "Column": 34,
+                  "Index": 84
+                }
+              }
+            ],
+            "Start": {
+              "Line": 6,
+              "Column": 16,
+              "Index": 66
+            },
+            "End": {
+              "Line": 6,
+              "Column": 35,
+              "Index": 85
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 6,
+        "Column": 1,
+        "Index": 51
+      },
+      "End": {
+        "Line": 6,
+        "Column": 36,
+        "Index": 86
+      }
+    }
+  ],
+  "Imports": null,
+  "Start": null,
+  "End": null
+}

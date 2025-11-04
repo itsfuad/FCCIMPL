@@ -79,6 +79,16 @@ func NewWarning(message string) *Diagnostic {
 	}
 }
 
+// NewInfo creates a new info diagnostic
+func NewInfo(message string) *Diagnostic {
+	return &Diagnostic{
+		Severity: Info,
+		Message:  message,
+		Labels:   make([]Label, 0),
+		Notes:    make([]Note, 0),
+	}
+}
+
 // WithCode sets the error code
 func (d *Diagnostic) WithCode(code string) *Diagnostic {
 	d.Code = code

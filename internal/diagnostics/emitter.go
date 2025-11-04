@@ -78,7 +78,7 @@ func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
 
 	// Print each labeled location
 	for _, label := range diag.Labels {
-		e.printLabel(filepath, label)
+		e.printLabel(filepath, label, diag.Severity)
 	}
 
 	// Print notes
@@ -100,16 +100,16 @@ func (e *Emitter) printHeader(diag *Diagnostic) {
 
 	switch diag.Severity {
 	case Error:
-		color = colors.RED
+		color = colors.BOLD_RED
 		severityStr = "error"
 	case Warning:
-		color = colors.YELLOW
+		color = colors.BOLD_YELLOW
 		severityStr = "warning"
 	case Info:
-		color = colors.BLUE
+		color = colors.BOLD_CYAN
 		severityStr = "info"
 	case Hint:
-		color = colors.CYAN
+		color = colors.BOLD_PURPLE
 		severityStr = "hint"
 	}
 
@@ -120,7 +120,7 @@ func (e *Emitter) printHeader(diag *Diagnostic) {
 	fmt.Fprintf(os.Stderr, ": %s\n", diag.Message)
 }
 
-func (e *Emitter) printLabel(filepath string, label Label) {
+func (e *Emitter) printLabel(filepath string, label Label, severity Severity) {
 	if label.Location == nil || label.Location.Start == nil {
 		return
 	}
@@ -149,14 +149,14 @@ func (e *Emitter) printLabel(filepath string, label Label) {
 
 	// For single-line errors
 	if start.Line == end.Line {
-		e.printSingleLineLabel(filepath, start.Line, start.Column, end.Column, label, lineNumWidth)
+		e.printSingleLineLabel(filepath, start.Line, start.Column, end.Column, label, lineNumWidth, severity)
 	} else {
 		// For multi-line errors
-		e.printMultiLineLabel(filepath, start.Line, end.Line, start.Column, end.Column, label, lineNumWidth)
+		e.printMultiLineLabel(filepath, start.Line, end.Line, start.Column, end.Column, label, lineNumWidth, severity)
 	}
 }
 
-func (e *Emitter) printSingleLineLabel(filepath string, line, startCol, endCol int, label Label, lineNumWidth int) {
+func (e *Emitter) printSingleLineLabel(filepath string, line, startCol, endCol int, label Label, lineNumWidth int, severity Severity) {
 	// Try to get previous line for context (if not empty)
 	if line > 1 {
 		prevLine, err := e.cache.GetLine(filepath, line-1)
@@ -188,12 +188,24 @@ func (e *Emitter) printSingleLineLabel(filepath string, line, startCol, endCol i
 		length = 1
 	}
 
-	// Choose color and style based on label style
+	// Choose color and style based on severity and label style
 	var underlineColor colors.COLOR
 	var underlineChar string
 
 	if label.Style == Primary {
-		underlineColor = colors.RED
+		// Primary labels use severity-based colors
+		switch severity {
+		case Error:
+			underlineColor = colors.RED
+		case Warning:
+			underlineColor = colors.YELLOW
+		case Info:
+			underlineColor = colors.BLUE
+		case Hint:
+			underlineColor = colors.PURPLE
+		default:
+			underlineColor = colors.RED
+		}
 		// Use ^ for single character, ~ for multiple
 		if length == 1 {
 			underlineChar = "^"
@@ -220,7 +232,7 @@ func (e *Emitter) printSingleLineLabel(filepath string, line, startCol, endCol i
 	colors.GREY.Println(" |")
 }
 
-func (e *Emitter) printMultiLineLabel(filepath string, startLine, endLine, startCol, endCol int, label Label, lineNumWidth int) {
+func (e *Emitter) printMultiLineLabel(filepath string, startLine, endLine, startCol, endCol int, label Label, lineNumWidth int, severity Severity) {
 	// Print start line
 	sourceLine, err := e.cache.GetLine(filepath, startLine)
 	if err != nil {
@@ -236,7 +248,19 @@ func (e *Emitter) printMultiLineLabel(filepath string, startLine, endLine, start
 
 	var underlineColor colors.COLOR
 	if label.Style == Primary {
-		underlineColor = colors.RED
+		// Primary labels use severity-based colors
+		switch severity {
+		case Error:
+			underlineColor = colors.BOLD_RED
+		case Warning:
+			underlineColor = colors.BOLD_YELLOW
+		case Info:
+			underlineColor = colors.BOLD_CYAN
+		case Hint:
+			underlineColor = colors.BOLD_PURPLE
+		default:
+			underlineColor = colors.RED
+		}
 	} else {
 		underlineColor = colors.BLUE
 	}
