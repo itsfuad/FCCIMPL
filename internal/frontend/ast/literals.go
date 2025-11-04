@@ -32,11 +32,17 @@ func (i *Invalid) INode()                {} // Implements Node interface
 func (i *Invalid) Expr()                 {}	// Expr is a marker interface for all expressions
 func (i *Invalid) Loc() *source.Location { return &i.Location }
 
-// CompositeLit represents a composite literal (array, struct, map, enum)
-// Examples: []i32{1, 2, 3}, Point{.x = 1, .y = 2}, map[str]i32{"a" => 1}
+// CompositeLit represents a composite literal (array, struct, or map)
+// Examples: 
+//   - Array:  []i32{1, 2, 3}
+//   - Struct: Point{.x = 1, .y = 2}
+//   - Map:    map[str]i32{"a" => 1, "b" => 2}
+// 
+// For arrays, Elts contains plain Expression values.
+// For structs and maps, Elts contains KeyValueExpr nodes.
 type CompositeLit struct {
 	Type TypeNode     // type of the composite literal (can be nil for inferred types)
-	Elts []Expression // list of composite elements
+	Elts []Expression // list of composite elements (can be plain values or KeyValueExpr)
 	source.Location
 }
 
@@ -45,9 +51,11 @@ func (c *CompositeLit) Expr()                 {} // Expr is a marker interface f
 func (c *CompositeLit) Loc() *source.Location { return &c.Location }
 
 // KeyValueExpr represents a key-value pair in a composite literal
-// Used for struct fields (.field = value) and map entries (key => value)
+// Used for:
+//   - Struct fields: .field = value  (Key is identifier, Value is expression)
+//   - Map entries:   key => value    (Key and Value are both expressions)
 type KeyValueExpr struct {
-	Key   Expression // field name or map key
+	Key   Expression // field name (for structs) or map key (for maps)
 	Value Expression // field value or map value
 	source.Location
 }
