@@ -1,0 +1,34 @@
+
+
+type Shape interface {
+    area() -> f64;
+    perimeter() -> f64;
+};
+
+type Circle struct {
+    .radius: f64,
+};
+
+fn (c: Circle) area() -> f64 {
+    return 3.14159 * c.radius * c.radius;
+}
+
+fn (c: Circle) perimeter() -> f64 {
+    return 2.0 * 3.14159 * c.radius;
+}
+
+type Rectangle struct {
+    .width: f64,
+    .height: f64,
+};
+
+fn (r: Rectangle) area() -> f64 {
+    return r.width * r.height;
+}
+
+fn (r: Rectangle) perimeter() -> f64 {
+    return 2.0 * (r.width + r.height);
+}
+
+let c := Circle{.radius = 5.0};
+let r := Rectangle{.width = 4.0, .height = 6.0};

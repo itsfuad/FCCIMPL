@@ -25,6 +25,21 @@ func (f *FuncDecl) Block()                {} // Block is a marker interface for 
 func (f *FuncDecl) Decl()                 {} // Decl is a marker interface for all declarations
 func (f *FuncDecl) Loc() *source.Location { return &f.Location }
 
+// MethodDecl represents a method declaration with a receiver
+// Example: fn (r Rect) area() -> f64 { return r.width * r.height; }
+type MethodDecl struct {
+	Receiver *Field          // method receiver (e.g., r Rect)
+	Name     *IdentifierExpr // method name
+	Type     *FuncType       // function signature (parameters and return type)
+	Body     *Block          // method body
+	source.Location
+}
+
+func (m *MethodDecl) INode()                {} // Implements Node interface
+func (m *MethodDecl) Block()                {} // Block is a marker interface for block constructs
+func (m *MethodDecl) Decl()                 {} // Decl is a marker interface for all declarations
+func (m *MethodDecl) Loc() *source.Location { return &m.Location }
+
 // IfStmt represents an if statement with optional else and else-if branches
 type IfStmt struct {
 	Cond Expression // condition

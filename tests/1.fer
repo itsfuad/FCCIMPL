@@ -37,3 +37,4 @@ if a > b {
 }
 
 let point: P = P{.x = 10, .y = 20};
+

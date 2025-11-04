@@ -597,6 +597,24 @@ func (p *Parser) parsePrimary() ast.Expression {
 		p.error("map type cannot be used as expression")
 		return nil
 
+	case lexer.FUNCTION_TOKEN:
+		// Anonymous function: fn (params) -> return { body }
+		start := p.peek().Start
+		p.advance() // consume 'fn'
+
+		// Must have parameters for anonymous function
+		if !p.check(lexer.OPEN_PAREN) {
+			p.error("anonymous function must have parameters")
+			return nil
+		}
+
+		p.advance() // consume '('
+		params := p.parseFunctionParams()
+		p.expect(lexer.CLOSE_PAREN)
+
+		// Parse as function literal
+		return p.parseFuncLit(start, params)
+
 	default:
 		p.error(fmt.Sprintf("unexpected token in expression: %s", tok.Value))
 		p.advance()

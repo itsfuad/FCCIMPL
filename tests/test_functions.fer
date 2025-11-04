@@ -1,0 +1,29 @@
+// Test 1: Named function with parameters
+fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
+// Test 2: Named function with trailing comma (should show info diagnostic)
+fn subtract(a: i32, b: i32,) -> i32 {
+    return a - b;
+}
+
+// Test 3: Function with no parameters
+fn sayHello() {
+    let msg := "Hello";
+}
+
+// Test 4: Function with no return type
+fn doSomething(x: i32) {
+    let y := x + 1;
+}
+
+// Test 5: Anonymous function in variable
+let multiply := fn (a: i32, b: i32) -> i32 {
+    return a * b;
+};
+
+// Test 6: Anonymous function with trailing comma
+let divide := fn (a: i32, b: i32,) -> i32 {
+    return a / b;
+};

@@ -1,0 +1,1456 @@
+{
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_methods.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "Rect",
+        "Start": {
+          "Line": 4,
+          "Column": 6,
+          "Index": 76
+        },
+        "End": {
+          "Line": 4,
+          "Column": 10,
+          "Index": 80
+        }
+      },
+      "Type": {
+        "Fields": {
+          "List": [
+            {
+              "Name": {
+                "Name": "width",
+                "Start": {
+                  "Line": 5,
+                  "Column": 6,
+                  "Index": 96
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 11,
+                  "Index": 101
+                }
+              },
+              "Type": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 5,
+                  "Column": 13,
+                  "Index": 103
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 16,
+                  "Index": 106
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            },
+            {
+              "Name": {
+                "Name": "height",
+                "Start": {
+                  "Line": 6,
+                  "Column": 6,
+                  "Index": 114
+                },
+                "End": {
+                  "Line": 6,
+                  "Column": 12,
+                  "Index": 120
+                }
+              },
+              "Type": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 6,
+                  "Column": 14,
+                  "Index": 122
+                },
+                "End": {
+                  "Line": 6,
+                  "Column": 17,
+                  "Index": 125
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Start": {
+          "Line": 4,
+          "Column": 11,
+          "Index": 81
+        },
+        "End": {
+          "Line": 7,
+          "Column": 2,
+          "Index": 129
+        }
+      },
+      "Start": {
+        "Line": 4,
+        "Column": 1,
+        "Index": 71
+      },
+      "End": {
+        "Line": 7,
+        "Column": 3,
+        "Index": 130
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "r",
+          "Start": {
+            "Line": 9,
+            "Column": 5,
+            "Index": 138
+          },
+          "End": {
+            "Line": 9,
+            "Column": 6,
+            "Index": 139
+          }
+        },
+        "Type": {
+          "Name": "Rect",
+          "Start": {
+            "Line": 9,
+            "Column": 8,
+            "Index": 141
+          },
+          "End": {
+            "Line": 9,
+            "Column": 12,
+            "Index": 145
+          }
+        },
+        "Value": null,
+        "Start": {
+          "Line": 9,
+          "Column": 5,
+          "Index": 138
+        },
+        "End": {
+          "Line": 9,
+          "Column": 12,
+          "Index": 145
+        }
+      },
+      "Name": {
+        "Name": "area",
+        "Start": {
+          "Line": 9,
+          "Column": 14,
+          "Index": 147
+        },
+        "End": {
+          "Line": 9,
+          "Column": 18,
+          "Index": 151
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [],
+          "Start": null,
+          "End": null
+        },
+        "Results": {
+          "List": [
+            {
+              "Name": null,
+              "Type": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 9,
+                  "Column": 24,
+                  "Index": 157
+                },
+                "End": {
+                  "Line": 9,
+                  "Column": 27,
+                  "Index": 160
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Start": {
+          "Line": 9,
+          "Column": 18,
+          "Index": 151
+        },
+        "End": {
+          "Line": 9,
+          "Column": 27,
+          "Index": 160
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "X": {
+                "X": {
+                  "Name": "r",
+                  "Start": {
+                    "Line": 10,
+                    "Column": 12,
+                    "Index": 175
+                  },
+                  "End": {
+                    "Line": 10,
+                    "Column": 13,
+                    "Index": 176
+                  }
+                },
+                "Sel": {
+                  "Name": "width",
+                  "Start": {
+                    "Line": 10,
+                    "Column": 14,
+                    "Index": 177
+                  },
+                  "End": {
+                    "Line": 10,
+                    "Column": 19,
+                    "Index": 182
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Op": {
+                "Kind": "*",
+                "Value": "*",
+                "Start": {
+                  "Line": 10,
+                  "Column": 20,
+                  "Index": 183
+                },
+                "End": {
+                  "Line": 10,
+                  "Column": 21,
+                  "Index": 184
+                }
+              },
+              "Y": {
+                "X": {
+                  "Name": "r",
+                  "Start": {
+                    "Line": 10,
+                    "Column": 22,
+                    "Index": 185
+                  },
+                  "End": {
+                    "Line": 10,
+                    "Column": 23,
+                    "Index": 186
+                  }
+                },
+                "Sel": {
+                  "Name": "height",
+                  "Start": {
+                    "Line": 10,
+                    "Column": 24,
+                    "Index": 187
+                  },
+                  "End": {
+                    "Line": 10,
+                    "Column": 30,
+                    "Index": 193
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Start": null,
+              "End": null
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 10,
+              "Column": 5,
+              "Index": 168
+            },
+            "End": {
+              "Line": 10,
+              "Column": 31,
+              "Index": 194
+            }
+          }
+        ],
+        "Start": {
+          "Line": 9,
+          "Column": 28,
+          "Index": 161
+        },
+        "End": {
+          "Line": 11,
+          "Column": 2,
+          "Index": 197
+        }
+      },
+      "Start": {
+        "Line": 9,
+        "Column": 1,
+        "Index": 134
+      },
+      "End": {
+        "Line": 11,
+        "Column": 2,
+        "Index": 197
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "r",
+          "Start": {
+            "Line": 14,
+            "Column": 5,
+            "Index": 240
+          },
+          "End": {
+            "Line": 14,
+            "Column": 6,
+            "Index": 241
+          }
+        },
+        "Type": {
+          "Name": "Rect",
+          "Start": {
+            "Line": 14,
+            "Column": 8,
+            "Index": 243
+          },
+          "End": {
+            "Line": 14,
+            "Column": 12,
+            "Index": 247
+          }
+        },
+        "Value": null,
+        "Start": {
+          "Line": 14,
+          "Column": 5,
+          "Index": 240
+        },
+        "End": {
+          "Line": 14,
+          "Column": 12,
+          "Index": 247
+        }
+      },
+      "Name": {
+        "Name": "scale",
+        "Start": {
+          "Line": 14,
+          "Column": 14,
+          "Index": 249
+        },
+        "End": {
+          "Line": 14,
+          "Column": 19,
+          "Index": 254
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "factor",
+                "Start": {
+                  "Line": 14,
+                  "Column": 20,
+                  "Index": 255
+                },
+                "End": {
+                  "Line": 14,
+                  "Column": 26,
+                  "Index": 261
+                }
+              },
+              "Type": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 14,
+                  "Column": 28,
+                  "Index": 263
+                },
+                "End": {
+                  "Line": 14,
+                  "Column": 31,
+                  "Index": 266
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Results": {
+          "List": [
+            {
+              "Name": null,
+              "Type": {
+                "Name": "Rect",
+                "Start": {
+                  "Line": 14,
+                  "Column": 36,
+                  "Index": 271
+                },
+                "End": {
+                  "Line": 14,
+                  "Column": 40,
+                  "Index": 275
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Start": {
+          "Line": 14,
+          "Column": 19,
+          "Index": 254
+        },
+        "End": {
+          "Line": 14,
+          "Column": 40,
+          "Index": 275
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Type": {
+                "Name": "Rect",
+                "Start": {
+                  "Line": 15,
+                  "Column": 12,
+                  "Index": 290
+                },
+                "End": {
+                  "Line": 15,
+                  "Column": 16,
+                  "Index": 294
+                }
+              },
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "width",
+                    "Start": {
+                      "Line": 16,
+                      "Column": 10,
+                      "Index": 306
+                    },
+                    "End": {
+                      "Line": 16,
+                      "Column": 15,
+                      "Index": 311
+                    }
+                  },
+                  "Value": {
+                    "X": {
+                      "X": {
+                        "Name": "r",
+                        "Start": {
+                          "Line": 16,
+                          "Column": 18,
+                          "Index": 314
+                        },
+                        "End": {
+                          "Line": 16,
+                          "Column": 19,
+                          "Index": 315
+                        }
+                      },
+                      "Sel": {
+                        "Name": "width",
+                        "Start": {
+                          "Line": 16,
+                          "Column": 20,
+                          "Index": 316
+                        },
+                        "End": {
+                          "Line": 16,
+                          "Column": 25,
+                          "Index": 321
+                        }
+                      },
+                      "Start": null,
+                      "End": null
+                    },
+                    "Op": {
+                      "Kind": "*",
+                      "Value": "*",
+                      "Start": {
+                        "Line": 16,
+                        "Column": 26,
+                        "Index": 322
+                      },
+                      "End": {
+                        "Line": 16,
+                        "Column": 27,
+                        "Index": 323
+                      }
+                    },
+                    "Y": {
+                      "Name": "factor",
+                      "Start": {
+                        "Line": 16,
+                        "Column": 28,
+                        "Index": 324
+                      },
+                      "End": {
+                        "Line": 16,
+                        "Column": 34,
+                        "Index": 330
+                      }
+                    },
+                    "Start": null,
+                    "End": null
+                  },
+                  "Start": {
+                    "Line": 15,
+                    "Column": 12,
+                    "Index": 290
+                  },
+                  "End": {
+                    "Line": 16,
+                    "Column": 34,
+                    "Index": 330
+                  }
+                },
+                {
+                  "Key": {
+                    "Name": "height",
+                    "Start": {
+                      "Line": 17,
+                      "Column": 10,
+                      "Index": 342
+                    },
+                    "End": {
+                      "Line": 17,
+                      "Column": 16,
+                      "Index": 348
+                    }
+                  },
+                  "Value": {
+                    "X": {
+                      "X": {
+                        "Name": "r",
+                        "Start": {
+                          "Line": 17,
+                          "Column": 19,
+                          "Index": 351
+                        },
+                        "End": {
+                          "Line": 17,
+                          "Column": 20,
+                          "Index": 352
+                        }
+                      },
+                      "Sel": {
+                        "Name": "height",
+                        "Start": {
+                          "Line": 17,
+                          "Column": 21,
+                          "Index": 353
+                        },
+                        "End": {
+                          "Line": 17,
+                          "Column": 27,
+                          "Index": 359
+                        }
+                      },
+                      "Start": null,
+                      "End": null
+                    },
+                    "Op": {
+                      "Kind": "*",
+                      "Value": "*",
+                      "Start": {
+                        "Line": 17,
+                        "Column": 28,
+                        "Index": 360
+                      },
+                      "End": {
+                        "Line": 17,
+                        "Column": 29,
+                        "Index": 361
+                      }
+                    },
+                    "Y": {
+                      "Name": "factor",
+                      "Start": {
+                        "Line": 17,
+                        "Column": 30,
+                        "Index": 362
+                      },
+                      "End": {
+                        "Line": 17,
+                        "Column": 36,
+                        "Index": 368
+                      }
+                    },
+                    "Start": null,
+                    "End": null
+                  },
+                  "Start": {
+                    "Line": 15,
+                    "Column": 12,
+                    "Index": 290
+                  },
+                  "End": {
+                    "Line": 17,
+                    "Column": 36,
+                    "Index": 368
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 15,
+                "Column": 12,
+                "Index": 290
+              },
+              "End": {
+                "Line": 18,
+                "Column": 6,
+                "Index": 376
+              }
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 15,
+              "Column": 5,
+              "Index": 283
+            },
+            "End": {
+              "Line": 18,
+              "Column": 7,
+              "Index": 377
+            }
+          }
+        ],
+        "Start": {
+          "Line": 14,
+          "Column": 41,
+          "Index": 276
+        },
+        "End": {
+          "Line": 19,
+          "Column": 2,
+          "Index": 380
+        }
+      },
+      "Start": {
+        "Line": 14,
+        "Column": 1,
+        "Index": 236
+      },
+      "End": {
+        "Line": 19,
+        "Column": 2,
+        "Index": 380
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "r",
+          "Start": {
+            "Line": 22,
+            "Column": 5,
+            "Index": 441
+          },
+          "End": {
+            "Line": 22,
+            "Column": 6,
+            "Index": 442
+          }
+        },
+        "Type": {
+          "Name": "Rect",
+          "Start": {
+            "Line": 22,
+            "Column": 8,
+            "Index": 444
+          },
+          "End": {
+            "Line": 22,
+            "Column": 12,
+            "Index": 448
+          }
+        },
+        "Value": null,
+        "Start": {
+          "Line": 22,
+          "Column": 5,
+          "Index": 441
+        },
+        "End": {
+          "Line": 22,
+          "Column": 12,
+          "Index": 448
+        }
+      },
+      "Name": {
+        "Name": "translate",
+        "Start": {
+          "Line": 22,
+          "Column": 14,
+          "Index": 450
+        },
+        "End": {
+          "Line": 22,
+          "Column": 23,
+          "Index": 459
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "dx",
+                "Start": {
+                  "Line": 22,
+                  "Column": 24,
+                  "Index": 460
+                },
+                "End": {
+                  "Line": 22,
+                  "Column": 26,
+                  "Index": 462
+                }
+              },
+              "Type": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 22,
+                  "Column": 28,
+                  "Index": 464
+                },
+                "End": {
+                  "Line": 22,
+                  "Column": 31,
+                  "Index": 467
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            },
+            {
+              "Name": {
+                "Name": "dy",
+                "Start": {
+                  "Line": 22,
+                  "Column": 33,
+                  "Index": 469
+                },
+                "End": {
+                  "Line": 22,
+                  "Column": 35,
+                  "Index": 471
+                }
+              },
+              "Type": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 22,
+                  "Column": 37,
+                  "Index": 473
+                },
+                "End": {
+                  "Line": 22,
+                  "Column": 40,
+                  "Index": 476
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Results": {
+          "List": [
+            {
+              "Name": null,
+              "Type": {
+                "Name": "Rect",
+                "Start": {
+                  "Line": 22,
+                  "Column": 46,
+                  "Index": 482
+                },
+                "End": {
+                  "Line": 22,
+                  "Column": 50,
+                  "Index": 486
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Start": {
+          "Line": 22,
+          "Column": 23,
+          "Index": 459
+        },
+        "End": {
+          "Line": 22,
+          "Column": 50,
+          "Index": 486
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Type": {
+                "Name": "Rect",
+                "Start": {
+                  "Line": 23,
+                  "Column": 12,
+                  "Index": 501
+                },
+                "End": {
+                  "Line": 23,
+                  "Column": 16,
+                  "Index": 505
+                }
+              },
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "width",
+                    "Start": {
+                      "Line": 24,
+                      "Column": 10,
+                      "Index": 517
+                    },
+                    "End": {
+                      "Line": 24,
+                      "Column": 15,
+                      "Index": 522
+                    }
+                  },
+                  "Value": {
+                    "X": {
+                      "X": {
+                        "Name": "r",
+                        "Start": {
+                          "Line": 24,
+                          "Column": 18,
+                          "Index": 525
+                        },
+                        "End": {
+                          "Line": 24,
+                          "Column": 19,
+                          "Index": 526
+                        }
+                      },
+                      "Sel": {
+                        "Name": "width",
+                        "Start": {
+                          "Line": 24,
+                          "Column": 20,
+                          "Index": 527
+                        },
+                        "End": {
+                          "Line": 24,
+                          "Column": 25,
+                          "Index": 532
+                        }
+                      },
+                      "Start": null,
+                      "End": null
+                    },
+                    "Op": {
+                      "Kind": "+",
+                      "Value": "+",
+                      "Start": {
+                        "Line": 24,
+                        "Column": 26,
+                        "Index": 533
+                      },
+                      "End": {
+                        "Line": 24,
+                        "Column": 27,
+                        "Index": 534
+                      }
+                    },
+                    "Y": {
+                      "Name": "dx",
+                      "Start": {
+                        "Line": 24,
+                        "Column": 28,
+                        "Index": 535
+                      },
+                      "End": {
+                        "Line": 24,
+                        "Column": 30,
+                        "Index": 537
+                      }
+                    },
+                    "Start": null,
+                    "End": null
+                  },
+                  "Start": {
+                    "Line": 23,
+                    "Column": 12,
+                    "Index": 501
+                  },
+                  "End": {
+                    "Line": 24,
+                    "Column": 30,
+                    "Index": 537
+                  }
+                },
+                {
+                  "Key": {
+                    "Name": "height",
+                    "Start": {
+                      "Line": 25,
+                      "Column": 10,
+                      "Index": 549
+                    },
+                    "End": {
+                      "Line": 25,
+                      "Column": 16,
+                      "Index": 555
+                    }
+                  },
+                  "Value": {
+                    "X": {
+                      "X": {
+                        "Name": "r",
+                        "Start": {
+                          "Line": 25,
+                          "Column": 19,
+                          "Index": 558
+                        },
+                        "End": {
+                          "Line": 25,
+                          "Column": 20,
+                          "Index": 559
+                        }
+                      },
+                      "Sel": {
+                        "Name": "height",
+                        "Start": {
+                          "Line": 25,
+                          "Column": 21,
+                          "Index": 560
+                        },
+                        "End": {
+                          "Line": 25,
+                          "Column": 27,
+                          "Index": 566
+                        }
+                      },
+                      "Start": null,
+                      "End": null
+                    },
+                    "Op": {
+                      "Kind": "+",
+                      "Value": "+",
+                      "Start": {
+                        "Line": 25,
+                        "Column": 28,
+                        "Index": 567
+                      },
+                      "End": {
+                        "Line": 25,
+                        "Column": 29,
+                        "Index": 568
+                      }
+                    },
+                    "Y": {
+                      "Name": "dy",
+                      "Start": {
+                        "Line": 25,
+                        "Column": 30,
+                        "Index": 569
+                      },
+                      "End": {
+                        "Line": 25,
+                        "Column": 32,
+                        "Index": 571
+                      }
+                    },
+                    "Start": null,
+                    "End": null
+                  },
+                  "Start": {
+                    "Line": 23,
+                    "Column": 12,
+                    "Index": 501
+                  },
+                  "End": {
+                    "Line": 25,
+                    "Column": 32,
+                    "Index": 571
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 23,
+                "Column": 12,
+                "Index": 501
+              },
+              "End": {
+                "Line": 26,
+                "Column": 6,
+                "Index": 579
+              }
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 23,
+              "Column": 5,
+              "Index": 494
+            },
+            "End": {
+              "Line": 26,
+              "Column": 7,
+              "Index": 580
+            }
+          }
+        ],
+        "Start": {
+          "Line": 22,
+          "Column": 51,
+          "Index": 487
+        },
+        "End": {
+          "Line": 27,
+          "Column": 2,
+          "Index": 583
+        }
+      },
+      "Start": {
+        "Line": 22,
+        "Column": 1,
+        "Index": 437
+      },
+      "End": {
+        "Line": 27,
+        "Column": 2,
+        "Index": 583
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "r",
+          "Start": {
+            "Line": 30,
+            "Column": 5,
+            "Index": 629
+          },
+          "End": {
+            "Line": 30,
+            "Column": 6,
+            "Index": 630
+          }
+        },
+        "Type": {
+          "Name": "Rect",
+          "Start": {
+            "Line": 30,
+            "Column": 8,
+            "Index": 632
+          },
+          "End": {
+            "Line": 30,
+            "Column": 12,
+            "Index": 636
+          }
+        },
+        "Value": null,
+        "Start": {
+          "Line": 30,
+          "Column": 5,
+          "Index": 629
+        },
+        "End": {
+          "Line": 30,
+          "Column": 12,
+          "Index": 636
+        }
+      },
+      "Name": {
+        "Name": "print",
+        "Start": {
+          "Line": 30,
+          "Column": 14,
+          "Index": 638
+        },
+        "End": {
+          "Line": 30,
+          "Column": 19,
+          "Index": 643
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [],
+          "Start": null,
+          "End": null
+        },
+        "Results": null,
+        "Start": {
+          "Line": 30,
+          "Column": 19,
+          "Index": 643
+        },
+        "End": {
+          "Line": 30,
+          "Column": 21,
+          "Index": 645
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "msg",
+                  "Start": {
+                    "Line": 31,
+                    "Column": 9,
+                    "Index": 657
+                  },
+                  "End": {
+                    "Line": 31,
+                    "Column": 12,
+                    "Index": 660
+                  }
+                },
+                "Type": null,
+                "Value": {
+                  "Kind": 2,
+                  "Value": "Rectangle",
+                  "Start": {
+                    "Line": 31,
+                    "Column": 16,
+                    "Index": 664
+                  },
+                  "End": {
+                    "Line": 31,
+                    "Column": 27,
+                    "Index": 675
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 31,
+              "Column": 5,
+              "Index": 653
+            },
+            "End": {
+              "Line": 31,
+              "Column": 28,
+              "Index": 676
+            }
+          }
+        ],
+        "Start": {
+          "Line": 30,
+          "Column": 22,
+          "Index": 646
+        },
+        "End": {
+          "Line": 32,
+          "Column": 2,
+          "Index": 679
+        }
+      },
+      "Start": {
+        "Line": 30,
+        "Column": 1,
+        "Index": 625
+      },
+      "End": {
+        "Line": 32,
+        "Column": 2,
+        "Index": 679
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "r",
+          "Start": {
+            "Line": 35,
+            "Column": 5,
+            "Index": 726
+          },
+          "End": {
+            "Line": 35,
+            "Column": 6,
+            "Index": 727
+          }
+        },
+        "Type": {
+          "Name": "Rect",
+          "Start": {
+            "Line": 35,
+            "Column": 8,
+            "Index": 729
+          },
+          "End": {
+            "Line": 35,
+            "Column": 12,
+            "Index": 733
+          }
+        },
+        "Value": null,
+        "Start": {
+          "Line": 35,
+          "Column": 5,
+          "Index": 726
+        },
+        "End": {
+          "Line": 35,
+          "Column": 12,
+          "Index": 733
+        }
+      },
+      "Name": {
+        "Name": "reset",
+        "Start": {
+          "Line": 35,
+          "Column": 14,
+          "Index": 735
+        },
+        "End": {
+          "Line": 35,
+          "Column": 19,
+          "Index": 740
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [],
+          "Start": null,
+          "End": null
+        },
+        "Results": null,
+        "Start": {
+          "Line": 35,
+          "Column": 19,
+          "Index": 740
+        },
+        "End": {
+          "Line": 35,
+          "Column": 21,
+          "Index": 742
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "newRect",
+                  "Start": {
+                    "Line": 36,
+                    "Column": 9,
+                    "Index": 754
+                  },
+                  "End": {
+                    "Line": 36,
+                    "Column": 16,
+                    "Index": 761
+                  }
+                },
+                "Type": null,
+                "Value": {
+                  "Type": {
+                    "Name": "Rect",
+                    "Start": {
+                      "Line": 36,
+                      "Column": 20,
+                      "Index": 765
+                    },
+                    "End": {
+                      "Line": 36,
+                      "Column": 24,
+                      "Index": 769
+                    }
+                  },
+                  "Elts": [
+                    {
+                      "Key": {
+                        "Name": "width",
+                        "Start": {
+                          "Line": 36,
+                          "Column": 26,
+                          "Index": 771
+                        },
+                        "End": {
+                          "Line": 36,
+                          "Column": 31,
+                          "Index": 776
+                        }
+                      },
+                      "Value": {
+                        "Kind": 1,
+                        "Value": "0.0",
+                        "Start": {
+                          "Line": 36,
+                          "Column": 34,
+                          "Index": 779
+                        },
+                        "End": {
+                          "Line": 36,
+                          "Column": 37,
+                          "Index": 782
+                        }
+                      },
+                      "Start": {
+                        "Line": 36,
+                        "Column": 20,
+                        "Index": 765
+                      },
+                      "End": {
+                        "Line": 36,
+                        "Column": 37,
+                        "Index": 782
+                      }
+                    },
+                    {
+                      "Key": {
+                        "Name": "height",
+                        "Start": {
+                          "Line": 36,
+                          "Column": 40,
+                          "Index": 785
+                        },
+                        "End": {
+                          "Line": 36,
+                          "Column": 46,
+                          "Index": 791
+                        }
+                      },
+                      "Value": {
+                        "Kind": 1,
+                        "Value": "0.0",
+                        "Start": {
+                          "Line": 36,
+                          "Column": 49,
+                          "Index": 794
+                        },
+                        "End": {
+                          "Line": 36,
+                          "Column": 52,
+                          "Index": 797
+                        }
+                      },
+                      "Start": {
+                        "Line": 36,
+                        "Column": 20,
+                        "Index": 765
+                      },
+                      "End": {
+                        "Line": 36,
+                        "Column": 52,
+                        "Index": 797
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 36,
+                    "Column": 20,
+                    "Index": 765
+                  },
+                  "End": {
+                    "Line": 36,
+                    "Column": 53,
+                    "Index": 798
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 36,
+              "Column": 5,
+              "Index": 750
+            },
+            "End": {
+              "Line": 36,
+              "Column": 54,
+              "Index": 799
+            }
+          }
+        ],
+        "Start": {
+          "Line": 35,
+          "Column": 22,
+          "Index": 743
+        },
+        "End": {
+          "Line": 37,
+          "Column": 2,
+          "Index": 802
+        }
+      },
+      "Start": {
+        "Line": 35,
+        "Column": 1,
+        "Index": 722
+      },
+      "End": {
+        "Line": 37,
+        "Column": 2,
+        "Index": 802
+      }
+    }
+  ],
+  "Imports": null,
+  "Start": null,
+  "End": null
+}

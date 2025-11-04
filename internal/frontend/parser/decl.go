@@ -114,10 +114,82 @@ func (p *Parser) parseTypeDecl() *ast.TypeDecl {
 }
 
 // parseFuncDecl: fn add(a: i32) -> i32 { return a; }
-func (p *Parser) parseFuncDecl() *ast.FuncDecl {
+// This is the entry point for all function-like declarations:
+// - Named functions: fn add(a: i32) -> i32 { ... }
+// - Anonymous functions: fn (a: i32) -> i32 { ... }
+// - Methods: fn (r Rect) area() -> f64 { ... }
+func (p *Parser) parseFuncDecl() ast.Node {
 	start := p.peek().Start
 	p.expect(lexer.FUNCTION_TOKEN)
 
+	// Lookahead to determine what kind of function this is
+	if p.check(lexer.OPEN_PAREN) {
+		// Could be: fn (params) { body } -- anonymous function
+		// Or:       fn (receiver) methodName(params) { body } -- method
+		p.advance() // consume '('
+
+		params := p.parseFunctionParams()
+
+		p.expect(lexer.CLOSE_PAREN)
+
+		// If next token is identifier, it's a method
+		if p.check(lexer.IDENTIFIER_TOKEN) {
+			return p.parseMethodDecl(start, params)
+		}
+
+		// Otherwise, it's an anonymous function (function literal)
+		return p.parseFuncLit(start, params)
+	}
+
+	// Named function: fn name(params) -> return { body }
+	return p.parseNamedFuncDecl(start)
+}
+
+// parseFunctionParams parses function parameters: name: type, name: type, ...
+// Used for both regular parameters and method receivers
+func (p *Parser) parseFunctionParams() []*ast.Field {
+	params := []*ast.Field{}
+
+	if p.check(lexer.CLOSE_PAREN) {
+		return params
+	}
+
+	for {
+		paramStart := p.peek().Start
+
+		// Parse parameter name
+		name := p.parseIdentifier()
+
+		// Expect colon
+		p.expect(lexer.COLON_TOKEN)
+
+		// Parse parameter type
+		paramType := p.parseType()
+
+		param := &ast.Field{
+			Name:     name,
+			Type:     paramType,
+			Location: p.makeLocation(paramStart),
+		}
+
+		params = append(params, param)
+
+		// Check for comma
+		if !p.match(lexer.COMMA_TOKEN) {
+			break
+		}
+
+		// Check for trailing comma
+		if p.checkTrailingComma(lexer.CLOSE_PAREN, "function parameters") {
+			break
+		}
+	}
+
+	return params
+}
+
+// parseNamedFuncDecl parses a named function declaration: fn name(params) -> return { body }
+func (p *Parser) parseNamedFuncDecl(start source.Position) *ast.FuncDecl {
 	name := p.parseIdentifier()
 
 	// Parse function type (parameters and return type)
@@ -131,6 +203,86 @@ func (p *Parser) parseFuncDecl() *ast.FuncDecl {
 
 	return &ast.FuncDecl{
 		Name:     name,
+		Type:     funcType,
+		Body:     body,
+		Location: p.makeLocation(start),
+	}
+}
+
+// parseFuncLit parses an anonymous function: fn (params) -> return { body }
+func (p *Parser) parseFuncLit(start source.Position, params []*ast.Field) *ast.FuncLit {
+	// Create FieldList from params
+	paramList := &ast.FieldList{
+		List:     params,
+		Location: p.makeLocation(start),
+	}
+
+	// Parse return type if present
+	var results *ast.FieldList
+	if p.match(lexer.ARROW_TOKEN) {
+		returnType := p.parseType()
+		results = &ast.FieldList{
+			List: []*ast.Field{
+				{
+					Type:     returnType,
+					Location: *returnType.Loc(),
+				},
+			},
+			Location: *returnType.Loc(),
+		}
+	}
+
+	funcType := &ast.FuncType{
+		Params:   paramList,
+		Results:  results,
+		Location: p.makeLocation(start),
+	}
+
+	// Parse body
+	body := p.parseBlock()
+
+	return &ast.FuncLit{
+		Type:     funcType,
+		Body:     body,
+		Location: p.makeLocation(start),
+	}
+}
+
+// parseMethodDecl parses a method declaration: fn (receiver) methodName(params) -> return { body }
+func (p *Parser) parseMethodDecl(start source.Position, receivers []*ast.Field) *ast.MethodDecl {
+	// Method name
+	methodName := p.parseIdentifier()
+
+	// Validate receiver count
+	if len(receivers) == 0 {
+		p.diagnostics.Add(
+			diagnostics.NewError("method must have a receiver").
+				WithCode(diagnostics.ErrUnexpectedToken).
+				WithPrimaryLabel(p.filepath, methodName.Loc(), "method declared without receiver"),
+		)
+		return nil
+	}
+
+	if len(receivers) > 1 {
+		secondReceiver := receivers[1]
+		p.diagnostics.Add(
+			diagnostics.NewError("method can only have one receiver").
+				WithCode(diagnostics.ErrUnexpectedToken).
+				WithPrimaryLabel(p.filepath, secondReceiver.Loc(), "extra receiver"),
+		)
+	}
+
+	receiver := receivers[0]
+
+	// Parse method signature (parameters and return type)
+	funcType := p.parseFuncType()
+
+	// Parse body
+	body := p.parseBlock()
+
+	return &ast.MethodDecl{
+		Receiver: receiver,
+		Name:     methodName,
 		Type:     funcType,
 		Body:     body,
 		Location: p.makeLocation(start),

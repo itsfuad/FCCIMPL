@@ -1,0 +1,37 @@
+// Test method declarations
+
+// Test 1: Simple method with receiver
+type Rect struct {
+    .width: f64,
+    .height: f64,
+};
+
+fn (r: Rect) area() -> f64 {
+    return r.width * r.height;
+}
+
+// Test 2: Method with parameters
+fn (r: Rect) scale(factor: f64) -> Rect {
+    return Rect{
+        .width = r.width * factor,
+        .height = r.height * factor,
+    };
+}
+
+// Test 3: Method with trailing comma in parameters
+fn (r: Rect) translate(dx: f64, dy: f64,) -> Rect {
+    return Rect{
+        .width = r.width + dx,
+        .height = r.height + dy,
+    };
+}
+
+// Test 4: Method with no parameters
+fn (r: Rect) print() {
+    let msg := "Rectangle";
+}
+
+// Test 5: Method with no return type
+fn (r: Rect) reset() {
+    let newRect := Rect{.width = 0.0, .height = 0.0};
+}
