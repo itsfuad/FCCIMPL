@@ -1,0 +1,111 @@
+{
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\1.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "P",
+        "Start": {
+          "Line": 3,
+          "Column": 6,
+          "Index": 9
+        },
+        "End": {
+          "Line": 3,
+          "Column": 7,
+          "Index": 10
+        }
+      },
+      "Type": {
+        "Fields": {
+          "List": [
+            {
+              "Names": [
+                {
+                  "Name": "x",
+                  "Start": {
+                    "Line": 4,
+                    "Column": 6,
+                    "Index": 26
+                  },
+                  "End": {
+                    "Line": 4,
+                    "Column": 7,
+                    "Index": 27
+                  }
+                }
+              ],
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 4,
+                  "Column": 10,
+                  "Index": 30
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 13,
+                  "Index": 33
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            },
+            {
+              "Names": [
+                {
+                  "Name": "y",
+                  "Start": {
+                    "Line": 5,
+                    "Column": 6,
+                    "Index": 41
+                  },
+                  "End": {
+                    "Line": 5,
+                    "Column": 7,
+                    "Index": 42
+                  }
+                }
+              ],
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 5,
+                  "Column": 10,
+                  "Index": 45
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 13,
+                  "Index": 48
+                }
+              },
+              "Value": null,
+              "Start": null,
+              "End": null
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Start": null,
+        "End": null
+      },
+      "Start": {
+        "Line": 3,
+        "Column": 1,
+        "Index": 4
+      },
+      "End": {
+        "Line": 6,
+        "Column": 3,
+        "Index": 53
+      }
+    }
+  ],
+  "Imports": null,
+  "Start": null,
+  "End": null
+}

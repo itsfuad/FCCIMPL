@@ -1,0 +1,11 @@
+
+
+type P struct {
+    .x : i32,
+    .y : i32,
+};
+
+struct {
+    .name: str,
+    .age: i32,
+};

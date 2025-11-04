@@ -1,0 +1,58 @@
+
+
+// Nullable types
+let nullable: i32? = None;
+let must_be_present: i32 = nullable ?: 10; // if the lhs is none, use the default value. only works with nullable types
+
+let a := 1, b : i16 = 12;
+const pi := 3.14;
+
+let fixedSizeArray : [3]i32; // size known at compile time
+let dynamicSizedArray : []i32 = [1, 2, 4]; // dynamic size. Can be resized at runtime
+
+if a == 10 {
+    b = 10;
+} else if a > b {
+    a = b;
+} else {
+    a = 0;
+    b = 0;
+}
+
+// errors
+
+type data struct {
+    .msg: str
+};
+
+type error struct {
+    .code: i32,
+    .message: str
+};
+
+type Shape interface {
+    fn area() -> f64,
+    fn perimeter() -> f64,
+}
+
+type Colors enum {
+    Red,
+    Green,
+    Blue,
+};
+
+fn fetch(url: str) -> data ! error {
+    if url == "http://example.com" {
+        return data{ .msg = "Hello, world!" };
+    } else {
+        return error{ .code = 404, .message = "Not found" }!;
+    }
+}
+
+const result := fetch("...") catch error {
+    println("Error: {}", error.message);
+    const fallback := data { .msg = "No data" };
+} fallback;
+
+// shorthand
+const result := fetch("...") catch data { .msg = "No data" };

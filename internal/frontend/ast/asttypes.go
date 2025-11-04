@@ -1,0 +1,127 @@
+package ast
+
+import (
+	"compiler/internal/source"
+)
+
+// DataType is a marker interface for type expressions
+// Types are NOT expressions - they are a separate syntactic category
+type DataType interface {
+	Node
+	TypeExpr()
+}
+
+// UserDefinedType represents an identifier (can be a type name or variable name)
+type UserDefinedType struct {
+	Name string
+	source.Location
+}
+
+func (i *UserDefinedType) INode()                {} // Implements Node interface
+func (i *UserDefinedType) Expr()                 {} // Can be used as expression (variable reference)
+func (i *UserDefinedType) TypeExpr()             {} // Can be used as type (type name)
+func (i *UserDefinedType) Loc() *source.Location { return &i.Location }
+
+// ArrayType represents array type [size]ElementType or []ElementType
+type ArrayType struct {
+	Len    *BasicLit // nil means dynamic array []T, otherwise [N]T
+	ElType TypeNode  // element type
+	source.Location
+}
+
+func (a *ArrayType) INode()                {} // Implements Node interface
+func (a *ArrayType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (a *ArrayType) Loc() *source.Location { return &a.Location }
+
+// OptionalType represents optional/nullable type T?
+type OptionalType struct {
+	Base TypeNode // The base type that is optional
+	source.Location
+}
+
+func (o *OptionalType) INode()                {} // Implements Node interface
+func (o *OptionalType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (o *OptionalType) Loc() *source.Location { return &o.Location }
+
+// ErrorType represents error-returning type T ! E
+type ErrorType struct {
+	Value TypeNode // The value type
+	Error TypeNode // The error type
+	source.Location
+}
+
+func (e *ErrorType) INode()                {} // Implements Node interface
+func (e *ErrorType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (e *ErrorType) Loc() *source.Location { return &e.Location }
+
+// Field represents a single field in a struct or parameter in a function
+type Field struct {
+	Names []*IdentifierExpr // field/parameter names (can be nil for anonymous fields)
+	Type  TypeNode          // field type
+	Value Expression        // initial value (for struct literals), nil otherwise
+	source.Location
+}
+
+func (f *Field) INode()                {} // Implements Node interface
+func (f *Field) Loc() *source.Location { return &f.Location }
+
+// FieldList represents a list of Fields, enclosed by parentheses or braces
+type FieldList struct {
+	List []*Field
+	source.Location
+}
+
+func (f *FieldList) INode()                {} // Implements Node interface
+func (f *FieldList) Loc() *source.Location { return &f.Location }
+
+// StructType represents a struct type definition
+type StructType struct {
+	Fields *FieldList // struct fields
+	source.Location
+}
+
+func (s *StructType) INode()                {} // Implements Node interface
+func (s *StructType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (s *StructType) Loc() *source.Location { return &s.Location }
+
+// InterfaceType represents an interface type definition
+type InterfaceType struct {
+	Methods *FieldList // interface methods (each Field contains a FuncType)
+	source.Location
+}
+
+func (i *InterfaceType) INode()                {} // Implements Node interface
+func (i *InterfaceType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (i *InterfaceType) Loc() *source.Location { return &i.Location }
+
+// FuncType represents a function type signature
+type FuncType struct {
+	Params  *FieldList // function parameters
+	Results *FieldList // return types (can be nil for no return)
+	source.Location
+}
+
+func (f *FuncType) INode()                {} // Implements Node interface
+func (f *FuncType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (f *FuncType) Loc() *source.Location { return &f.Location }
+
+// MapType represents a map type map[KeyType]ValueType
+type MapType struct {
+	Key   TypeNode // key type
+	Value TypeNode // value type
+	source.Location
+}
+
+func (m *MapType) INode()                {} // Implements Node interface
+func (m *MapType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (m *MapType) Loc() *source.Location { return &m.Location }
+
+// EnumType represents an enum type definition
+type EnumType struct {
+	Variants *FieldList // enum variants
+	source.Location
+}
+
+func (e *EnumType) INode()                {} // Implements Node interface
+func (e *EnumType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (e *EnumType) Loc() *source.Location { return &e.Location }
