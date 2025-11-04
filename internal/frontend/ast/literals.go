@@ -29,15 +29,15 @@ type Invalid struct {
 }
 
 func (i *Invalid) INode()                {} // Implements Node interface
-func (i *Invalid) Expr()                 {}	// Expr is a marker interface for all expressions
+func (i *Invalid) Expr()                 {} // Expr is a marker interface for all expressions
 func (i *Invalid) Loc() *source.Location { return &i.Location }
 
 // CompositeLit represents a composite literal (array, struct, or map)
-// Examples: 
+// Examples:
 //   - Array:  []i32{1, 2, 3}
 //   - Struct: Point{.x = 1, .y = 2}
 //   - Map:    map[str]i32{"a" => 1, "b" => 2}
-// 
+//
 // For arrays, Elts contains plain Expression values.
 // For structs and maps, Elts contains KeyValueExpr nodes.
 type CompositeLit struct {
