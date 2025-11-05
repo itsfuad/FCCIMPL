@@ -1,0 +1,37 @@
+{
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\multi\\main.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Path": {
+        "Kind": 2,
+        "Value": "module1.fer",
+        "Start": {
+          "Line": 1,
+          "Column": 8,
+          "Index": 7
+        },
+        "End": {
+          "Line": 1,
+          "Column": 21,
+          "Index": 20
+        }
+      },
+      "Alias": null,
+      "LocationOnDisk": "",
+      "Start": {
+        "Line": 1,
+        "Column": 1,
+        "Index": 0
+      },
+      "End": {
+        "Line": 1,
+        "Column": 22,
+        "Index": 21
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

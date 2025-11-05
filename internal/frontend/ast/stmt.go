@@ -8,15 +8,14 @@ import (
 	"compiler/internal/source"
 )
 
-// Module represents a Ferret source file
+// Module represents a Ferret source file (pure syntax tree)
+// This is the output of the Parser phase - contains only syntactic information.
+// Semantic information (imports, symbols, types) lives in SemanticModel in the context package.
 type Module struct {
 	FullPath   string // the physical full path to the file
 	ImportPath string // the logical path to the module
 	Alias      string // module alias
 	Nodes      []Node // top-level declarations and statements
-
-	// Semantic information (populated during type checking)
-	Imports []*Module // resolved imported modules
 
 	source.Location
 }

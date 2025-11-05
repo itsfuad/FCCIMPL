@@ -101,9 +101,50 @@
         "Index": 31
       }
     },
-    null
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "a",
+            "Start": {
+              "Line": 4,
+              "Column": 7,
+              "Index": 39
+            },
+            "End": {
+              "Line": 4,
+              "Column": 8,
+              "Index": 40
+            }
+          },
+          "Type": {
+            "Name": "i32",
+            "Start": {
+              "Line": 4,
+              "Column": 10,
+              "Index": 42
+            },
+            "End": {
+              "Line": 4,
+              "Column": 13,
+              "Index": 45
+            }
+          },
+          "Value": null
+        }
+      ],
+      "Start": {
+        "Line": 4,
+        "Column": 1,
+        "Index": 33
+      },
+      "End": {
+        "Line": 4,
+        "Column": 14,
+        "Index": 46
+      }
+    }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }
