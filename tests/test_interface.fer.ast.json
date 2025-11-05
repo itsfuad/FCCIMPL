@@ -40,30 +40,18 @@
                   "Start": null,
                   "End": null
                 },
-                "Results": {
-                  "List": [
-                    {
-                      "Name": null,
-                      "Type": {
-                        "Name": "f64",
-                        "Start": {
-                          "Line": 4,
-                          "Column": 15,
-                          "Index": 42
-                        },
-                        "End": {
-                          "Line": 4,
-                          "Column": 18,
-                          "Index": 45
-                        }
-                      },
-                      "Value": null,
-                      "Start": null,
-                      "End": null
-                    }
-                  ],
-                  "Start": null,
-                  "End": null
+                "Result": {
+                  "Name": "f64",
+                  "Start": {
+                    "Line": 4,
+                    "Column": 15,
+                    "Index": 42
+                  },
+                  "End": {
+                    "Line": 4,
+                    "Column": 18,
+                    "Index": 45
+                  }
                 },
                 "Start": {
                   "Line": 4,
@@ -84,8 +72,8 @@
               },
               "End": {
                 "Line": 4,
-                "Column": 19,
-                "Index": 46
+                "Column": 18,
+                "Index": 45
               }
             },
             {
@@ -108,30 +96,18 @@
                   "Start": null,
                   "End": null
                 },
-                "Results": {
-                  "List": [
-                    {
-                      "Name": null,
-                      "Type": {
-                        "Name": "f64",
-                        "Start": {
-                          "Line": 5,
-                          "Column": 20,
-                          "Index": 67
-                        },
-                        "End": {
-                          "Line": 5,
-                          "Column": 23,
-                          "Index": 70
-                        }
-                      },
-                      "Value": null,
-                      "Start": null,
-                      "End": null
-                    }
-                  ],
-                  "Start": null,
-                  "End": null
+                "Result": {
+                  "Name": "f64",
+                  "Start": {
+                    "Line": 5,
+                    "Column": 20,
+                    "Index": 67
+                  },
+                  "End": {
+                    "Line": 5,
+                    "Column": 23,
+                    "Index": 70
+                  }
                 },
                 "Start": {
                   "Line": 5,
@@ -152,8 +128,8 @@
               },
               "End": {
                 "Line": 5,
-                "Column": 24,
-                "Index": 71
+                "Column": 23,
+                "Index": 70
               }
             }
           ],
@@ -167,8 +143,8 @@
         },
         "End": {
           "Line": 6,
-          "Column": 2,
-          "Index": 74
+          "Column": 3,
+          "Index": 75
         }
       },
       "Start": {
@@ -315,30 +291,18 @@
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "f64",
-                "Start": {
-                  "Line": 12,
-                  "Column": 26,
-                  "Index": 151
-                },
-                "End": {
-                  "Line": 12,
-                  "Column": 29,
-                  "Index": 154
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 12,
+            "Column": 26,
+            "Index": 151
+          },
+          "End": {
+            "Line": 12,
+            "Column": 29,
+            "Index": 154
+          }
         },
         "Start": {
           "Line": 12,
@@ -558,30 +522,18 @@
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "f64",
-                "Start": {
-                  "Line": 16,
-                  "Column": 31,
-                  "Index": 236
-                },
-                "End": {
-                  "Line": 16,
-                  "Column": 34,
-                  "Index": 239
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 16,
+            "Column": 31,
+            "Index": 236
+          },
+          "End": {
+            "Line": 16,
+            "Column": 34,
+            "Index": 239
+          }
         },
         "Start": {
           "Line": 16,
@@ -890,30 +842,18 @@
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "f64",
-                "Start": {
-                  "Line": 25,
-                  "Column": 29,
-                  "Index": 382
-                },
-                "End": {
-                  "Line": 25,
-                  "Column": 32,
-                  "Index": 385
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 25,
+            "Column": 29,
+            "Index": 382
+          },
+          "End": {
+            "Line": 25,
+            "Column": 32,
+            "Index": 385
+          }
         },
         "Start": {
           "Line": 25,
@@ -1101,30 +1041,18 @@
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "f64",
-                "Start": {
-                  "Line": 29,
-                  "Column": 34,
-                  "Index": 459
-                },
-                "End": {
-                  "Line": 29,
-                  "Column": 37,
-                  "Index": 462
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 29,
+            "Column": 34,
+            "Index": 459
+          },
+          "End": {
+            "Line": 29,
+            "Column": 37,
+            "Index": 462
+          }
         },
         "Start": {
           "Line": 29,

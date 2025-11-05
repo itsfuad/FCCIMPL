@@ -556,30 +556,18 @@
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "i32",
-                "Start": {
-                  "Line": 31,
-                  "Column": 27,
-                  "Index": 293
-                },
-                "End": {
-                  "Line": 31,
-                  "Column": 30,
-                  "Index": 296
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "i32",
+          "Start": {
+            "Line": 31,
+            "Column": 27,
+            "Index": 293
+          },
+          "End": {
+            "Line": 31,
+            "Column": 30,
+            "Index": 296
+          }
         },
         "Start": {
           "Line": 31,

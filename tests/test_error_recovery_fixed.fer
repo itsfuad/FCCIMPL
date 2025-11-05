@@ -8,27 +8,27 @@ fn test1(arg: interface{}) -> i32 {
 
 // Test 2: Struct with invalid field syntax
 type BadStruct struct {
-    .name: str;
+    .name: str
 };
 
 // Test 3: Enum with non-identifier variant
 type BadEnum enum {
-    Valid;
+    Valid
 };
 
 // Test 4: Interface with invalid method syntax
 type BadInterface interface {
-    validMethod() -> i32;
+    validMethod() -> i32
 };
 
 // Test 5: Block with unexpected token
 fn test5() {
-    let x = 5;
-    let y = 10;
+    let x := 5;
+    let y := 10;
 }
 
 // Test 6: Array literal
-let badArray = [1, 2, 3, 4];
+let badArray := [1, 2, 3, 4];
 
 // Test 7: Function parameters with errors
 fn badParams(x: i32, y: str, z: i32) {
@@ -36,16 +36,16 @@ fn badParams(x: i32, y: str, z: i32) {
 }
 
 // Test 8: Composite literal
-type Point = struct {
-    .x: i32;
-    .y: i32;
-}
+type Point struct {
+    .x: i32,
+    .y: i32
+};
 
-let badPoint = Point{.x = 1, .y = 3};
+let badPoint := Point{.x = 1, .y = 3};
 
 // Test 9: Nested blocks
 fn nested() {
     if true {
-        let a = 1;
+        let a := 1;
     }
 }

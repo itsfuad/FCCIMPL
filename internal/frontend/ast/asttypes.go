@@ -11,6 +11,15 @@ type DataType interface {
 	TypeExpr()
 }
 
+type Invalid struct {
+	source.Location
+}
+
+func (i *Invalid) INode()                {} // Implements Node interface
+func (i *Invalid) TypeExpr()             {} // Type nodes implement TypeExpr
+func (i *Invalid) Loc() *source.Location { return &i.Location }
+
+
 // UserDefinedType represents an identifier (can be a type name or variable name)
 type UserDefinedType struct {
 	Name string
@@ -24,7 +33,7 @@ func (i *UserDefinedType) Loc() *source.Location { return &i.Location }
 
 // ArrayType represents array type [size]ElementType or []ElementType
 type ArrayType struct {
-	Len    *BasicLit // nil means dynamic array []T, otherwise [N]T
+	Len    Expression // nil means dynamic array []T, otherwise [N]T
 	ElType TypeNode  // element type
 	source.Location
 }
@@ -97,7 +106,7 @@ func (i *InterfaceType) Loc() *source.Location { return &i.Location }
 // FuncType represents a function type signature
 type FuncType struct {
 	Params  *FieldList // function parameters
-	Results *FieldList // return types (can be nil for no return)
+	Result   TypeNode // return types (can be nil for no return)
 	source.Location
 }
 
