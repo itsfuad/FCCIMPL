@@ -73,9 +73,9 @@ func (p *Parser) parseVariableDeclaration(start source.Position, isConst bool) (
 			loc := p.makeLocation(p.advance().Start)
 			decl.Value = p.parseExpr()
 			p.diagnostics.Add(
-				diagnostics.NewError("expected ':=' for inferred symbols with values"). 
-				WithCode(diagnostics.ErrUnexpectedToken). 
-				WithPrimaryLabel(p.filepath, &loc, "add a `:` before `=`"),
+				diagnostics.NewError("expected ':=' for inferred symbols with values").
+					WithCode(diagnostics.ErrUnexpectedToken).
+					WithPrimaryLabel(p.filepath, &loc, "add a `:` before `=`"),
 			)
 		} else {
 			if isConst {
@@ -177,7 +177,7 @@ func (p *Parser) parseFunctionParams() []*ast.Field {
 		param := &ast.Field{
 			Name:     name,
 			Type:     paramType,
-			Location: p.makeLocation(*name.Start),
+			Location: *source.NewLocation(name.Start, paramType.Loc().End),
 		}
 
 		params = append(params, param)
@@ -194,7 +194,8 @@ func (p *Parser) parseFunctionParams() []*ast.Field {
 		p.expect(lexer.COMMA_TOKEN)
 	}
 
-	p.expect(lexer.CLOSE_PAREN)
+	// Note: Don't consume CLOSE_PAREN here - let the caller handle it
+	// This keeps the behavior consistent with the early return case (line 157)
 
 	return params
 }

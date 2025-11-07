@@ -148,8 +148,9 @@ func (p *Parser) parseFuncType() *ast.FuncType {
 			typ := p.parseType()
 
 			params.List = append(params.List, &ast.Field{
-				Name: name,
-				Type: typ,
+				Name:     name,
+				Type:     typ,
+				Location: *source.NewLocation(name.Start, typ.Loc().End),
 			})
 
 			if p.match(lexer.CLOSE_PAREN) {

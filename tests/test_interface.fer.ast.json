@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_interface.fer",
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_interface.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -143,8 +143,8 @@
         },
         "End": {
           "Line": 6,
-          "Column": 3,
-          "Index": 75
+          "Column": 2,
+          "Index": 74
         }
       },
       "Start": {
@@ -1445,7 +1445,6 @@
       }
     }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }

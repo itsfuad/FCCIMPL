@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_methods.fer",
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_methods.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -167,30 +167,18 @@
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "f64",
-                "Start": {
-                  "Line": 9,
-                  "Column": 24,
-                  "Index": 157
-                },
-                "End": {
-                  "Line": 9,
-                  "Column": 27,
-                  "Index": 160
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 9,
+            "Column": 24,
+            "Index": 157
+          },
+          "End": {
+            "Line": 9,
+            "Column": 27,
+            "Index": 160
+          }
         },
         "Start": {
           "Line": 9,
@@ -403,37 +391,33 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 14,
+                "Column": 20,
+                "Index": 255
+              },
+              "End": {
+                "Line": 14,
+                "Column": 31,
+                "Index": 266
+              }
             }
           ],
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "Rect",
-                "Start": {
-                  "Line": 14,
-                  "Column": 36,
-                  "Index": 271
-                },
-                "End": {
-                  "Line": 14,
-                  "Column": 40,
-                  "Index": 275
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "Rect",
+          "Start": {
+            "Line": 14,
+            "Column": 36,
+            "Index": 271
+          },
+          "End": {
+            "Line": 14,
+            "Column": 40,
+            "Index": 275
+          }
         },
         "Start": {
           "Line": 14,
@@ -767,8 +751,16 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 22,
+                "Column": 24,
+                "Index": 460
+              },
+              "End": {
+                "Line": 22,
+                "Column": 31,
+                "Index": 467
+              }
             },
             {
               "Name": {
@@ -798,37 +790,33 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 22,
+                "Column": 33,
+                "Index": 469
+              },
+              "End": {
+                "Line": 22,
+                "Column": 40,
+                "Index": 476
+              }
             }
           ],
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "Rect",
-                "Start": {
-                  "Line": 22,
-                  "Column": 46,
-                  "Index": 482
-                },
-                "End": {
-                  "Line": 22,
-                  "Column": 50,
-                  "Index": 486
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "Rect",
+          "Start": {
+            "Line": 22,
+            "Column": 46,
+            "Index": 482
+          },
+          "End": {
+            "Line": 22,
+            "Column": 50,
+            "Index": 486
+          }
         },
         "Start": {
           "Line": 22,
@@ -1137,7 +1125,7 @@
           "Start": null,
           "End": null
         },
-        "Results": null,
+        "Result": null,
         "Start": {
           "Line": 30,
           "Column": 19,
@@ -1277,7 +1265,7 @@
           "Start": null,
           "End": null
         },
-        "Results": null,
+        "Result": null,
         "Start": {
           "Line": 35,
           "Column": 19,
@@ -1450,7 +1438,6 @@
       }
     }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }

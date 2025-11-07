@@ -572,7 +572,7 @@ func (p *Parser) parsePrimary() ast.Expression {
 			return nil
 		}
 
-		p.advance() // consume '('
+		// parseFunctionParams will consume the '(' itself
 		params := p.parseFunctionParams()
 		p.expect(lexer.CLOSE_PAREN)
 

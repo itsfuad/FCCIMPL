@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_var_decl.fer",
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_var_decl.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -401,7 +401,6 @@
       }
     }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }
