@@ -579,6 +579,29 @@ func (p *Parser) parsePrimary() ast.Expression {
 		// Parse as function literal
 		return p.parseFuncLit(start, params)
 
+	case lexer.DOT_TOKEN:
+		// Anonymous struct literal: .{ .field = value, ... }
+		// This is Zig-style syntax for struct literals without explicit type
+		start := p.peek().Start
+		p.advance() // consume '.'
+
+		if !p.match(lexer.OPEN_CURLY) {
+			p.error("expected '{' after '.' for anonymous struct literal")
+			return nil
+		}
+
+		p.advance() // consume '{'
+		startPos := start
+		elems := p.parseCompositeLiteralElements(startPos)
+		p.expect(lexer.CLOSE_CURLY)
+
+		// Create a composite literal with nil type (anonymous)
+		return &ast.CompositeLit{
+			Type:     nil, // Anonymous struct literal has no explicit type
+			Elts:     elems,
+			Location: p.makeLocation(startPos),
+		}
+
 	default:
 		p.error(fmt.Sprintf("unexpected token in expression: %s", tok.Value))
 		p.advance()

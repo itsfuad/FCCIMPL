@@ -1,0 +1,49 @@
+// Test file for anonymous struct literals using .{} syntax
+
+type Point struct {
+    .x: f64,
+    .y: f64,
+};
+
+// Test 1: Basic anonymous struct literal
+let point1 := .{ .x = 1.0, .y = 2.0 };
+
+// Test 2: Anonymous struct with different field types
+let record := .{ .id = 42, .name = "Test", .active = true };
+
+// Test 3: Nested anonymous struct
+let nested := .{ 
+    .outer = "wrapper",
+    .inner = .{ .value = 100 },
+};
+
+// Test 4: Anonymous struct in function parameter
+fn processPoint(p: Point) -> f64 {
+    return p.x + p.y;
+}
+
+fn testAnonymous() {
+    let result := processPoint(.{ .x = 5.0, .y = 10.0 });
+}
+
+// Test 5: Anonymous struct in array
+let points := [
+    .{ .x = 0.0, .y = 0.0 },
+    .{ .x = 1.0, .y = 1.0 },
+    .{ .x = 2.0, .y = 2.0 },
+];
+
+// Test 6: Comparison with named struct literal
+let named := Point { .x = 3.0, .y = 4.0 };
+let anonymous := .{ .x = 3.0, .y = 4.0 };
+
+// Test 7: Anonymous struct type declaration and assignment in function
+fn testTypedAnonymous() {
+    let typedAnon: struct { .id: i32, .label: str };
+    typedAnon = .{ .id = 1, .label = "First" };
+}
+
+// Test 8: Anonymous struct in return statement
+fn createOrigin() -> Point {
+    return .{ .x = 0.0, .y = 0.0 };
+}

@@ -11063,6 +11063,239 @@
         "Column": 2,
         "Index": 5974
       }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "annonymousStructNoValue",
+            "Start": {
+              "Line": 297,
+              "Column": 5,
+              "Index": 6038
+            },
+            "End": {
+              "Line": 297,
+              "Column": 28,
+              "Index": 6061
+            }
+          },
+          "Type": {
+            "Fields": {
+              "List": [
+                {
+                  "Name": {
+                    "Name": "id",
+                    "Start": {
+                      "Line": 297,
+                      "Column": 41,
+                      "Index": 6074
+                    },
+                    "End": {
+                      "Line": 297,
+                      "Column": 43,
+                      "Index": 6076
+                    }
+                  },
+                  "Type": {
+                    "Name": "i32",
+                    "Start": {
+                      "Line": 297,
+                      "Column": 45,
+                      "Index": 6078
+                    },
+                    "End": {
+                      "Line": 297,
+                      "Column": 48,
+                      "Index": 6081
+                    }
+                  },
+                  "Value": null,
+                  "Start": null,
+                  "End": null
+                },
+                {
+                  "Name": {
+                    "Name": "name",
+                    "Start": {
+                      "Line": 297,
+                      "Column": 51,
+                      "Index": 6084
+                    },
+                    "End": {
+                      "Line": 297,
+                      "Column": 55,
+                      "Index": 6088
+                    }
+                  },
+                  "Type": {
+                    "Name": "str",
+                    "Start": {
+                      "Line": 297,
+                      "Column": 57,
+                      "Index": 6090
+                    },
+                    "End": {
+                      "Line": 297,
+                      "Column": 60,
+                      "Index": 6093
+                    }
+                  },
+                  "Value": null,
+                  "Start": null,
+                  "End": null
+                }
+              ],
+              "Start": null,
+              "End": null
+            },
+            "Start": {
+              "Line": 297,
+              "Column": 31,
+              "Index": 6064
+            },
+            "End": {
+              "Line": 297,
+              "Column": 62,
+              "Index": 6095
+            }
+          },
+          "Value": null
+        }
+      ],
+      "Start": {
+        "Line": 297,
+        "Column": 1,
+        "Index": 6034
+      },
+      "End": {
+        "Line": 297,
+        "Column": 63,
+        "Index": 6096
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "annonymousStruct",
+            "Start": {
+              "Line": 298,
+              "Column": 5,
+              "Index": 6102
+            },
+            "End": {
+              "Line": 298,
+              "Column": 21,
+              "Index": 6118
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Type": null,
+            "Elts": [
+              {
+                "Key": {
+                  "Name": "id",
+                  "Start": {
+                    "Line": 298,
+                    "Column": 29,
+                    "Index": 6126
+                  },
+                  "End": {
+                    "Line": 298,
+                    "Column": 31,
+                    "Index": 6128
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "0",
+                  "Start": {
+                    "Line": 298,
+                    "Column": 34,
+                    "Index": 6131
+                  },
+                  "End": {
+                    "Line": 298,
+                    "Column": 35,
+                    "Index": 6132
+                  }
+                },
+                "Start": {
+                  "Line": 298,
+                  "Column": 25,
+                  "Index": 6122
+                },
+                "End": {
+                  "Line": 298,
+                  "Column": 35,
+                  "Index": 6132
+                }
+              },
+              {
+                "Key": {
+                  "Name": "name",
+                  "Start": {
+                    "Line": 298,
+                    "Column": 38,
+                    "Index": 6135
+                  },
+                  "End": {
+                    "Line": 298,
+                    "Column": 42,
+                    "Index": 6139
+                  }
+                },
+                "Value": {
+                  "Kind": 2,
+                  "Value": "Anon",
+                  "Start": {
+                    "Line": 298,
+                    "Column": 45,
+                    "Index": 6142
+                  },
+                  "End": {
+                    "Line": 298,
+                    "Column": 51,
+                    "Index": 6148
+                  }
+                },
+                "Start": {
+                  "Line": 298,
+                  "Column": 25,
+                  "Index": 6122
+                },
+                "End": {
+                  "Line": 298,
+                  "Column": 51,
+                  "Index": 6148
+                }
+              }
+            ],
+            "Start": {
+              "Line": 298,
+              "Column": 25,
+              "Index": 6122
+            },
+            "End": {
+              "Line": 298,
+              "Column": 53,
+              "Index": 6150
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 298,
+        "Column": 1,
+        "Index": 6098
+      },
+      "End": {
+        "Line": 298,
+        "Column": 54,
+        "Index": 6151
+      }
     }
   ],
   "Start": null,
