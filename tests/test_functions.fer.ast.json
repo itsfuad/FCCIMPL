@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_functions.fer",
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_functions.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -48,8 +48,16 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 2,
+                "Column": 8,
+                "Index": 50
+              },
+              "End": {
+                "Line": 2,
+                "Column": 14,
+                "Index": 56
+              }
             },
             {
               "Name": {
@@ -79,37 +87,33 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 2,
+                "Column": 16,
+                "Index": 58
+              },
+              "End": {
+                "Line": 2,
+                "Column": 22,
+                "Index": 64
+              }
             }
           ],
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "i32",
-                "Start": {
-                  "Line": 2,
-                  "Column": 27,
-                  "Index": 69
-                },
-                "End": {
-                  "Line": 2,
-                  "Column": 30,
-                  "Index": 72
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "i32",
+          "Start": {
+            "Line": 2,
+            "Column": 27,
+            "Index": 69
+          },
+          "End": {
+            "Line": 2,
+            "Column": 30,
+            "Index": 72
+          }
         },
         "Start": {
           "Line": 2,
@@ -249,8 +253,16 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 7,
+                "Column": 13,
+                "Index": 189
+              },
+              "End": {
+                "Line": 7,
+                "Column": 19,
+                "Index": 195
+              }
             },
             {
               "Name": {
@@ -280,37 +292,33 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 7,
+                "Column": 21,
+                "Index": 197
+              },
+              "End": {
+                "Line": 7,
+                "Column": 27,
+                "Index": 203
+              }
             }
           ],
           "Start": null,
           "End": null
         },
-        "Results": {
-          "List": [
-            {
-              "Name": null,
-              "Type": {
-                "Name": "i32",
-                "Start": {
-                  "Line": 7,
-                  "Column": 33,
-                  "Index": 209
-                },
-                "End": {
-                  "Line": 7,
-                  "Column": 36,
-                  "Index": 212
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
+        "Result": {
+          "Name": "i32",
+          "Start": {
+            "Line": 7,
+            "Column": 33,
+            "Index": 209
+          },
+          "End": {
+            "Line": 7,
+            "Column": 36,
+            "Index": 212
+          }
         },
         "Start": {
           "Line": 7,
@@ -425,7 +433,7 @@
           "Start": null,
           "End": null
         },
-        "Results": null,
+        "Result": null,
         "Start": {
           "Line": 12,
           "Column": 12,
@@ -551,14 +559,22 @@
                 }
               },
               "Value": null,
-              "Start": null,
-              "End": null
+              "Start": {
+                "Line": 17,
+                "Column": 16,
+                "Index": 383
+              },
+              "End": {
+                "Line": 17,
+                "Column": 22,
+                "Index": 389
+              }
             }
           ],
           "Start": null,
           "End": null
         },
-        "Results": null,
+        "Result": null,
         "Start": {
           "Line": 17,
           "Column": 15,
@@ -781,36 +797,8 @@
                   "Index": 498
                 }
               },
-              "Results": {
-                "List": [
-                  {
-                    "Name": null,
-                    "Type": {
-                      "Name": "i32",
-                      "Start": {
-                        "Line": 22,
-                        "Column": 40,
-                        "Index": 502
-                      },
-                      "End": {
-                        "Line": 22,
-                        "Column": 43,
-                        "Index": 505
-                      }
-                    },
-                    "Value": null,
-                    "Start": {
-                      "Line": 22,
-                      "Column": 40,
-                      "Index": 502
-                    },
-                    "End": {
-                      "Line": 22,
-                      "Column": 43,
-                      "Index": 505
-                    }
-                  }
-                ],
+              "Result": {
+                "Name": "i32",
                 "Start": {
                   "Line": 22,
                   "Column": 40,
@@ -1039,36 +1027,8 @@
                   "Index": 619
                 }
               },
-              "Results": {
-                "List": [
-                  {
-                    "Name": null,
-                    "Type": {
-                      "Name": "i32",
-                      "Start": {
-                        "Line": 27,
-                        "Column": 39,
-                        "Index": 623
-                      },
-                      "End": {
-                        "Line": 27,
-                        "Column": 42,
-                        "Index": 626
-                      }
-                    },
-                    "Value": null,
-                    "Start": {
-                      "Line": 27,
-                      "Column": 39,
-                      "Index": 623
-                    },
-                    "End": {
-                      "Line": 27,
-                      "Column": 42,
-                      "Index": 626
-                    }
-                  }
-                ],
+              "Result": {
+                "Name": "i32",
                 "Start": {
                   "Line": 27,
                   "Column": 39,
@@ -1187,7 +1147,6 @@
       }
     }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }

@@ -1,0 +1,3 @@
+fn testAnon() {
+    let x := .{ .id = 0, .name = "Anon" };
+}

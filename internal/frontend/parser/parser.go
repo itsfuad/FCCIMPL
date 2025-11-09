@@ -24,67 +24,17 @@ type Parser struct {
 	filepath    string
 }
 
-// parseForStmt: for init; cond; post { }
-func (p *Parser) parseForStmt() *ast.ForStmt {
-	start := p.peek().Start
-	p.expect(lexer.FOR_TOKEN)
-
-	var init, cond, post ast.Expression
-
-	// init
-	if !p.check(lexer.SEMICOLON_TOKEN) {
-		init = p.parseExpr()
-	}
-	p.expect(lexer.SEMICOLON_TOKEN)
-
-	// cond
-	if !p.check(lexer.SEMICOLON_TOKEN) {
-		cond = p.parseExpr()
-	}
-	p.expect(lexer.SEMICOLON_TOKEN)
-
-	// post
-	if !p.check(lexer.OPEN_CURLY) {
-		post = p.parseExpr()
-	}
-
-	body := p.parseBlock()
-
-	return &ast.ForStmt{
-		Init:     init,
-		Cond:     cond,
-		Post:     post,
-		Body:     body,
-		Location: p.makeLocation(start),
-	}
-}
-
-// parseWhileStmt: while cond { }
-func (p *Parser) parseWhileStmt() *ast.WhileStmt {
-	start := p.peek().Start
-	p.expect(lexer.WHILE_TOKEN)
-
-	cond := p.parseExpr()
-	body := p.parseBlock()
-
-	return &ast.WhileStmt{
-		Cond:     cond,
-		Body:     body,
-		Location: p.makeLocation(start),
-	}
-}
-
 // Parse is the internal parsing function called by the pipeline.
 // It takes tokens and diagnostics as parameters to avoid import cycles.
 func Parse(tokens []lexer.Token, filepath string, diag *diagnostics.DiagnosticBag) *ast.Module {
-	state := &Parser{
+	parser := &Parser{
 		tokens:      tokens,
 		current:     0,
 		diagnostics: diag,
 		filepath:    filepath,
 	}
 
-	return state.parseModule()
+	return parser.parseModule()
 }
 
 // parseModule parses the entire module (all top-level declarations)
@@ -145,14 +95,16 @@ func (p *Parser) parseTopLevel() ast.Node {
 // parseImport: import "path";
 func (p *Parser) parseImport() *ast.ImportStmt {
 	start := p.peek().Start
+
 	p.expect(lexer.IMPORT_TOKEN)
 
-	if !p.check(lexer.STRING_TOKEN) {
+	if !p.match(lexer.STRING_TOKEN) {
 		p.error("expected string literal after 'import'")
 		return nil
 	}
 
 	pathTok := p.advance()
+
 	path := &ast.BasicLit{
 		Kind:     ast.STRING,
 		Value:    pathTok.Value,
@@ -181,10 +133,6 @@ func (p *Parser) parseStmt() ast.Node {
 		return p.parseReturnStmt()
 	case lexer.IF_TOKEN:
 		return p.parseIfStmt()
-	case lexer.FOR_TOKEN:
-		return p.parseForStmt()
-	case lexer.WHILE_TOKEN:
-		return p.parseWhileStmt()
 	case lexer.OPEN_CURLY:
 		return p.parseBlock()
 	default:
@@ -200,9 +148,10 @@ func (p *Parser) parseReturnStmt() *ast.ReturnStmt {
 	var result ast.Expression
 	var isError bool
 
-	if !p.check(lexer.SEMICOLON_TOKEN) {
+	if !p.match(lexer.SEMICOLON_TOKEN) {
 		result = p.parseExpr()
 		if p.match(lexer.NOT_TOKEN) {
+			p.advance()
 			isError = true
 		}
 	}
@@ -218,15 +167,16 @@ func (p *Parser) parseReturnStmt() *ast.ReturnStmt {
 
 // parseIfStmt: if cond { } else { }
 func (p *Parser) parseIfStmt() *ast.IfStmt {
-	start := p.peek().Start
-	p.expect(lexer.IF_TOKEN)
+
+	start := p.advance().Start
 
 	cond := p.parseExpr()
 	body := p.parseBlock()
 
 	var elseNode ast.Node
 	if p.match(lexer.ELSE_TOKEN) {
-		if p.check(lexer.IF_TOKEN) {
+		p.advance()
+		if p.match(lexer.IF_TOKEN) {
 			elseNode = p.parseIfStmt()
 		} else {
 			elseNode = p.parseBlock()
@@ -248,6 +198,7 @@ func (p *Parser) parseExprOrAssign() ast.Node {
 
 	// Check for assignment
 	if p.match(lexer.EQUALS_TOKEN) {
+		p.advance()
 		rhs := p.parseExpr()
 		p.expect(lexer.SEMICOLON_TOKEN)
 
@@ -275,7 +226,7 @@ func (p *Parser) parseLogicalOr() ast.Expression {
 	left := p.parseLogicalAnd()
 
 	for p.match(lexer.OR_TOKEN) {
-		op := p.previous()
+		op := p.advance()
 		right := p.parseLogicalAnd()
 		left = &ast.BinaryExpr{
 			X:  left,
@@ -291,7 +242,7 @@ func (p *Parser) parseLogicalAnd() ast.Expression {
 	left := p.parseEquality()
 
 	for p.match(lexer.AND_TOKEN) {
-		op := p.previous()
+		op := p.advance()
 		right := p.parseEquality()
 		left = &ast.BinaryExpr{
 			X:  left,
@@ -307,7 +258,7 @@ func (p *Parser) parseEquality() ast.Expression {
 	left := p.parseComparison()
 
 	for p.match(lexer.DOUBLE_EQUAL_TOKEN, lexer.NOT_EQUAL_TOKEN) {
-		op := p.previous()
+		op := p.advance()
 		right := p.parseComparison()
 		left = &ast.BinaryExpr{
 			X:  left,
@@ -323,7 +274,7 @@ func (p *Parser) parseComparison() ast.Expression {
 	left := p.parseAdditive()
 
 	for p.match(lexer.LESS_TOKEN, lexer.LESS_EQUAL_TOKEN, lexer.GREATER_TOKEN, lexer.GREATER_EQUAL_TOKEN) {
-		op := p.previous()
+		op := p.advance()
 		right := p.parseAdditive()
 		left = &ast.BinaryExpr{
 			X:  left,
@@ -339,7 +290,7 @@ func (p *Parser) parseAdditive() ast.Expression {
 	left := p.parseMultiplicative()
 
 	for p.match(lexer.PLUS_TOKEN, lexer.MINUS_TOKEN) {
-		op := p.previous()
+		op := p.advance()
 		right := p.parseMultiplicative()
 		left = &ast.BinaryExpr{
 			X:  left,
@@ -355,7 +306,7 @@ func (p *Parser) parseMultiplicative() ast.Expression {
 	left := p.parseUnary()
 
 	for p.match(lexer.MUL_TOKEN, lexer.DIV_TOKEN, lexer.MOD_TOKEN) {
-		op := p.previous()
+		op := p.advance()
 		right := p.parseUnary()
 		left = &ast.BinaryExpr{
 			X:  left,
@@ -369,7 +320,7 @@ func (p *Parser) parseMultiplicative() ast.Expression {
 
 func (p *Parser) parseUnary() ast.Expression {
 	if p.match(lexer.NOT_TOKEN, lexer.MINUS_TOKEN) {
-		op := p.previous()
+		op := p.advance()
 		expr := p.parseUnary()
 		return &ast.UnaryExpr{
 			Op: op,
@@ -383,7 +334,7 @@ func (p *Parser) parseUnary() ast.Expression {
 func (p *Parser) parsePostfix() ast.Expression {
 	expr := p.parsePrimary()
 
-	for {
+	for !p.isAtEnd() {
 		if p.match(lexer.OPEN_PAREN) {
 			expr = p.parseCallExpr(expr)
 		} else if p.match(lexer.OPEN_BRACKET) {
@@ -392,7 +343,7 @@ func (p *Parser) parsePostfix() ast.Expression {
 			expr = p.parseSelectorExpr(expr)
 		} else if p.match(lexer.SCOPE_TOKEN) {
 			expr = p.parseScopeResolutionExpr(expr)
-		} else if p.check(lexer.OPEN_CURLY) {
+		} else if p.match(lexer.OPEN_CURLY) {
 			if !p.isCompositeLiteral() {
 				break
 			}
@@ -406,10 +357,12 @@ func (p *Parser) parsePostfix() ast.Expression {
 }
 
 func (p *Parser) parseCallExpr(fun ast.Expression) *ast.CallExpr {
+	p.advance() // consume '('
 	args := []ast.Expression{}
-	if !p.check(lexer.CLOSE_PAREN) {
+	if !p.match(lexer.CLOSE_PAREN) {
 		args = append(args, p.parseExpr())
 		for p.match(lexer.COMMA_TOKEN) {
+			p.advance()
 			args = append(args, p.parseExpr())
 		}
 	}
@@ -422,6 +375,7 @@ func (p *Parser) parseCallExpr(fun ast.Expression) *ast.CallExpr {
 }
 
 func (p *Parser) parseIndexExpr(x ast.Expression) *ast.IndexExpr {
+	p.advance() // consume '['
 	index := p.parseExpr()
 	p.expect(lexer.CLOSE_BRACKET)
 
@@ -432,6 +386,7 @@ func (p *Parser) parseIndexExpr(x ast.Expression) *ast.IndexExpr {
 }
 
 func (p *Parser) parseSelectorExpr(x ast.Expression) *ast.SelectorExpr {
+	p.advance() // consume '.'
 	sel := p.parseIdentifier()
 	return &ast.SelectorExpr{
 		X:   x,
@@ -440,6 +395,7 @@ func (p *Parser) parseSelectorExpr(x ast.Expression) *ast.SelectorExpr {
 }
 
 func (p *Parser) parseScopeResolutionExpr(x ast.Expression) *ast.ScopeResolutionExpr {
+	p.advance() // consume '::'
 	member := p.parseIdentifier()
 	return &ast.ScopeResolutionExpr{
 		X:   x,
@@ -448,15 +404,16 @@ func (p *Parser) parseScopeResolutionExpr(x ast.Expression) *ast.ScopeResolution
 }
 
 func (p *Parser) isCompositeLiteral() bool {
+
 	savedPos := p.current
 	p.advance() // consume {
 
 	isCompositeLit := false
-	if p.check(lexer.DOT_TOKEN) || p.check(lexer.CLOSE_CURLY) {
+	if p.match(lexer.DOT_TOKEN, lexer.CLOSE_CURLY) {
 		isCompositeLit = true
-	} else if p.check(lexer.IDENTIFIER_TOKEN) || p.check(lexer.NUMBER_TOKEN) || p.check(lexer.STRING_TOKEN) {
+	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
 		p.advance()
-		if p.check(lexer.FAT_ARROW_TOKEN) {
+		if p.match(lexer.FAT_ARROW_TOKEN) {
 			isCompositeLit = true
 		}
 	}
@@ -493,28 +450,26 @@ func (p *Parser) parseCompositeLiteralExpr(expr ast.Expression) *ast.CompositeLi
 func (p *Parser) parseCompositeLiteralElements(startPos source.Position) []ast.Expression {
 	elts := []ast.Expression{}
 
-	if p.check(lexer.CLOSE_CURLY) {
+	if p.match(lexer.CLOSE_CURLY) {
 		return elts
 	}
 
-	for {
+	for !(p.match(lexer.CLOSE_CURLY) || p.isAtEnd()) {
 		elt := p.parseCompositeLiteralElement(startPos)
 		if elt != nil {
 			elts = append(elts, elt)
 		}
 
-		if !p.match(lexer.COMMA_TOKEN) {
+		if p.match(lexer.CLOSE_CURLY) {
 			break
 		}
 
-		if p.checkTrailingComma(lexer.CLOSE_CURLY, "composite literal") {
+		if p.checkTrailing(lexer.COMMA_TOKEN, lexer.CLOSE_CURLY, "composite literal") {
+			p.advance() // skip the token
 			break
 		}
 
-		// Safety: if we're at closing brace, break to prevent infinite loop
-		if p.check(lexer.CLOSE_CURLY) {
-			break
-		}
+		p.expect(lexer.COMMA_TOKEN)
 	}
 
 	return elts
@@ -522,6 +477,7 @@ func (p *Parser) parseCompositeLiteralElements(startPos source.Position) []ast.E
 
 func (p *Parser) parseCompositeLiteralElement(startPos source.Position) ast.Expression {
 	if p.match(lexer.DOT_TOKEN) {
+		p.advance()
 		name := p.parseIdentifier()
 		p.expect(lexer.EQUALS_TOKEN)
 		val := p.parseExpr()
@@ -534,6 +490,7 @@ func (p *Parser) parseCompositeLiteralElement(startPos source.Position) ast.Expr
 
 	key := p.parseExpr()
 	if p.match(lexer.FAT_ARROW_TOKEN) {
+		p.advance()
 		val := p.parseExpr()
 		return &ast.KeyValueExpr{
 			Key:      key,
@@ -610,17 +567,40 @@ func (p *Parser) parsePrimary() ast.Expression {
 		p.advance() // consume 'fn'
 
 		// Must have parameters for anonymous function
-		if !p.check(lexer.OPEN_PAREN) {
+		if !p.match(lexer.OPEN_PAREN) {
 			p.error("anonymous function must have parameters")
 			return nil
 		}
 
-		p.advance() // consume '('
+		// parseFunctionParams will consume the '(' itself
 		params := p.parseFunctionParams()
 		p.expect(lexer.CLOSE_PAREN)
 
 		// Parse as function literal
 		return p.parseFuncLit(start, params)
+
+	case lexer.DOT_TOKEN:
+		// Anonymous struct literal: .{ .field = value, ... }
+		// This is Zig-style syntax for struct literals without explicit type
+		start := p.peek().Start
+		p.advance() // consume '.'
+
+		if !p.match(lexer.OPEN_CURLY) {
+			p.error("expected '{' after '.' for anonymous struct literal")
+			return nil
+		}
+
+		p.advance() // consume '{'
+		startPos := start
+		elems := p.parseCompositeLiteralElements(startPos)
+		p.expect(lexer.CLOSE_CURLY)
+
+		// Create a composite literal with nil type (anonymous)
+		return &ast.CompositeLit{
+			Type:     nil, // Anonymous struct literal has no explicit type
+			Elts:     elems,
+			Location: p.makeLocation(startPos),
+		}
 
 	default:
 		p.error(fmt.Sprintf("unexpected token in expression: %s", tok.Value))
@@ -634,13 +614,14 @@ func (p *Parser) parseArrayLiteral() *ast.CompositeLit {
 	p.expect(lexer.OPEN_BRACKET)
 
 	elems := []ast.Expression{}
-	if !p.check(lexer.CLOSE_BRACKET) {
+	if !p.match(lexer.CLOSE_BRACKET) {
 		elem := p.parseExpr()
 		if elem != nil {
 			elems = append(elems, elem)
 		}
 		for p.match(lexer.COMMA_TOKEN) {
-			if p.check(lexer.CLOSE_BRACKET) {
+			p.advance()
+			if p.match(lexer.CLOSE_BRACKET) {
 				break
 			}
 			elem := p.parseExpr()
@@ -659,7 +640,7 @@ func (p *Parser) parseArrayLiteral() *ast.CompositeLit {
 }
 
 func (p *Parser) parseIdentifier() *ast.IdentifierExpr {
-	if !p.check(lexer.IDENTIFIER_TOKEN) {
+	if !p.match(lexer.IDENTIFIER_TOKEN) {
 		p.error(fmt.Sprintf("expected identifier, got %s", p.peek().Value))
 		return &ast.IdentifierExpr{Name: "<error>"}
 	}
@@ -691,6 +672,13 @@ func (p *Parser) previous() lexer.Token {
 	return p.tokens[p.current-1]
 }
 
+func (p *Parser) next() lexer.Token {
+	if p.current+1 >= len(p.tokens) {
+		return p.tokens[len(p.tokens)-1]
+	}
+	return p.tokens[p.current+1]
+}
+
 func (p *Parser) advance() lexer.Token {
 	if !p.isAtEnd() {
 		p.current++
@@ -698,17 +686,9 @@ func (p *Parser) advance() lexer.Token {
 	return p.previous()
 }
 
-func (p *Parser) check(kind lexer.TOKEN) bool {
-	if p.isAtEnd() {
-		return false
-	}
-	return p.peek().Kind == kind
-}
-
 func (p *Parser) match(kinds ...lexer.TOKEN) bool {
 	for _, kind := range kinds {
-		if p.check(kind) {
-			p.advance()
+		if p.peek().Kind == kind {
 			return true
 		}
 	}
@@ -716,23 +696,28 @@ func (p *Parser) match(kinds ...lexer.TOKEN) bool {
 }
 
 func (p *Parser) expect(kind lexer.TOKEN) lexer.Token {
-	if p.check(kind) {
+	return p.expectError(kind, fmt.Sprintf("unexpected token %v, expected %s", p.peek().Value, kind))
+}
+
+func (p *Parser) expectError(kind lexer.TOKEN, msg string) lexer.Token {
+
+	if p.match(kind) {
 		return p.advance()
 	}
 
 	if kind == lexer.SEMICOLON_TOKEN {
 		tok := p.peek()
 		p.diagnostics.Add(
-			diagnostics.NewError("expected ';' at end of statement").
+			diagnostics.NewError(fmt.Sprintf("expected ';' at end of statement, got %s", tok.Value)).
 				WithCode(diagnostics.ErrUnterminatedExpr).
 				WithPrimaryLabel(p.filepath, source.NewLocation(&tok.Start, &tok.End), "missing semicolon").
-				WithHelp("Every statement must end with a semicolon"),
+				WithNote("Every statement must end with a semicolon"),
 		)
 		return p.peek()
 	}
 
-	p.error(fmt.Sprintf("expected %v but got %s", kind, p.peek().Value))
-	return p.peek()
+	p.error(msg)
+	return p.advance()
 }
 
 // error reports a parsing error to the diagnostics
@@ -746,7 +731,7 @@ func (p *Parser) error(msg string) {
 	)
 }
 
-// checkTrailingComma checks if the current position is at a closing delimiter
+// checkTrailing checks if the current position is at a closing delimiter
 // after a comma was just consumed, and emits an info diagnostic if so.
 // This provides a consistent message across all composite structures.
 //
@@ -757,17 +742,18 @@ func (p *Parser) error(msg string) {
 //   - contextName: Name of the context for the diagnostic message (e.g., "struct literal", "map literal")
 //
 // Returns true if we're at the closing delimiter (indicating a trailing comma was found).
-func (p *Parser) checkTrailingComma(closingToken lexer.TOKEN, contextName string) bool {
-	if p.check(closingToken) {
+func (p *Parser) checkTrailing(target, closingToken lexer.TOKEN, contextName string) bool {
+
+	if p.match(target) && p.next().Kind == closingToken {
 		// We just consumed a comma and we're at the closing delimiter
 		// This means there was a trailing comma
-		prevToken := p.previous()
-		loc := source.NewLocation(&prevToken.Start, &prevToken.End)
+		token := p.peek()
+		loc := source.NewLocation(&token.Start, &token.End)
 		p.diagnostics.Add(
-			diagnostics.NewInfo(fmt.Sprintf("trailing comma in %s", contextName)).
+			diagnostics.NewInfo(fmt.Sprintf("trailing %s in %s", target, contextName)).
 				WithCode(diagnostics.InfoTrailingComma).
 				WithPrimaryLabel(p.filepath, loc, "remove this trailing comma").
-				WithNote("Trailing commas are allowed but not required in Ferret"),
+				WithNote(fmt.Sprintf("Trailing %s are allowed but excluding it keeps code clean ans consistent", target)),
 		)
 		return true
 	}

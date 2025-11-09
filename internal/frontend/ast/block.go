@@ -94,9 +94,6 @@ type CaseClause struct {
 	source.Location
 }
 
-func (c *CaseClause) INode()                {} // Implements Node interface
-func (c *CaseClause) Loc() *source.Location { return &c.Location }
-
 // DeferStmt represents a defer statement
 type DeferStmt struct {
 	Call Expression // the call to defer (typically a CallExpr)

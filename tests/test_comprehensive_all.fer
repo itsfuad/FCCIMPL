@@ -1,0 +1,300 @@
+// Comprehensive test file combining all Ferret language features
+
+// ============ Constants ============
+const PI := 3.14159;
+const MAX_SIZE: i32 = 100;
+const APP_NAME := "Ferret Compiler";
+
+// ============ Variables ============
+let counter := 0;
+let name: str = "Test";
+let uninit: f64;
+
+// ============ Enums ============
+type Color enum {
+    Red,
+    Green,
+    Blue,
+};
+
+type Status enum {
+    Active,
+    Inactive,
+    Pending,
+};
+
+// ============ Structs ============
+type Point struct {
+    .x: f64,
+    .y: f64,
+};
+
+type Rectangle struct {
+    .topLeft: Point,
+    .bottomRight: Point,
+    .color: Color,
+};
+
+type Person struct {
+    .name: str,
+    .age: i32,
+    .email: str,
+};
+
+// ============ Interfaces ============
+type Shape interface {
+    area() -> f64,
+    perimeter() -> f64,
+};
+
+type Drawable interface {
+    draw() -> str,
+    move(dx: f64, dy: f64) -> bool,
+};
+
+// ============ Named Functions ============
+fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
+fn multiply(x: f64, y: f64) -> f64 {
+    return x * y;
+}
+
+fn greet(name: str) {
+    let message := "Hello, " + name;
+}
+
+fn noParams() -> i32 {
+    return 42;
+}
+
+// ============ Methods ============
+fn (p: Point) distance() -> f64 {
+    return p.x * p.x + p.y * p.y;
+}
+
+fn (p: Point) translate(dx: f64, dy: f64) -> Point {
+    return Point {
+        .x = p.x + dx,
+        .y = p.y + dy,
+    };
+}
+
+fn (r: Rectangle) area() -> f64 {
+    let width := r.bottomRight.x - r.topLeft.x;
+    let height := r.bottomRight.y - r.topLeft.y;
+    return width * height;
+}
+
+fn (p: Person) isAdult() -> bool {
+    return p.age >= 18;
+}
+
+// ============ If-Else Statements ============
+fn checkAge(age: i32) -> str {
+    if age < 13 {
+        return "child";
+    } else if age < 18 {
+        return "teenager";
+    } else if age < 65 {
+        return "adult";
+    } else {
+        return "senior";
+    }
+}
+
+fn abs(x: i32) -> i32 {
+    if x < 0 {
+        return -x;
+    } else {
+        return x;
+    }
+}
+
+fn max(a: i32, b: i32) -> i32 {
+    if a > b {
+        return a;
+    }
+    return b;
+}
+
+// ============ Anonymous Functions ============
+let square := fn (n: i32) -> i32 {
+    return n * n;
+};
+
+let cube := fn (n: i32) -> i32 {
+    return n * n * n;
+};
+
+let isEven := fn (n: i32) -> bool {
+    return n % 2 == 0;
+};
+
+// ============ Composite Literals ============
+let origin := Point {
+    .x = 0.0,
+    .y = 0.0,
+};
+
+let rect := Rectangle {
+    .topLeft = Point { .x = 0.0, .y = 10.0 },
+    .bottomRight = Point { .x = 10.0, .y = 0.0 },
+    .color = Color.Blue,
+};
+
+let john := Person {
+    .name = "John Doe",
+    .age = 30,
+    .email = "john@example.com",
+};
+
+// ============ Arrays ============
+let numbers := [1, 2, 3, 4, 5];
+let names := ["Alice", "Bob", "Charlie"];
+let points := [
+    Point { .x = 0.0, .y = 0.0 },
+    Point { .x = 1.0, .y = 1.0 },
+];
+
+// ============ Maps and Complex Expressions ============
+fn testMapsAndCollections() {
+    let ages := map[str]i32 {
+        "Alice" => 25,
+        "Bob" => 30,
+        "Charlie" => 35,
+    };
+
+    let coords := map[str]Point {
+        "origin" => Point { .x = 0.0, .y = 0.0 },
+        "unit" => Point { .x = 1.0, .y = 1.0 },
+    };
+    
+    return ages;
+}
+
+// ============ Complex Function with Multiple Features ============
+fn processData(data: map[str]i32, threshold: i32) -> map[str]i32 {
+    let result := map[str]i32 {};
+    
+    let filter := fn (value: i32) -> bool {
+        return value > threshold;
+    };
+    
+    if threshold < 0 {
+        return result;
+    } else if threshold > 100 {
+        return data;
+    }
+    
+    return result;
+}
+
+// ============ Assignment Statements ============
+fn testAssignments() {
+    let x := 10;
+    x = 20;
+    x = x + 5;
+    
+    let person := Person {
+        .name = "Test",
+        .age = 25,
+        .email = "test@test.com",
+    };
+    
+    person.age = 26;
+    person.name = "Updated";
+}
+
+// ============ Nested Structures ============
+type Company struct {
+    .name: str,
+    .employees: map[str]Person,
+    .location: Point,
+};
+
+fn createCompany(name: str) -> Company {
+    let comp := Company {
+        .name = name,
+        .employees = map[str]Person {},
+        .location = Point { .x = 0.0, .y = 0.0 },
+    };
+    
+    return comp;
+}
+
+// ============ Multiple Variable Declarations ============
+fn multipleDecls() {
+    let a := 1, b: i32 = 2, c: f64;
+    const X := 10, Y := 20, Z := 30;
+}
+
+// ============ Complex Expressions ============
+fn complexMath(a: i32, b: i32, c: i32) -> i32 {
+    let result := (a + b) * c - (a - b) / 2;
+    let comparison := a > b && b < c || a == c;
+    
+    if comparison {
+        result = result * 2;
+    }
+    
+    return result;
+}
+
+// ============ Method Chaining Potential ============
+fn chainedOperations() {
+    let p1 := Point { .x = 1.0, .y = 2.0 };
+    let p2 := p1.translate(5.0, 5.0);
+    let dist := p2.distance();
+}
+
+// ============ Edge Cases ============
+fn emptyFunction() {
+}
+
+fn singleStatement() -> i32 {
+    return 1;
+}
+
+let emptyArray := [];
+let emptyMap := map[str]i32 {};
+
+// ============ Deeply Nested Structures ============
+type Team struct {
+    .name: str,
+    .members: map[str]Person,
+    .location: Point,
+};
+
+type Department struct {
+    .name: str,
+    .teams: map[str]Team,
+    .budget: i32,
+};
+
+fn createDepartment() -> Department {
+    let backendTeam := Team {
+        .name = "Backend",
+        .members = map[str]Person {},
+        .location = Point { .x = 0.0, .y = 0.0 },
+    };
+    
+    let teams := map[str]Team {
+        "Backend" => backendTeam,
+    };
+    
+    let dept := Department {
+        .name = "Engineering",
+        .teams = teams,
+        .budget = 1000000,
+    };
+    
+    return dept;
+}
+
+// ============ Anonymous Struct Literals ============
+let annonymousStructNoValue : struct { .id: i32, .name: str };
+let annonymousStruct := .{ .id = 0, .name = "Anon" };
+
+//let annonymousStruct := .{ .id = 0, .name = "Anon" };

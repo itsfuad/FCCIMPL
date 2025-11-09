@@ -9,41 +9,11 @@ import (
 
 // parseVarDecl: let x := 10; or let x: i32 = 10;
 func (p *Parser) parseVarDecl() *ast.VarDecl {
-	start := p.peek().Start
-	p.expect(lexer.LET_TOKEN)
-
-	var decls []ast.DeclLists
-
-	// can be let a : <type> = <expr>; or let a := <expr>; or let a: <type>;
-	// or list of variables, let a : i32, b := 10, c: str;
-
-	for !p.isAtEnd() {
-		var decl ast.DeclLists
-
-		decl.Name = p.parseIdentifier()
-
-		if p.match(lexer.COLON_TOKEN) {
-			decl.Type = p.parseType()
-			p.expect(lexer.EQUALS_TOKEN)
-			decl.Value = p.parseExpr()
-		} else if p.match(lexer.WALRUS_TOKEN) {
-			decl.Value = p.parseExpr()
-		} else {
-			p.error("expected ':' or ':=' in variable declaration")
-		}
-
-		decls = append(decls, decl)
-
-		if !p.match(lexer.COMMA_TOKEN) {
-			break
-		}
-	}
-
-	p.expect(lexer.SEMICOLON_TOKEN)
-
+	start := p.advance().Start
+	decls, location := p.parseVariableDeclaration(start, false)
 	return &ast.VarDecl{
 		Decls:    decls,
-		Location: p.makeLocation(start),
+		Location: location,
 	}
 }
 
@@ -52,18 +22,39 @@ func (p *Parser) parseConstDecl() *ast.ConstDecl {
 	start := p.peek().Start
 	p.expect(lexer.CONST_TOKEN)
 
-	// can be const a := <expr>; or const a: <type> = <expr>; or list of constants, const a := 10, b: str = "hello";
-	// must have initializers
+	decls, location := p.parseVariableDeclaration(start, true)
+
+	return &ast.ConstDecl{
+		Decls:    decls,
+		Location: location,
+	}
+}
+
+// parseVariableDeclaration: unified parser for let/const declarations
+// Returns the declarations and location
+func (p *Parser) parseVariableDeclaration(start source.Position, isConst bool) ([]ast.DeclLists, source.Location) {
 	var decls []ast.DeclLists
+
+	// can be let a : <type> = <expr>; or let a := <expr>; or let a: <type>;
+	// or list of variables, let a : i32, b := 10, c: str;
+	// for const, initializer is mandatory
+
 	for !p.isAtEnd() {
+
 		var decl ast.DeclLists
 
 		decl.Name = p.parseIdentifier()
 
 		if p.match(lexer.COLON_TOKEN) {
+			p.advance()
 			decl.Type = p.parseType()
-			if !p.check(lexer.EQUALS_TOKEN) {
-				//p.error("expected = after constant type")
+
+			// Check for initializer
+			if p.match(lexer.EQUALS_TOKEN) {
+				p.advance()
+				decl.Value = p.parseExpr()
+			} else if isConst {
+				// Constants MUST have an initializer
 				peek := p.peek()
 				p.diagnostics.Add(
 					diagnostics.NewError("expected = after constant type").
@@ -71,14 +62,27 @@ func (p *Parser) parseConstDecl() *ast.ConstDecl {
 						WithHelp("Constants must have an initializer").
 						WithPrimaryLabel(p.filepath, source.NewLocation(&peek.Start, &peek.End), "missing initializer for constant"),
 				)
-				return nil
+				// Continue parsing to gather more errors
 			}
-			p.expect(lexer.EQUALS_TOKEN)
-			decl.Value = p.parseExpr()
+			// For variables, no initializer is OK (decl.Value remains nil)
 		} else if p.match(lexer.WALRUS_TOKEN) {
+			p.advance()
 			decl.Value = p.parseExpr()
+		} else if p.match(lexer.EQUALS_TOKEN) {
+			// Allow the parsing but report an error
+			loc := p.makeLocation(p.advance().Start)
+			decl.Value = p.parseExpr()
+			p.diagnostics.Add(
+				diagnostics.NewError("expected ':=' for inferred symbols with values").
+					WithCode(diagnostics.ErrUnexpectedToken).
+					WithPrimaryLabel(p.filepath, &loc, "add a `:` before `=`"),
+			)
 		} else {
-			p.error("expected ':' or ':=' in constant declaration")
+			if isConst {
+				p.error("expected ':' or ':=' in constant declaration")
+			} else {
+				p.error("expected ':' or ':=' in variable declaration")
+			}
 		}
 
 		decls = append(decls, decl)
@@ -86,14 +90,12 @@ func (p *Parser) parseConstDecl() *ast.ConstDecl {
 		if !p.match(lexer.COMMA_TOKEN) {
 			break
 		}
+		p.advance()
 	}
 
 	p.expect(lexer.SEMICOLON_TOKEN)
 
-	return &ast.ConstDecl{
-		Decls:    decls,
-		Location: p.makeLocation(start),
-	}
+	return decls, p.makeLocation(start)
 }
 
 // parseTypeDecl: type Point struct { .x: i32 };
@@ -123,17 +125,16 @@ func (p *Parser) parseFuncDecl() ast.Node {
 	p.expect(lexer.FUNCTION_TOKEN)
 
 	// Lookahead to determine what kind of function this is
-	if p.check(lexer.OPEN_PAREN) {
+	if p.match(lexer.OPEN_PAREN) {
 		// Could be: fn (params) { body } -- anonymous function
 		// Or:       fn (receiver) methodName(params) { body } -- method
-		p.advance() // consume '('
 
 		params := p.parseFunctionParams()
 
 		p.expect(lexer.CLOSE_PAREN)
 
 		// If next token is identifier, it's a method
-		if p.check(lexer.IDENTIFIER_TOKEN) {
+		if p.match(lexer.IDENTIFIER_TOKEN) {
 			return p.parseMethodDecl(start, params)
 		}
 
@@ -148,49 +149,26 @@ func (p *Parser) parseFuncDecl() ast.Node {
 // parseFunctionParams parses function parameters: name: type, name: type, ...
 // Used for both regular parameters and method receivers
 func (p *Parser) parseFunctionParams() []*ast.Field {
+
+	p.advance() // consume '('
+
 	params := []*ast.Field{}
 
-	if p.check(lexer.CLOSE_PAREN) {
+	if p.match(lexer.CLOSE_PAREN) {
 		return params
 	}
 
-	for {
-		paramStart := p.peek().Start
-
-		// Safety check: if we're at closing paren or end of file, break
-		if p.check(lexer.CLOSE_PAREN) || p.isAtEnd() {
-			break
-		}
-
-		// Verify we have an identifier before parsing parameter
-		if !p.check(lexer.IDENTIFIER_TOKEN) {
-			p.error("expected parameter name")
-			p.advance() // Prevent infinite loop
-			// Try to recover by skipping to next comma or closing paren
-			for !p.check(lexer.COMMA_TOKEN) && !p.check(lexer.CLOSE_PAREN) && !p.isAtEnd() {
-				p.advance()
-			}
-			if p.match(lexer.COMMA_TOKEN) {
-				continue
-			}
-			break
-		}
+	for !(p.match(lexer.CLOSE_PAREN) || p.isAtEnd()) {
 
 		// Parse parameter name
 		name := p.parseIdentifier()
 
 		// Expect colon
-		if !p.check(lexer.COLON_TOKEN) {
+		if !p.match(lexer.COLON_TOKEN) {
 			p.error("expected ':' after parameter name")
-			// Try to recover
-			for !p.check(lexer.COMMA_TOKEN) && !p.check(lexer.CLOSE_PAREN) && !p.isAtEnd() {
-				p.advance()
-			}
-			if p.match(lexer.COMMA_TOKEN) {
-				continue
-			}
 			break
 		}
+
 		p.expect(lexer.COLON_TOKEN)
 
 		// Parse parameter type
@@ -199,21 +177,25 @@ func (p *Parser) parseFunctionParams() []*ast.Field {
 		param := &ast.Field{
 			Name:     name,
 			Type:     paramType,
-			Location: p.makeLocation(paramStart),
+			Location: *source.NewLocation(name.Start, paramType.Loc().End),
 		}
 
 		params = append(params, param)
 
-		// Check for comma
-		if !p.match(lexer.COMMA_TOKEN) {
+		if p.match(lexer.CLOSE_PAREN) {
 			break
 		}
 
-		// Check for trailing comma
-		if p.checkTrailingComma(lexer.CLOSE_PAREN, "function parameters") {
+		if p.checkTrailing(lexer.COMMA_TOKEN, lexer.CLOSE_PAREN, "function parameters") {
+			p.advance() // skip the token
 			break
 		}
+
+		p.expect(lexer.COMMA_TOKEN)
 	}
+
+	// Note: Don't consume CLOSE_PAREN here - let the caller handle it
+	// This keeps the behavior consistent with the early return case (line 157)
 
 	return params
 }
@@ -227,7 +209,7 @@ func (p *Parser) parseNamedFuncDecl(start source.Position) *ast.FuncDecl {
 
 	// Parse body
 	var body *ast.Block
-	if p.check(lexer.OPEN_CURLY) {
+	if p.match(lexer.OPEN_CURLY) {
 		body = p.parseBlock()
 	}
 
@@ -248,23 +230,16 @@ func (p *Parser) parseFuncLit(start source.Position, params []*ast.Field) *ast.F
 	}
 
 	// Parse return type if present
-	var results *ast.FieldList
+	var result ast.TypeNode
 	if p.match(lexer.ARROW_TOKEN) {
-		returnType := p.parseType()
-		results = &ast.FieldList{
-			List: []*ast.Field{
-				{
-					Type:     returnType,
-					Location: *returnType.Loc(),
-				},
-			},
-			Location: *returnType.Loc(),
-		}
+		p.advance()
+		typenode := p.parseType()
+		result = typenode
 	}
 
 	funcType := &ast.FuncType{
 		Params:   paramList,
-		Results:  results,
+		Result:   result,
 		Location: p.makeLocation(start),
 	}
 
@@ -321,16 +296,16 @@ func (p *Parser) parseMethodDecl(start source.Position, receivers []*ast.Field) 
 
 // parseBlock: { ... }
 func (p *Parser) parseBlock() *ast.Block {
-	start := p.peek().Start
-	p.expect(lexer.OPEN_CURLY)
+
+	start := p.expect(lexer.OPEN_CURLY).Start
 
 	nodes := []ast.Node{}
-	for !p.check(lexer.CLOSE_CURLY) && !p.isAtEnd() {
+	for !(p.match(lexer.CLOSE_CURLY) || p.isAtEnd()) {
 		node := p.parseStmt()
 		if node == nil {
 			// parseStmt() returned nil - this is an error case
 			// Advance to prevent infinite loop and try to recover
-			p.error("unexpected token in block, skipping")
+			p.error("unexpected token in block")
 			p.advance()
 			continue
 		}

@@ -23,19 +23,54 @@
 package context
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"sync"
+
 	"compiler/internal/diagnostics"
 	"compiler/internal/frontend/ast"
 	"compiler/internal/frontend/lexer"
+	"compiler/internal/frontend/parser"
 	"compiler/internal/semantics"
 	"compiler/internal/types"
-	"sync"
 )
+
+// CompilationPhase tracks the current phase of compilation
+// This is global state - not per-file. All files move through phases together.
+type CompilationPhase int
+
+const (
+	PhaseInitial      CompilationPhase = iota // Not started
+	PhaseLexing                               // Tokenizing source files
+	PhaseParsing                              // Building ASTs
+	PhaseCollecting                           // Building symbol tables (TODO)
+	PhaseResolving                            // Resolving symbols and imports (TODO)
+	PhaseTypeChecking                         // Validating types (TODO)
+	PhaseCodeGen                              // Generating output code (TODO)
+	PhaseComplete                             // Compilation finished
+)
+
+// DependencyGraph tracks the import relationships between files
+// This enables parallel compilation and incremental builds
+type DependencyGraph struct {
+	// Adjacency list: file path -> list of files it depends on
+	Dependencies map[string][]string
+
+	// Reverse dependencies: file path -> list of files that depend on it
+	Dependents map[string][]string
+
+	// Track which files have been processed
+	Processed map[string]bool
+
+	// Mutex for thread-safe graph operations during parallel discovery
+	mu sync.RWMutex
+}
 
 // CompilerContext is the central hub for all compilation state.
 // This is the ONLY place where global compiler state should live.
 //
 // Thread safety: All mutations should go through methods that can add locking.
-// Future: Add sync.RWMutex for parallel compilation support.
 type CompilerContext struct {
 	// Diagnostics - centralized error and warning collection
 	// All phases report here instead of storing their own errors
@@ -43,16 +78,20 @@ type CompilerContext struct {
 
 	// Files - maps absolute file path -> SourceFile
 	// This is the single registry of all files in the compilation
+	// Each SourceFile contains both syntax (AST) and semantics (Scope, Imports)
 	Files map[string]*SourceFile
 
-	// SemanticModels - maps file path -> semantic analysis results
-	// Populated during Collector/Resolver/TypeChecker phases
-	SemanticModels map[string]*SemanticModel
+	// DependencyGraph - tracks import relationships for parallel compilation
+	Graph *DependencyGraph
 
 	// UniverseScope - root scope containing built-in types and functions
 	// This is the parent of all module scopes
 	// Contains: i32, f64, bool, string, print, etc.
 	UniverseScope *semantics.SymbolTable
+
+	// CurrentPhase - global compilation phase tracker
+	// All files move through phases together for consistency
+	CurrentPhase CompilationPhase
 
 	// Options - compiler configuration
 	Options *CompilerOptions
@@ -60,23 +99,26 @@ type CompilerContext struct {
 	// FileOrder - tracks order files were added (for deterministic builds)
 	FileOrder []string
 
-	// Mutex for thread-safe operations (future: parallel compilation)
+	// Mutex for thread-safe operations during parallel compilation
 	mu sync.RWMutex
 }
 
-// SourceFile represents ONLY the lexical and syntactic state of a source file.
-// This is the output of Lexer (Phase 1) and Parser (Phase 2).
+// SourceFile represents a complete source file through all compilation phases.
+// This is the SINGLE structure per file - no separate semantic model.
 //
-// SEPARATION OF CONCERNS:
-// - SourceFile = Lexical + Syntactic (source, tokens, AST)
-// - SemanticModel = Semantic analysis (symbols, scopes, types)
+// PHASE PROGRESSION:
 //
-// This separation keeps phase boundaries clean and enables:
-// - Easy serialization of AST without semantic data
-// - Incremental re-parsing without losing semantic info
-// - Thread-safe parallel parsing
+//	Phase 0: Discovery - Path, Content populated
+//	Phase 1: Lexer    - Tokens populated
+//	Phase 2: Parser   - AST populated
+//	Phase 3: Collector- Scope populated (TODO)
+//	Phase 4: Resolver - Imports, ModuleName populated (TODO)
+//	Phase 5: TypeChecker - Types stored in Scope.Symbols (TODO)
+//
+// This matches the design of production compilers (Rustc, Zig, Go, TypeScript)
+// where semantic data is attached directly to the file, not stored separately.
 type SourceFile struct {
-	// Source metadata
+	// Phase 0: Discovery
 	Path    string // Absolute file path
 	Content string // Raw source code
 
@@ -84,40 +126,22 @@ type SourceFile struct {
 	Tokens []lexer.Token
 
 	// Phase 2: Parser output
-	AST *ast.Module // Pure syntax tree (no semantic annotations yet)
-}
+	AST *ast.Module // Pure syntax tree (no semantic annotations)
 
-// SemanticModel holds all semantic analysis results for a single file/module.
-// This is populated by Collector (Phase 3), Resolver (Phase 4), and TypeChecker (Phase 5).
-//
-// IMPORTANT: This is the semantic layer - completely separate from syntax.
-// The AST in SourceFile remains pure and immutable after parsing.
-//
-// AUTHORITATIVE DATA SOURCES:
-// - Scope (SymbolTable) is the SINGLE source of truth for all symbols in this module
-// - Symbol.Type is the SINGLE source of truth for type information
-// - No duplication between Scope, AST, or side maps
-type SemanticModel struct {
-	// File reference
-	SourceFile *SourceFile
-
-	// Phase 3 & 4: Collector + Resolver output
-	// AUTHORITATIVE symbol table for this module
-	// Contains all declarations: variables, functions, types, structs, etc.
-	// Parent: UniverseScope (built-ins)
+	// Phase 3: Collector output (TODO: implement)
+	// Symbol table for this module's declarations
+	// Parent scope is CompilerContext.UniverseScope
 	Scope *semantics.SymbolTable
 
-	// Phase 4: Resolver output
+	// Phase 4: Resolver output (TODO: implement)
 	// Resolved import statements
 	Imports []*ImportInfo
+	// Module name derived from file path or explicit module declaration
+	ModuleName string
 
-	// Module metadata
-	ModuleName string // Derived from file path or module declaration
-
-	// Phase completion flags
-	Collected bool // Has symbol collection completed?
-	Resolved  bool // Has symbol resolution completed?
-	Checked   bool // Has type checking completed?
+	// Phase 5: Type Checker output (TODO: implement)
+	// Types are stored directly in Scope.Symbols[name].Type
+	// No separate type map needed
 }
 
 // ImportInfo tracks a single import statement and its resolution.
@@ -156,12 +180,17 @@ func New(options *CompilerOptions) *CompilerContext {
 	registerBuiltins(universeScope)
 
 	return &CompilerContext{
-		Diagnostics:    diagnostics.NewDiagnosticBag(""),
-		Files:          make(map[string]*SourceFile),
-		SemanticModels: make(map[string]*SemanticModel),
-		UniverseScope:  universeScope,
-		Options:        options,
-		FileOrder:      make([]string, 0),
+		Diagnostics:   diagnostics.NewDiagnosticBag(""),
+		Files:         make(map[string]*SourceFile),
+		UniverseScope: universeScope,
+		Graph: &DependencyGraph{
+			Dependencies: make(map[string][]string),
+			Dependents:   make(map[string][]string),
+			Processed:    make(map[string]bool),
+		},
+		Options:      options,
+		FileOrder:    make([]string, 0),
+		CurrentPhase: PhaseInitial,
 	}
 }
 
@@ -242,34 +271,21 @@ func (ctx *CompilerContext) GetAllFiles() []*SourceFile {
 }
 
 // ============================================================================
-// SEMANTIC MODEL MANAGEMENT
+// SEMANTIC INITIALIZATION
 // ============================================================================
 
-// GetOrCreateSemanticModel retrieves or creates a semantic model for a file.
-// Called by Collector phase to initialize semantic analysis.
-func (ctx *CompilerContext) GetOrCreateSemanticModel(file *SourceFile) *SemanticModel {
+// InitializeSemantics initializes semantic fields for a SourceFile.
+// Call this when transitioning to Phase 3 (Collector).
+func (ctx *CompilerContext) InitializeSemantics(file *SourceFile) {
 	ctx.mu.Lock()
 	defer ctx.mu.Unlock()
 
-	if model, exists := ctx.SemanticModels[file.Path]; exists {
-		return model
+	if file.Scope == nil {
+		file.Scope = semantics.NewSymbolTable(ctx.UniverseScope)
 	}
-
-	model := &SemanticModel{
-		SourceFile: file,
-		// Scope will be created by Resolver with UniverseScope as parent
+	if file.Imports == nil {
+		file.Imports = make([]*ImportInfo, 0)
 	}
-
-	ctx.SemanticModels[file.Path] = model
-	return model
-}
-
-// GetSemanticModel retrieves a semantic model by file path.
-// Returns nil if no semantic analysis has been done for this file yet.
-func (ctx *CompilerContext) GetSemanticModel(filePath string) *SemanticModel {
-	ctx.mu.RLock()
-	defer ctx.mu.RUnlock()
-	return ctx.SemanticModels[filePath]
 }
 
 // ============================================================================
@@ -285,4 +301,410 @@ func (ctx *CompilerContext) HasErrors() bool {
 // Typically called at the end of compilation.
 func (ctx *CompilerContext) EmitDiagnostics() {
 	ctx.Diagnostics.EmitAll()
+}
+
+// ============================================================================
+// COMPILATION PIPELINE
+// ============================================================================
+
+// Compile runs the complete compilation pipeline on the entry point file.
+//
+// CURRENT IMPLEMENTATION (Phases 0-2):
+//
+//	Phase 0: File Discovery - Build dependency graph (parallel)
+//	Phase 1: Lexer - Tokenize all files (parallel)
+//	Phase 2: Parser - Build ASTs (parallel)
+//
+// FUTURE PHASES (to be implemented):
+//
+//	Phase 3: Collector - Build symbol tables
+//	Phase 4: Resolver - Resolve all symbols and imports
+//	Phase 5: Type Checker - Validate types and expressions
+//	Phase 6: Code Generator - Emit target code
+//
+// All phases operate on the CompilerContext state and report diagnostics
+// through ctx.Diagnostics. Returns error only for fatal compilation failures.
+func (ctx *CompilerContext) Compile(entryPoint string) error {
+	if ctx.Options.Debug {
+		fmt.Println("╔════════════════════════════════════════╗")
+		fmt.Println("║    FERRET COMPILER - BUILD PIPELINE    ║")
+		fmt.Println("╚════════════════════════════════════════╝")
+	}
+
+	// Phase 0: File Discovery
+	// Recursively discover all source files by following import statements
+	// Builds dependency graph for parallel compilation
+	if err := ctx.BuildDependencyGraph(entryPoint); err != nil {
+		return fmt.Errorf("file discovery failed: %w", err)
+	}
+
+	// Phase 1 & 2: Lex + Parse (Combined for efficiency)
+	// Tokenize and parse all discovered files in parallel
+	if err := ctx.RunLexAndParsePhase(); err != nil {
+		return fmt.Errorf("lex/parse failed: %w", err)
+	}
+
+	// TODO: Phase 3 - Collector
+	// collector.Run(ctx)
+	// Walks ASTs and builds symbol tables for each module
+
+	// TODO: Phase 4 - Resolver
+	// resolver.Run(ctx)
+	// Resolves all symbol references and import dependencies
+
+	// TODO: Phase 5 - Type Checker
+	// typechecker.Run(ctx)
+	// Validates type correctness of all expressions
+
+	// TODO: Phase 6 - Code Generator
+	// codegen.Run(ctx)
+	// Emits target code (bytecode, LLVM IR, etc.)
+
+	// Check for compilation errors
+	if ctx.HasErrors() {
+		return fmt.Errorf("compilation failed with errors")
+	}
+
+	return nil
+}
+
+// BuildDependencyGraph discovers all source files starting from entry point
+// Recursively follows import statements and builds the dependency graph
+// Uses breadth-first traversal with concurrent file processing
+func (ctx *CompilerContext) BuildDependencyGraph(entryPoint string) error {
+	if ctx.Options.Debug {
+		fmt.Printf("\n[Phase 0] File Discovery (Parallel)\n")
+	}
+
+	absPath, err := filepath.Abs(entryPoint)
+	if err != nil {
+		return fmt.Errorf("failed to resolve path %s: %w", entryPoint, err)
+	}
+
+	// Queue for BFS traversal
+	toProcess := []string{absPath}
+	ctx.Graph.Processed[absPath] = true
+
+	for len(toProcess) > 0 {
+		// Process current batch in parallel
+		currentBatch := toProcess
+		toProcess = nil
+
+		var mu sync.Mutex // Protects toProcess slice
+		var wg sync.WaitGroup
+		errorChan := make(chan error, len(currentBatch))
+
+		for _, filePath := range currentBatch {
+			wg.Add(1)
+			go func(path string) {
+				defer wg.Done()
+
+				// Discover file and get its imports
+				imports, err := ctx.discoverFile(path)
+				if err != nil {
+					errorChan <- err
+					return
+				}
+
+				// Add unprocessed imports to next batch
+				mu.Lock()
+				for _, imp := range imports {
+					ctx.Graph.mu.Lock()
+					if !ctx.Graph.Processed[imp] {
+						ctx.Graph.Processed[imp] = true
+						toProcess = append(toProcess, imp)
+						ctx.Graph.mu.Unlock()
+					} else {
+						ctx.Graph.mu.Unlock()
+					}
+				}
+				mu.Unlock()
+			}(filePath)
+		}
+
+		wg.Wait()
+		close(errorChan)
+
+		// Check for errors
+		for err := range errorChan {
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if ctx.Options.Debug {
+		fmt.Printf("  Discovered %d file(s)\n", len(ctx.Files))
+		if len(ctx.Graph.Dependencies) > 0 {
+			fmt.Printf("  Dependency edges: %d\n", ctx.countDependencyEdges())
+		}
+	}
+
+	return nil
+}
+
+// countDependencyEdges counts total import edges in the graph
+func (ctx *CompilerContext) countDependencyEdges() int {
+	count := 0
+	for _, deps := range ctx.Graph.Dependencies {
+		count += len(deps)
+	}
+	return count
+}
+
+// discoverFile reads a file, registers it, and returns its import dependencies
+// Returns list of absolute paths that this file imports
+func (ctx *CompilerContext) discoverFile(filePath string) ([]string, error) {
+	// Read file
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file %s: %w", filePath, err)
+	}
+
+	// Register file in context (thread-safe)
+	// Use separate lock to avoid deadlock
+	ctx.mu.Lock()
+	alreadyExists := false
+	if _, exists := ctx.Files[filePath]; !exists {
+		// Create file entry without using AddFile (to avoid mutex recursion)
+		ctx.Files[filePath] = &SourceFile{
+			Path:    filePath,
+			Content: string(content),
+		}
+		ctx.FileOrder = append(ctx.FileOrder, filePath)
+		if ctx.Options.Debug {
+			fmt.Printf("  %s\n", filepath.Base(filePath))
+		}
+	} else {
+		alreadyExists = true
+	}
+	ctx.mu.Unlock()
+
+	// If file already processed, return early
+	if alreadyExists {
+		return nil, nil
+	}
+
+	// Quick scan for import statements (lightweight parse)
+	imports := ctx.extractImports(string(content), filePath)
+
+	// Register dependencies in graph
+	if len(imports) > 0 {
+		ctx.Graph.mu.Lock()
+		ctx.Graph.Dependencies[filePath] = imports
+		for _, importPath := range imports {
+			ctx.Graph.Dependents[importPath] = append(ctx.Graph.Dependents[importPath], filePath)
+		}
+		ctx.Graph.mu.Unlock()
+	}
+
+	return imports, nil
+}
+
+// extractImports does a lightweight scan for import statements
+// Returns list of absolute file paths for imported modules
+func (ctx *CompilerContext) extractImports(content, currentFile string) []string {
+	// Tokenize just enough to find import statements
+	tokenizer := lexer.New(currentFile, content)
+	tokens := tokenizer.Tokenize(false) // Don't print tokens
+
+	var imports []string
+	i := 0
+	for i < len(tokens) {
+		// Look for: import "path/to/module"
+		if tokens[i].Kind == lexer.IMPORT_TOKEN {
+			i++
+			// Skip to next token
+			if i >= len(tokens) {
+				break
+			}
+			// Expect string literal
+			if tokens[i].Kind == lexer.STRING_TOKEN {
+				importPath := tokens[i].Value
+				// Resolve relative to current file or search paths
+				resolvedPath := ctx.resolveImportPath(importPath, currentFile)
+				if resolvedPath != "" {
+					imports = append(imports, resolvedPath)
+				}
+			}
+		}
+		i++
+	}
+
+	return imports
+}
+
+// resolveImportPath converts an import path to an absolute file path
+func (ctx *CompilerContext) resolveImportPath(importPath, currentFile string) string {
+	// Remove quotes from import path (lexer includes quotes in string token value)
+	if len(importPath) >= 2 && importPath[0] == '"' && importPath[len(importPath)-1] == '"' {
+		importPath = importPath[1 : len(importPath)-1]
+	}
+
+	// Try relative to current file first
+	currentDir := filepath.Dir(currentFile)
+	candidatePath := filepath.Join(currentDir, importPath)
+
+	// Add .fer extension if not present
+	if filepath.Ext(candidatePath) != ".fer" {
+		candidatePath += ".fer"
+	}
+
+	// Check if file exists
+	if _, err := os.Stat(candidatePath); err == nil {
+		absPath, _ := filepath.Abs(candidatePath)
+		return absPath
+	}
+
+	// Try include paths
+	for _, includePath := range ctx.Options.IncludePaths {
+		candidatePath = filepath.Join(includePath, importPath)
+		if filepath.Ext(candidatePath) != ".fer" {
+			candidatePath += ".fer"
+		}
+		if _, err := os.Stat(candidatePath); err == nil {
+			absPath, _ := filepath.Abs(candidatePath)
+			return absPath
+		}
+	}
+
+	// Import not found - will be reported as error later
+	return ""
+}
+
+// RunLexAndParsePhase tokenizes and parses all files in parallel
+func (ctx *CompilerContext) RunLexAndParsePhase() error {
+	if ctx.Options.Debug {
+		fmt.Printf("\n[Phase 1 & 2] Lex + Parse (Parallel)\n")
+	}
+
+	files := ctx.GetAllFiles()
+	errorChan := make(chan error, len(files))
+	var wg sync.WaitGroup
+
+	// Process each file in parallel
+	for _, file := range files {
+		wg.Add(1)
+		go func(f *SourceFile) {
+			defer wg.Done()
+
+			// Lex
+			if err := ctx.lexFile(f); err != nil {
+				errorChan <- fmt.Errorf("lexer failed on %s: %w", f.Path, err)
+				return
+			}
+
+			// Parse
+			if err := ctx.parseFile(f); err != nil {
+				errorChan <- fmt.Errorf("parser failed on %s: %w", f.Path, err)
+				return
+			}
+		}(file)
+	}
+
+	// Wait for all to complete
+	wg.Wait()
+	close(errorChan)
+
+	// Check for errors
+	for err := range errorChan {
+		if err != nil {
+			return err
+		}
+	}
+
+	if ctx.Options.Debug {
+		fmt.Printf("  ✓ Processed %d file(s)\n", len(files))
+	}
+
+	return nil
+}
+
+// RunLexerPhase tokenizes all registered source files (sequential fallback)
+func (ctx *CompilerContext) RunLexerPhase() error {
+	if ctx.Options.Debug {
+		fmt.Printf("\n[Phase 1] Lexer\n")
+	}
+
+	// Process each file in order
+	for _, file := range ctx.GetAllFiles() {
+		if err := ctx.lexFile(file); err != nil {
+			return fmt.Errorf("lexer failed on %s: %w", file.Path, err)
+		}
+	}
+
+	if ctx.Options.Debug {
+		fmt.Printf("  ✓ Tokenization complete\n")
+	}
+
+	return nil
+} // lexFile tokenizes a single source file
+// This is the lexer phase worker - it's stateless and operates on the context
+func (ctx *CompilerContext) lexFile(file *SourceFile) error {
+	if ctx.Options.Debug {
+		fmt.Printf("  Tokenizing %s (%d bytes)\n", file.Path, len(file.Content))
+	}
+
+	// Use the existing tokenizer implementation
+	tokenizer := lexer.New(file.Path, file.Content)
+	tokens := tokenizer.Tokenize(ctx.Options.Debug)
+
+	// Store tokens in the file
+	file.Tokens = tokens
+
+	// Transfer any errors from the tokenizer to the context
+	for _, err := range tokenizer.Errors {
+		// Create minimal error diagnostic
+		ctx.Diagnostics.Add(
+			diagnostics.NewError(fmt.Sprintf("Lexer error in %s: %s", file.Path, err.Error())).
+				WithCode("L0001"),
+		)
+	}
+
+	if ctx.Options.Debug {
+		fmt.Printf("    Generated %d tokens\n", len(tokens))
+	}
+
+	return nil
+}
+
+// RunParserPhase parses all tokenized files into ASTs
+func (ctx *CompilerContext) RunParserPhase() error {
+	if ctx.Options.Debug {
+		fmt.Printf("\n[Phase 2] Parser\n")
+	}
+
+	// Process each file in order
+	for _, file := range ctx.GetAllFiles() {
+		if err := ctx.parseFile(file); err != nil {
+			return fmt.Errorf("parser failed on %s: %w", file.Path, err)
+		}
+	}
+
+	if ctx.Options.Debug {
+		fmt.Printf("  ✓ Parsing complete\n")
+	}
+
+	return nil
+}
+
+// parseFile parses a single tokenized file into an AST
+// This is the parser phase worker - it's stateless and operates on the context
+func (ctx *CompilerContext) parseFile(file *SourceFile) error {
+	if ctx.Options.Debug {
+		fmt.Printf("  Parsing %s (%d tokens)\n", file.Path, len(file.Tokens))
+	}
+
+	// Call the parser with tokens and diagnostics
+	file.AST = parser.Parse(file.Tokens, file.Path, ctx.Diagnostics)
+
+	file.AST.SaveAST()
+
+	if ctx.Options.Debug {
+		if file.AST != nil {
+			fmt.Printf("    Generated %d top-level declarations\n", len(file.AST.Nodes))
+		}
+	}
+
+	return nil
 }

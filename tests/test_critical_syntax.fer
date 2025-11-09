@@ -8,10 +8,10 @@ type Outer struct {
     .count: i32,
 };
 
-let obj := Outer{inner: Inner{val: 5}, count: 10};
+let obj := Outer{ .inner = Inner{ .val = 5}, .count = 10};
 
 // This is the critical test - nested composite literals in condition
-if obj == Outer{inner: Inner{val: 5}, count: 10} {
+if obj == Outer{ .inner = Inner{ .val = 5}, .count = 10} {
     let result := 100;
 }
 
@@ -31,10 +31,10 @@ type Mixed struct {
     .y: i32,
 };
 
-let m1 := Mixed{x: 1, y: 2};
+let m1 := Mixed{ .x = 1, .y = 2};
 let m2 := Mixed{.x = 3, .y = 4};
 
-if m1 == Mixed{x: 1, y: 2} {
+if m1 == Mixed{ .x = 1, .y = 2} {
     let t1 := 1;
 }
 
