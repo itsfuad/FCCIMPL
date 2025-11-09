@@ -12,6 +12,16 @@ import (
 func (p *Parser) parseType() ast.TypeNode {
 	tok := p.peek()
 
+	// Check for reference type &T
+	if p.match(lexer.BIT_AND_TOKEN) {
+		ampersand := p.advance()
+		baseType := p.parseType()
+		return &ast.ReferenceType{
+			Base:     baseType,
+			Location: *source.NewLocation(&ampersand.Start, baseType.Loc().End),
+		}
+	}
+
 	var t ast.TypeNode
 
 	switch tok.Kind {

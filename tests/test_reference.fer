@@ -1,0 +1,16 @@
+// Test reference operator
+
+type Point struct {
+    .x: i32,
+    .y: i32,
+};
+
+fn testReference() {
+    let p := Point { .x = 1, .y = 2 };
+    
+    // Test reference operator
+    let ref := &p;
+    
+    // Test dereference (if supported)
+    let val := *ref;
+}

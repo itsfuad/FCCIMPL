@@ -19,7 +19,6 @@ func (i *Invalid) INode()                {} // Implements Node interface
 func (i *Invalid) TypeExpr()             {} // Type nodes implement TypeExpr
 func (i *Invalid) Loc() *source.Location { return &i.Location }
 
-
 // UserDefinedType represents an identifier (can be a type name or variable name)
 type UserDefinedType struct {
 	Name string
@@ -34,7 +33,7 @@ func (i *UserDefinedType) Loc() *source.Location { return &i.Location }
 // ArrayType represents array type [size]ElementType or []ElementType
 type ArrayType struct {
 	Len    Expression // nil means dynamic array []T, otherwise [N]T
-	ElType TypeNode  // element type
+	ElType TypeNode   // element type
 	source.Location
 }
 
@@ -51,6 +50,16 @@ type OptionalType struct {
 func (o *OptionalType) INode()                {} // Implements Node interface
 func (o *OptionalType) TypeExpr()             {} // Type nodes implement TypeExpr
 func (o *OptionalType) Loc() *source.Location { return &o.Location }
+
+// ReferenceType represents reference type &T (C#-style reference)
+type ReferenceType struct {
+	Base TypeNode // The base type being referenced
+	source.Location
+}
+
+func (r *ReferenceType) INode()                {} // Implements Node interface
+func (r *ReferenceType) TypeExpr()             {} // Type nodes implement TypeExpr
+func (r *ReferenceType) Loc() *source.Location { return &r.Location }
 
 // ErrorType represents error-returning type T ! E
 type ErrorType struct {
@@ -105,8 +114,8 @@ func (i *InterfaceType) Loc() *source.Location { return &i.Location }
 
 // FuncType represents a function type signature
 type FuncType struct {
-	Params  *FieldList // function parameters
-	Result   TypeNode // return types (can be nil for no return)
+	Params *FieldList // function parameters
+	Result TypeNode   // return types (can be nil for no return)
 	source.Location
 }
 

@@ -1,0 +1,24 @@
+// Test combining reference and optional types
+
+type Point struct {
+    .x: i32,
+    .y: i32,
+};
+
+// Optional reference: &T?
+fn optionalRef(p: &Point?) {
+    // p is an optional reference to Point
+}
+
+// Reference to optional: &(T?)
+// This would need explicit syntax if you want to differentiate
+
+// Test in return type
+fn getOptionalRef() -> &Point? {
+    return null;
+}
+
+// Test in variable
+fn testVar() {
+    let ref: &Point? = null;
+}
