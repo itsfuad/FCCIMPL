@@ -1,14 +1,16 @@
 ---
 // Shared Navbar Component
 import ferretLogo from '../assets/ferret.webp';
-import Search from '@astrojs/starlight/components/Search.astro';
+
+import SearchBar from './CustomSearch.astro';
+
 import type { StarlightRouteData } from '@astrojs/starlight/route-data';
 
 interface NavbarProps extends StarlightRouteData {
     showSearch?: boolean;
 }
 
-const { showSearch = true, ...starlightProps } = Astro.props as NavbarProps;
+const { showSearch = false, ...starlightProps } = Astro.props as NavbarProps;
 
 // Get current path to conditionally show/hide nav items
 const currentPath = Astro.url.pathname;
@@ -21,15 +23,14 @@ const isDocs = !isHome && !isPlayground;
     <div class="navbar-left">
         <a href="/" class="navbar-logo">
             <img src={ferretLogo.src} alt="Ferret" />
-            <span>Ferret</span>
         </a>
     </div>
     
     <div class="navbar-right">
+        
+        
         {showSearch && (
-            <div class="search-wrapper">
-                <Search {...starlightProps} />
-            </div>
+            <SearchBar />
         )}
         
         {/* Show "Docs" link only when NOT on docs pages */}
@@ -139,40 +140,6 @@ const isDocs = !isHome && !isPlayground;
         flex-wrap: nowrap;
         width: 100%;
         justify-content: flex-end;
-    }
-
-    .search-wrapper {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-
-    /* Style Starlight's search to match our navbar */
-    .search-wrapper :global(site-search) {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        width: 100%;
-    }
-
-    .search-wrapper :global(button) {
-        padding: 0.5rem 0.875rem;
-        border-radius: 0.5rem;
-        font-size: 0.875rem;
-        background: var(--background);
-        color: var(--muted-foreground);
-        transition: all 0.15s ease;
-        white-space: nowrap;
-    }
-
-    .search-wrapper :global(button:hover) {
-        background: var(--muted);
-        color: var(--foreground);
-    }
-
-    /* Prevent search modal from being hidden */
-    :global(dialog[open]) {
-        display: flex !important;
     }
 
     .nav-link {
