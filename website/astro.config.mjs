@@ -39,8 +39,9 @@ export default defineConfig({
                     lang: 'en',
                 },
             },
+            // Use a single theme for both code snippets and playground for visual consistency.
             expressiveCode: {
-                themes: ['github-dark', 'github-light', 'ayu-dark', 'one-dark-pro'],
+                themes: ['one-dark-pro'], // Change this to your preferred built-in Shiki theme
                 shiki: {
                     langs: [ferretGrammar],
                 },

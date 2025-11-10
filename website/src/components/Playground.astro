@@ -82,6 +82,10 @@
 
 <script>
 
+
+// NOTE: Monaco theme definitions below must match the custom Shiki/Expressive Code themes in src/syntax/ferret-dark.json and ferret-light.json.
+// If you update the color palette or token rules here, update the JSON files as well for unified appearance.
+
 import * as monaco from 'monaco-editor';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 
@@ -257,52 +261,91 @@ monaco.languages.register({ id: 'ferret' });
     },
   });
 
-  // Define Ferret theme
-  monaco.editor.defineTheme('ferret-dark', {
+
+  // Use a single theme for both Monaco and code snippets: 'one-dark-pro' palette
+  // (This is a close approximation; Monaco and Shiki have different theme engines)
+  monaco.editor.defineTheme('ferret-one-dark-pro', {
     base: 'vs-dark',
     inherit: true,
     rules: [
-      { token: 'keyword', foreground: 'C586C0', fontStyle: 'bold' },
-      { token: 'type', foreground: '4EC9B0' },
-      { token: 'type.identifier', foreground: '4EC9B0' },
-      { token: 'string', foreground: 'CE9178' },
-      { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
-      { token: 'number', foreground: 'B5CEA8' },
-      { token: 'operator', foreground: 'D4D4D4' },
+      { token: 'keyword', foreground: 'C678DD', fontStyle: 'bold' },
+      { token: 'type', foreground: '56B6C2' },
+      { token: 'type.identifier', foreground: '56B6C2' },
+      { token: 'string', foreground: '98C379' },
+      { token: 'comment', foreground: '5C6370', fontStyle: 'italic' },
+      { token: 'number', foreground: 'D19A66' },
+      { token: 'operator', foreground: 'ABB2BF' },
     ],
     colors: {
-      'editor.background': '#1e1e1e',
-      'editor.foreground': '#d4d4d4',
-      'editor.lineHighlightBackground': '#2a2a2a',
-      'editorLineNumber.foreground': '#858585',
-      'editorLineNumber.activeForeground': '#c6c6c6',
-      'editorCursor.foreground': '#f44597',
-      'editor.selectionBackground': '#264f78',
-      'editor.inactiveSelectionBackground': '#3a3d41',
-      'editorIndentGuide.background': '#404040',
-      'editorIndentGuide.activeBackground': '#707070',
+      'editor.background': 'var(--editor-bg)',
+      'editor.foreground': '#ABB2BF',
+      'editor.lineHighlightBackground': '#2C313C',
+      'editorLineNumber.foreground': '#636D83',
+      'editorLineNumber.activeForeground': '#ABB2BF',
+      'editorCursor.foreground': '#528BFF',
+      'editor.selectionBackground': '#3E4451',
+      'editor.inactiveSelectionBackground': '#3E4451',
+      'editorIndentGuide.background': '#3B4048',
+      'editorIndentGuide.activeBackground': '#ABB2BF',
     }
   });
 
-  monaco.editor.defineTheme('ferret-light', {
+  // Detect theme
+
+
+  // Dynamic theme switching for Monaco
+  const editorContainer = document.getElementById('editor');
+  editorContainer.offsetHeight;
+  const defaultCode = [
+    'let name := "Ferret";',
+    'name = 10;'
+  ].join('\n');
+
+  // Define both dark and light themes
+  monaco.editor.defineTheme('ferret-one-dark-pro', {
+    base: 'vs-dark',
+    inherit: true,
+    rules: [
+      { token: 'keyword', foreground: 'C678DD', fontStyle: 'bold' },
+      { token: 'type', foreground: '56B6C2' },
+      { token: 'type.identifier', foreground: '56B6C2' },
+      { token: 'string', foreground: '98C379' },
+      { token: 'comment', foreground: '5C6370', fontStyle: 'italic' },
+      { token: 'number', foreground: 'D19A66' },
+      { token: 'operator', foreground: 'ABB2BF' },
+    ],
+    colors: {
+      'editor.background': '#282C34',
+      'editor.foreground': '#ABB2BF',
+      'editor.lineHighlightBackground': '#2C313C',
+      'editorLineNumber.foreground': '#636D83',
+      'editorLineNumber.activeForeground': '#ABB2BF',
+      'editorCursor.foreground': '#528BFF',
+      'editor.selectionBackground': '#3E4451',
+      'editor.inactiveSelectionBackground': '#3E4451',
+      'editorIndentGuide.background': '#3B4048',
+      'editorIndentGuide.activeBackground': '#ABB2BF',
+    }
+  });
+  monaco.editor.defineTheme('ferret-one-light', {
     base: 'vs',
     inherit: true,
     rules: [
-      { token: 'keyword', foreground: 'AF00DB', fontStyle: 'bold' },
-      { token: 'type', foreground: '267F99' },
-      { token: 'type.identifier', foreground: '267F99' },
-      { token: 'string', foreground: 'A31515' },
-      { token: 'comment', foreground: '008000', fontStyle: 'italic' },
-      { token: 'number', foreground: '098658' },
-      { token: 'operator', foreground: '000000' },
+      { token: 'keyword', foreground: 'C678DD', fontStyle: 'bold' },
+      { token: 'type', foreground: '56B6C2' },
+      { token: 'type.identifier', foreground: '56B6C2' },
+      { token: 'string', foreground: '98C379' },
+      { token: 'comment', foreground: '5C6370', fontStyle: 'italic' },
+      { token: 'number', foreground: 'D19A66' },
+      { token: 'operator', foreground: 'ABB2BF' },
     ],
     colors: {
       'editor.background': '#fafafa',
-      'editor.foreground': '#000000',
+      'editor.foreground': '#23272e',
       'editor.lineHighlightBackground': '#f0f0f0',
       'editorLineNumber.foreground': '#a0a0a0',
-      'editorLineNumber.activeForeground': '#5a5a5a',
-      'editorCursor.foreground': '#f44597',
+      'editorLineNumber.activeForeground': '#23272e',
+      'editorCursor.foreground': '#528BFF',
       'editor.selectionBackground': '#add6ff',
       'editor.inactiveSelectionBackground': '#e5ebf1',
       'editorIndentGuide.background': '#d3d3d3',
@@ -310,27 +353,30 @@ monaco.languages.register({ id: 'ferret' });
     }
   });
 
-  // Detect theme
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-  
-  // Wait for container to be fully rendered and sized
-  const editorContainer = document.getElementById('editor');
-  
-  // Force a reflow to ensure container has dimensions
-  editorContainer.offsetHeight;
-  
-  // Create Monaco Editor instance with ABSOLUTE MINIMAL configuration
-  const defaultCode = [
-    'let name := "Ferret";',
-    'name = 10;'
-  ].join('\n');
-  
+  // Detect initial theme
+  function getCurrentTheme() {
+    const themeAttr = document.documentElement.getAttribute('data-theme');
+    if (themeAttr === 'light') return 'ferret-one-light';
+    return 'ferret-one-dark-pro';
+  }
+
+  let currentTheme = getCurrentTheme();
   const editor = monaco.editor.create(editorContainer, {
     value: defaultCode,
     language: 'ferret',
-    theme: isDark ? 'ferret-dark' : 'ferret-light',
+    theme: currentTheme,
     automaticLayout: true,
   });
+
+  // Listen for theme changes
+  const observer = new MutationObserver(() => {
+    const newTheme = getCurrentTheme();
+    if (newTheme !== currentTheme) {
+      monaco.editor.setTheme(newTheme);
+      currentTheme = newTheme;
+    }
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // Force immediate layout update after creation
   requestAnimationFrame(() => {
@@ -347,20 +393,7 @@ monaco.languages.register({ id: 'ferret' });
     document.getElementById('run-btn').click();
   });
 
-  // Theme change listener
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.attributeName === 'data-theme') {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        monaco.editor.setTheme(isDark ? 'ferret-dark' : 'ferret-light');
-      }
-    });
-  });
-
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme']
-  });
+  // No theme switching: always use 'ferret-one-dark-pro' for consistency with code snippets
 
   // Button handlers
   document.getElementById('run-btn').addEventListener('click', async function() {
@@ -601,7 +634,7 @@ monaco.languages.register({ id: 'ferret' });
   }
 
   :global([data-theme='dark']) .playground-container {
-    background: #1e1e1e;
+    background: var(--editor-bg);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 10px 40px rgba(0, 0, 0, 0.4);
     border-color: rgba(255, 255, 255, 0.05);
   }
@@ -617,7 +650,7 @@ monaco.languages.register({ id: 'ferret' });
   }
 
   :global([data-theme='dark']) .playground-header {
-    background: #252525;
+    background: var(--editor-bg);
     border-bottom-color: rgba(255, 255, 255, 0.05);
   }
 
@@ -788,7 +821,7 @@ monaco.languages.register({ id: 'ferret' });
   }
 
   :global([data-theme='dark']) .editor-panel {
-    background: #1e1e1e;
+    background: var(--editor-bg);
   }
 
   /* Resize handle (desktop only) */
@@ -871,7 +904,7 @@ monaco.languages.register({ id: 'ferret' });
 
   :global([data-theme='dark']) .editor-footer {
     color: #6b7280;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--editor-bg);
     border-top-color: rgba(255, 255, 255, 0.06);
   }
 
@@ -891,7 +924,7 @@ monaco.languages.register({ id: 'ferret' });
   }
 
   :global([data-theme='dark']) .output-panel {
-    background: #181818;
+    background: var(--editor-bg);
     border-left-color: rgba(255, 255, 255, 0.05);
   }
 

@@ -11,6 +11,10 @@
   --ferret-blue: #3b82f6;
   --ferret-pink: #ec4899;
   --ferret-cyan: #d4ca06;
+
+
+  --editor-bg: #282C34;
+  --editor-fg: #ABB2BF;
   
   /* Modern minimal palette */
   --border: hsl(214.3 31.8% 91.4%);
@@ -31,7 +35,7 @@
 
 :root[data-theme='dark'] {
   --border: hsl(217.2 32.6% 17.5%);
-  --background: hsl(222.2 84% 4.9%);
+  --background: #14161c;
   --foreground: hsl(210 40% 98%);
   --muted: hsl(217.2 32.6% 17.5%);
   --muted-foreground: hsl(215 20.2% 65.1%);
