@@ -155,12 +155,29 @@ func (p *Parser) parseFuncType() *ast.FuncType {
 
 			name := p.parseIdentifier()
 			p.expect(lexer.COLON_TOKEN)
+
+			// Check for variadic parameter (...)
+			isVariadic := false
+			if p.match(lexer.THREE_DOT_TOKEN) {
+				isVariadic = true
+				p.advance() // consume '...'
+			}
+
 			typ := p.parseType()
 
+			// Handle nil type
+			var endPos *source.Position
+			if typ != nil && typ.Loc() != nil {
+				endPos = typ.Loc().End
+			} else {
+				endPos = name.End
+			}
+
 			params.List = append(params.List, &ast.Field{
-				Name:     name,
-				Type:     typ,
-				Location: *source.NewLocation(name.Start, typ.Loc().End),
+				Name:       name,
+				Type:       typ,
+				IsVariadic: isVariadic,
+				Location:   *source.NewLocation(name.Start, endPos),
 			})
 
 			if p.match(lexer.CLOSE_PAREN) {
