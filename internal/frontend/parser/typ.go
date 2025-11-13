@@ -71,6 +71,46 @@ func (p *Parser) parseType() ast.TypeNode {
 		}
 	}
 
+	// Check for error type T ! E or T!
+	// Supports two syntaxes:
+	//   1. T ! E - explicit error type (e.g., i32 ! str, User ! HttpError)
+	//   2. T!     - default error type (defaults to 'str')
+	// The default can be changed later to Error struct or same type as success type
+	// Note: ErrorType always has exactly two types: Value (success) and Error
+	if p.match(lexer.NOT_TOKEN) {
+		notToken := p.advance() // consume '!'
+
+		var errorType ast.TypeNode
+		var endPos *source.Position
+
+		// Check if error type is provided (T ! E) or use default (T!)
+		// Default error type is 'str' for now, but this can be changed later
+		// to Error struct or same type as success type
+		if !p.match(lexer.SEMICOLON_TOKEN, lexer.CLOSE_PAREN, lexer.COMMA_TOKEN, lexer.OPEN_CURLY) {
+			// Error type is explicitly provided
+			errorType = p.parseType()
+			if errorType != nil && errorType.Loc() != nil {
+				endPos = errorType.Loc().End
+			} else {
+				endPos = &notToken.End
+			}
+		} else {
+			// No error type provided, use default 'str'
+			// TODO: This default can be changed to Error struct or same type as success type
+			errorType = &ast.IdentifierExpr{
+				Name:     "str",
+				Location: *source.NewLocation(&notToken.End, &notToken.End),
+			}
+			endPos = &notToken.End
+		}
+
+		t = &ast.ErrorType{
+			Value:    t,
+			Error:    errorType,
+			Location: *source.NewLocation(t.Loc().Start, endPos),
+		}
+	}
+
 	return t
 }
 
@@ -155,12 +195,29 @@ func (p *Parser) parseFuncType() *ast.FuncType {
 
 			name := p.parseIdentifier()
 			p.expect(lexer.COLON_TOKEN)
+
+			// Check for variadic parameter (...)
+			isVariadic := false
+			if p.match(lexer.THREE_DOT_TOKEN) {
+				isVariadic = true
+				p.advance() // consume '...'
+			}
+
 			typ := p.parseType()
 
+			// Handle nil type
+			var endPos *source.Position
+			if typ != nil && typ.Loc() != nil {
+				endPos = typ.Loc().End
+			} else {
+				endPos = name.End
+			}
+
 			params.List = append(params.List, &ast.Field{
-				Name:     name,
-				Type:     typ,
-				Location: *source.NewLocation(name.Start, typ.Loc().End),
+				Name:       name,
+				Type:       typ,
+				IsVariadic: isVariadic,
+				Location:   *source.NewLocation(name.Start, endPos),
 			})
 
 			if p.match(lexer.CLOSE_PAREN) {

@@ -74,9 +74,10 @@ func (e *ErrorType) Loc() *source.Location { return &e.Location }
 
 // Field represents a single field in a struct or parameter in a function
 type Field struct {
-	Name  *IdentifierExpr // field/parameter names (can be nil for anonymous fields)
-	Type  TypeNode        // field type
-	Value Expression      // initial value (for struct literals), nil otherwise
+	Name       *IdentifierExpr // field/parameter names (can be nil for anonymous fields)
+	Type       TypeNode        // field type
+	Value      Expression      // initial value (for struct literals), nil otherwise
+	IsVariadic bool            // true if this is a variadic parameter (...type)
 	source.Location
 }
 

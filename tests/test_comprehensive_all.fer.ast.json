@@ -1,5 +1,5 @@
 {
-  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_comprehensive_all.fer",
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_comprehensive_all.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -323,6 +323,7 @@
               },
               "Type": null,
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -342,6 +343,7 @@
               },
               "Type": null,
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -361,6 +363,7 @@
               },
               "Type": null,
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -423,6 +426,7 @@
               },
               "Type": null,
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -442,6 +446,7 @@
               },
               "Type": null,
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -461,6 +466,7 @@
               },
               "Type": null,
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -535,6 +541,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -566,6 +573,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -640,6 +648,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -671,6 +680,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -702,6 +712,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -776,6 +787,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -807,6 +819,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -838,6 +851,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -929,6 +943,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 46,
                 "Column": 5,
@@ -985,6 +1000,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 47,
                 "Column": 5,
@@ -1084,6 +1100,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 51,
                 "Column": 5,
@@ -1140,6 +1157,7 @@
                         }
                       },
                       "Value": null,
+                      "IsVariadic": false,
                       "Start": {
                         "Line": 52,
                         "Column": 10,
@@ -1179,6 +1197,7 @@
                         }
                       },
                       "Value": null,
+                      "IsVariadic": false,
                       "Start": {
                         "Line": 52,
                         "Column": 19,
@@ -1219,6 +1238,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 52,
                 "Column": 5,
@@ -1301,6 +1321,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 56,
                 "Column": 8,
@@ -1340,6 +1361,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 56,
                 "Column": 16,
@@ -1506,6 +1528,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 60,
                 "Column": 13,
@@ -1545,6 +1568,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 60,
                 "Column": 21,
@@ -1711,6 +1735,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 64,
                 "Column": 10,
@@ -1963,6 +1988,7 @@
           }
         },
         "Value": null,
+        "IsVariadic": false,
         "Start": {
           "Line": 73,
           "Column": 5,
@@ -2258,6 +2284,7 @@
           }
         },
         "Value": null,
+        "IsVariadic": false,
         "Start": {
           "Line": 77,
           "Column": 5,
@@ -2313,6 +2340,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 77,
                 "Column": 25,
@@ -2352,6 +2380,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 77,
                 "Column": 34,
@@ -2657,6 +2686,7 @@
           }
         },
         "Value": null,
+        "IsVariadic": false,
         "Start": {
           "Line": 84,
           "Column": 5,
@@ -3106,6 +3136,7 @@
           }
         },
         "Value": null,
+        "IsVariadic": false,
         "Start": {
           "Line": 90,
           "Column": 5,
@@ -3305,6 +3336,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 95,
                 "Column": 13,
@@ -3749,6 +3781,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 107,
                 "Column": 8,
@@ -4013,6 +4046,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 115,
                 "Column": 8,
@@ -4052,6 +4086,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 115,
                 "Column": 16,
@@ -4288,6 +4323,7 @@
                       }
                     },
                     "Value": null,
+                    "IsVariadic": false,
                     "Start": {
                       "Line": 123,
                       "Column": 19,
@@ -4479,6 +4515,7 @@
                       }
                     },
                     "Value": null,
+                    "IsVariadic": false,
                     "Start": {
                       "Line": 127,
                       "Column": 17,
@@ -4701,6 +4738,7 @@
                       }
                     },
                     "Value": null,
+                    "IsVariadic": false,
                     "Start": {
                       "Line": 131,
                       "Column": 19,
@@ -6713,6 +6751,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 178,
                 "Column": 16,
@@ -6752,6 +6791,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 178,
                 "Column": 35,
@@ -6948,6 +6988,7 @@
                             }
                           },
                           "Value": null,
+                          "IsVariadic": false,
                           "Start": {
                             "Line": 181,
                             "Column": 23,
@@ -7875,6 +7916,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -7931,6 +7973,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -7962,6 +8005,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -8036,6 +8080,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 217,
                 "Column": 18,
@@ -8748,6 +8793,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 234,
                 "Column": 16,
@@ -8787,6 +8833,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 234,
                 "Column": 24,
@@ -8826,6 +8873,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": {
                 "Line": 234,
                 "Column": 32,
@@ -9670,8 +9718,17 @@
                       }
                     }
                   ],
-                  "Start": null,
-                  "End": null
+                  "Catch": null,
+                  "Start": {
+                    "Line": 248,
+                    "Column": 18,
+                    "Index": 5059
+                  },
+                  "End": {
+                    "Line": 248,
+                    "Column": 37,
+                    "Index": 5078
+                  }
                 }
               }
             ],
@@ -9735,8 +9792,17 @@
                     "End": null
                   },
                   "Args": [],
-                  "Start": null,
-                  "End": null
+                  "Catch": null,
+                  "Start": {
+                    "Line": 249,
+                    "Column": 20,
+                    "Index": 5100
+                  },
+                  "End": {
+                    "Line": 249,
+                    "Column": 30,
+                    "Index": 5110
+                  }
                 }
               }
             ],
@@ -10096,6 +10162,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -10152,6 +10219,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -10183,6 +10251,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -10257,6 +10326,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -10313,6 +10383,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             },
@@ -10344,6 +10415,7 @@
                 }
               },
               "Value": null,
+              "IsVariadic": false,
               "Start": null,
               "End": null
             }
@@ -11111,6 +11183,7 @@
                     }
                   },
                   "Value": null,
+                  "IsVariadic": false,
                   "Start": null,
                   "End": null
                 },
@@ -11142,6 +11215,7 @@
                     }
                   },
                   "Value": null,
+                  "IsVariadic": false,
                   "Start": null,
                   "End": null
                 }

@@ -1,0 +1,36 @@
+// Comprehensive variadic parameter tests
+
+// 1. Function with variadic at the end
+fn sum(base: i32, nums: ...i32) -> i32 {
+    return base;
+}
+
+// 2. Function with only variadic parameter
+fn print(args: ...str) {
+    return;
+}
+
+// 3. Function with variadic in middle (position validation is semantic phase's job)
+fn format(prefix: str, values: ...str, suffix: str) -> str {
+    return prefix;
+}
+
+// 4. Anonymous function with variadic
+const handler := fn (code: i32, errors: ...str) -> str {
+    return "error";
+};
+
+// 5. Variadic with optional type
+fn optionalVariadic(nums: ...i32?) -> i32 {
+    return 0;
+}
+
+// 6. Variadic with ref type
+fn refVariadic(objs: ...&MyStruct) {
+    return;
+}
+
+// 7. Variadic with optional and ref type
+fn optRefVariadic(objs: ...&MyStruct?) {
+    return;
+}

@@ -357,6 +357,7 @@ func (p *Parser) parsePostfix() ast.Expression {
 }
 
 func (p *Parser) parseCallExpr(fun ast.Expression) *ast.CallExpr {
+	start := p.previous().Start
 	p.advance() // consume '('
 	args := []ast.Expression{}
 	if !p.match(lexer.CLOSE_PAREN) {
@@ -368,9 +369,54 @@ func (p *Parser) parseCallExpr(fun ast.Expression) *ast.CallExpr {
 	}
 	p.expect(lexer.CLOSE_PAREN)
 
+	// Check for catch clause
+	var catchClause *ast.CatchClause
+	if p.match(lexer.CATCH_TOKEN) {
+		catchClause = p.parseCatchClause()
+	}
+
 	return &ast.CallExpr{
-		Fun:  fun,
-		Args: args,
+		Fun:      fun,
+		Args:     args,
+		Catch:    catchClause,
+		Location: p.makeLocation(start),
+	}
+}
+
+// parseCatchClause parses a catch clause: catch [ident] [block] [fallback]
+// Examples:
+//   - catch 0                    -> just fallback
+//   - catch err { ... } 0        -> error handler + fallback
+//   - catch err { return 0; }    -> error handler only
+func (p *Parser) parseCatchClause() *ast.CatchClause {
+	start := p.peek().Start
+	p.expect(lexer.CATCH_TOKEN) // consume 'catch'
+
+	var errIdent *ast.IdentifierExpr
+	var handler *ast.Block
+	var fallback ast.Expression
+
+	// Check if we have an error identifier
+	if p.match(lexer.IDENTIFIER_TOKEN) {
+		errIdent = p.parseIdentifier()
+	}
+
+	// Check if we have a handler block
+	if p.match(lexer.OPEN_CURLY) {
+		handler = p.parseBlock()
+	}
+
+	// Check if we have a fallback value
+	// Fallback is not present if we're at statement-ending tokens
+	if !p.match(lexer.SEMICOLON_TOKEN, lexer.COMMA_TOKEN, lexer.CLOSE_PAREN, lexer.CLOSE_BRACKET, lexer.CLOSE_CURLY) && !p.isAtEnd() {
+		fallback = p.parseExpr()
+	}
+
+	return &ast.CatchClause{
+		ErrIdent: errIdent,
+		Handler:  handler,
+		Fallback: fallback,
+		Location: p.makeLocation(start),
 	}
 }
 
@@ -398,8 +444,8 @@ func (p *Parser) parseScopeResolutionExpr(x ast.Expression) *ast.ScopeResolution
 	p.advance() // consume '::'
 	member := p.parseIdentifier()
 	return &ast.ScopeResolutionExpr{
-		X:   x,
-		Sel: member,
+		X:        x,
+		Selector: member,
 	}
 }
 

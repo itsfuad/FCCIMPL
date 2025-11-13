@@ -61,10 +61,27 @@ func (i *IdentifierExpr) Expr()                 {} // Expr is a marker interface
 func (i *IdentifierExpr) TypeExpr()             {} // Can also be used as a type name
 func (i *IdentifierExpr) Loc() *source.Location { return &i.Location }
 
+// CatchClause represents the catch part of error handling
+// Syntax: catch [ident] [block] [fallback]
+// Examples:
+//   - catch 0                    -> just fallback
+//   - catch err { ... } 0        -> handler + fallback
+//   - catch err { return 0; }    -> handler only (must handle control flow)
+type CatchClause struct {
+	ErrIdent *IdentifierExpr // Optional: error variable name (e.g., 'err')
+	Handler  *Block          // Optional: error handler block { ... }
+	Fallback Expression      // Optional: fallback/default value
+	source.Location
+}
+
+func (c *CatchClause) INode()                {} // Implements Node interface
+func (c *CatchClause) Loc() *source.Location { return &c.Location }
+
 // CallExpr represents a function call expression
 type CallExpr struct {
-	Fun  Expression   // function expression
-	Args []Expression // function arguments
+	Fun   Expression   // function expression
+	Args  []Expression // function arguments
+	Catch *CatchClause // Optional: error handling (nil if no catch)
 	source.Location
 }
 
@@ -117,32 +134,32 @@ func (e *ElvisExpr) INode()                {} // Implements Node interface
 func (e *ElvisExpr) Expr()                 {} // Expr is a marker interface for all expressions
 func (e *ElvisExpr) Loc() *source.Location { return &e.Location }
 
-// TryExpr represents a try expression with catch block
+// CatchExpr represents a try expression with catch block
 // Example: fetch("...") catch error { println(error) } fallback
-type TryExpr struct {
+type CatchExpr struct {
 	X     Expression  // expression that might return an error (T ! E)
 	Catch *CatchBlock // catch block for error handling
 	source.Location
 }
 
-func (t *TryExpr) INode()                {} // Implements Node interface
-func (t *TryExpr) Expr()                 {} // Expr is a marker interface for all expressions
-func (t *TryExpr) Loc() *source.Location { return &t.Location }
+func (t *CatchExpr) INode()                {} // Implements Node interface
+func (t *CatchExpr) Expr()                 {} // Expr is a marker interface for all expressions
+func (t *CatchExpr) Loc() *source.Location { return &t.Location }
 
-// SpawnExpr represents a spawn expression for coroutines
-type SpawnExpr struct {
-	Call Expression // the function call to spawn
+// ForkExpr represents a fork expression for coroutines
+type ForkExpr struct {
+	Call Expression // the function call to fork
 	source.Location
 }
 
-func (s *SpawnExpr) INode()                {} // Implements Node interface
-func (s *SpawnExpr) Expr()                 {} // Expr is a marker interface for all expressions
-func (s *SpawnExpr) Loc() *source.Location { return &s.Location }
+func (s *ForkExpr) INode()                {} // Implements Node interface
+func (s *ForkExpr) Expr()                 {} // Expr is a marker interface for all expressions
+func (s *ForkExpr) Loc() *source.Location { return &s.Location }
 
 // ScopeResolutionExpr represents scope resolution (module::symbol or Enum::Variant)
 type ScopeResolutionExpr struct {
-	X   Expression      // left side (module or enum name)
-	Sel *IdentifierExpr // symbol being accessed
+	X        Expression      // left side (module or enum name)
+	Selector *IdentifierExpr // symbol being accessed
 	source.Location
 }
 
