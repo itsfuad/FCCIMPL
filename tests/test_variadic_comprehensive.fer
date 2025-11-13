@@ -19,3 +19,18 @@ fn format(prefix: str, values: ...str, suffix: str) -> str {
 const handler := fn (code: i32, errors: ...str) -> str {
     return "error";
 };
+
+// 5. Variadic with optional type
+fn optionalVariadic(nums: ...i32?) -> i32 {
+    return 0;
+}
+
+// 6. Variadic with ref type
+fn refVariadic(objs: ...&MyStruct) {
+    return;
+}
+
+// 7. Variadic with optional and ref type
+fn optRefVariadic(objs: ...&MyStruct?) {
+    return;
+}

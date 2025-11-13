@@ -1,0 +1,39 @@
+// Test optional error type syntax
+
+// 1. Error type with explicit error (T ! E)
+fn divide(a: i32, b: i32) -> i32 ! str {
+    if b == 0 {
+        return "division by zero"!;
+    }
+    return a / b;
+}
+
+// 2. Error type with default error (T!)
+fn parseNumber(s: str) -> i32! {
+    return 42;
+}
+
+// 3. Error type with custom error type
+fn fetchData(url: str) -> Data ! HttpError {
+    return data!;
+}
+
+// 4. Optional with default error (T?!)
+fn findUser(id: i32) -> User?! {
+    return user;
+}
+
+// 5. Array with default error
+fn processItems(items: []str) -> []i32! {
+    return result!;
+}
+
+// 6. Anonymous function with default error
+const handler := fn (code: i32) -> str! {
+    return "error";
+};
+
+// 7. Mix of both in parameters - function returning explicit error
+fn complexOp(a: i32!, b: str ! CustomError) -> bool! {
+    return true;
+}

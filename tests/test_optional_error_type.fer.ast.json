@@ -1,0 +1,1461 @@
+{
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_optional_error_type.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "divide",
+        "Start": {
+          "Line": 4,
+          "Column": 4,
+          "Index": 87
+        },
+        "End": {
+          "Line": 4,
+          "Column": 10,
+          "Index": 93
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "a",
+                "Start": {
+                  "Line": 4,
+                  "Column": 11,
+                  "Index": 94
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 12,
+                  "Index": 95
+                }
+              },
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 4,
+                  "Column": 14,
+                  "Index": 97
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 17,
+                  "Index": 100
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 4,
+                "Column": 11,
+                "Index": 94
+              },
+              "End": {
+                "Line": 4,
+                "Column": 17,
+                "Index": 100
+              }
+            },
+            {
+              "Name": {
+                "Name": "b",
+                "Start": {
+                  "Line": 4,
+                  "Column": 19,
+                  "Index": 102
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 20,
+                  "Index": 103
+                }
+              },
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 4,
+                  "Column": 22,
+                  "Index": 105
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 25,
+                  "Index": 108
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 4,
+                "Column": 19,
+                "Index": 102
+              },
+              "End": {
+                "Line": 4,
+                "Column": 25,
+                "Index": 108
+              }
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Result": {
+          "Value": {
+            "Name": "i32",
+            "Start": {
+              "Line": 4,
+              "Column": 30,
+              "Index": 113
+            },
+            "End": {
+              "Line": 4,
+              "Column": 33,
+              "Index": 116
+            }
+          },
+          "Error": {
+            "Name": "str",
+            "Start": {
+              "Line": 4,
+              "Column": 36,
+              "Index": 119
+            },
+            "End": {
+              "Line": 4,
+              "Column": 39,
+              "Index": 122
+            }
+          },
+          "Start": {
+            "Line": 4,
+            "Column": 30,
+            "Index": 113
+          },
+          "End": {
+            "Line": 4,
+            "Column": 39,
+            "Index": 122
+          }
+        },
+        "Start": {
+          "Line": 4,
+          "Column": 10,
+          "Index": 93
+        },
+        "End": {
+          "Line": 4,
+          "Column": 39,
+          "Index": 122
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Cond": {
+              "X": {
+                "Name": "b",
+                "Start": {
+                  "Line": 5,
+                  "Column": 8,
+                  "Index": 133
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 9,
+                  "Index": 134
+                }
+              },
+              "Op": {
+                "Kind": "==",
+                "Value": "==",
+                "Start": {
+                  "Line": 5,
+                  "Column": 10,
+                  "Index": 135
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 12,
+                  "Index": 137
+                }
+              },
+              "Y": {
+                "Kind": 0,
+                "Value": "0",
+                "Start": {
+                  "Line": 5,
+                  "Column": 13,
+                  "Index": 138
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 14,
+                  "Index": 139
+                }
+              },
+              "Start": null,
+              "End": null
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Result": {
+                    "Kind": 2,
+                    "Value": "division by zero",
+                    "Start": {
+                      "Line": 6,
+                      "Column": 16,
+                      "Index": 158
+                    },
+                    "End": {
+                      "Line": 6,
+                      "Column": 34,
+                      "Index": 176
+                    }
+                  },
+                  "IsError": true,
+                  "Start": {
+                    "Line": 6,
+                    "Column": 9,
+                    "Index": 151
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 36,
+                    "Index": 178
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 5,
+                "Column": 15,
+                "Index": 140
+              },
+              "End": {
+                "Line": 7,
+                "Column": 6,
+                "Index": 185
+              }
+            },
+            "Else": null,
+            "Start": {
+              "Line": 5,
+              "Column": 5,
+              "Index": 130
+            },
+            "End": {
+              "Line": 7,
+              "Column": 6,
+              "Index": 185
+            }
+          },
+          {
+            "Result": {
+              "X": {
+                "Name": "a",
+                "Start": {
+                  "Line": 8,
+                  "Column": 12,
+                  "Index": 198
+                },
+                "End": {
+                  "Line": 8,
+                  "Column": 13,
+                  "Index": 199
+                }
+              },
+              "Op": {
+                "Kind": "/",
+                "Value": "/",
+                "Start": {
+                  "Line": 8,
+                  "Column": 14,
+                  "Index": 200
+                },
+                "End": {
+                  "Line": 8,
+                  "Column": 15,
+                  "Index": 201
+                }
+              },
+              "Y": {
+                "Name": "b",
+                "Start": {
+                  "Line": 8,
+                  "Column": 16,
+                  "Index": 202
+                },
+                "End": {
+                  "Line": 8,
+                  "Column": 17,
+                  "Index": 203
+                }
+              },
+              "Start": null,
+              "End": null
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 8,
+              "Column": 5,
+              "Index": 191
+            },
+            "End": {
+              "Line": 8,
+              "Column": 18,
+              "Index": 204
+            }
+          }
+        ],
+        "Start": {
+          "Line": 4,
+          "Column": 40,
+          "Index": 123
+        },
+        "End": {
+          "Line": 9,
+          "Column": 2,
+          "Index": 207
+        }
+      },
+      "Start": {
+        "Line": 4,
+        "Column": 1,
+        "Index": 84
+      },
+      "End": {
+        "Line": 9,
+        "Column": 2,
+        "Index": 207
+      }
+    },
+    {
+      "Name": {
+        "Name": "parseNumber",
+        "Start": {
+          "Line": 12,
+          "Column": 4,
+          "Index": 256
+        },
+        "End": {
+          "Line": 12,
+          "Column": 15,
+          "Index": 267
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "s",
+                "Start": {
+                  "Line": 12,
+                  "Column": 16,
+                  "Index": 268
+                },
+                "End": {
+                  "Line": 12,
+                  "Column": 17,
+                  "Index": 269
+                }
+              },
+              "Type": {
+                "Name": "str",
+                "Start": {
+                  "Line": 12,
+                  "Column": 19,
+                  "Index": 271
+                },
+                "End": {
+                  "Line": 12,
+                  "Column": 22,
+                  "Index": 274
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 12,
+                "Column": 16,
+                "Index": 268
+              },
+              "End": {
+                "Line": 12,
+                "Column": 22,
+                "Index": 274
+              }
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Result": {
+          "Value": {
+            "Name": "i32",
+            "Start": {
+              "Line": 12,
+              "Column": 27,
+              "Index": 279
+            },
+            "End": {
+              "Line": 12,
+              "Column": 30,
+              "Index": 282
+            }
+          },
+          "Error": {
+            "Name": "str",
+            "Start": {
+              "Line": 12,
+              "Column": 31,
+              "Index": 283
+            },
+            "End": {
+              "Line": 12,
+              "Column": 31,
+              "Index": 283
+            }
+          },
+          "Start": {
+            "Line": 12,
+            "Column": 27,
+            "Index": 279
+          },
+          "End": {
+            "Line": 12,
+            "Column": 31,
+            "Index": 283
+          }
+        },
+        "Start": {
+          "Line": 12,
+          "Column": 15,
+          "Index": 267
+        },
+        "End": {
+          "Line": 12,
+          "Column": 31,
+          "Index": 283
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Kind": 0,
+              "Value": "42",
+              "Start": {
+                "Line": 13,
+                "Column": 12,
+                "Index": 298
+              },
+              "End": {
+                "Line": 13,
+                "Column": 14,
+                "Index": 300
+              }
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 13,
+              "Column": 5,
+              "Index": 291
+            },
+            "End": {
+              "Line": 13,
+              "Column": 15,
+              "Index": 301
+            }
+          }
+        ],
+        "Start": {
+          "Line": 12,
+          "Column": 32,
+          "Index": 284
+        },
+        "End": {
+          "Line": 14,
+          "Column": 2,
+          "Index": 304
+        }
+      },
+      "Start": {
+        "Line": 12,
+        "Column": 1,
+        "Index": 253
+      },
+      "End": {
+        "Line": 14,
+        "Column": 2,
+        "Index": 304
+      }
+    },
+    {
+      "Name": {
+        "Name": "fetchData",
+        "Start": {
+          "Line": 17,
+          "Column": 4,
+          "Index": 352
+        },
+        "End": {
+          "Line": 17,
+          "Column": 13,
+          "Index": 361
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "url",
+                "Start": {
+                  "Line": 17,
+                  "Column": 14,
+                  "Index": 362
+                },
+                "End": {
+                  "Line": 17,
+                  "Column": 17,
+                  "Index": 365
+                }
+              },
+              "Type": {
+                "Name": "str",
+                "Start": {
+                  "Line": 17,
+                  "Column": 19,
+                  "Index": 367
+                },
+                "End": {
+                  "Line": 17,
+                  "Column": 22,
+                  "Index": 370
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 17,
+                "Column": 14,
+                "Index": 362
+              },
+              "End": {
+                "Line": 17,
+                "Column": 22,
+                "Index": 370
+              }
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Result": {
+          "Value": {
+            "Name": "Data",
+            "Start": {
+              "Line": 17,
+              "Column": 27,
+              "Index": 375
+            },
+            "End": {
+              "Line": 17,
+              "Column": 31,
+              "Index": 379
+            }
+          },
+          "Error": {
+            "Name": "HttpError",
+            "Start": {
+              "Line": 17,
+              "Column": 34,
+              "Index": 382
+            },
+            "End": {
+              "Line": 17,
+              "Column": 43,
+              "Index": 391
+            }
+          },
+          "Start": {
+            "Line": 17,
+            "Column": 27,
+            "Index": 375
+          },
+          "End": {
+            "Line": 17,
+            "Column": 43,
+            "Index": 391
+          }
+        },
+        "Start": {
+          "Line": 17,
+          "Column": 13,
+          "Index": 361
+        },
+        "End": {
+          "Line": 17,
+          "Column": 43,
+          "Index": 391
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Name": "data",
+              "Start": {
+                "Line": 18,
+                "Column": 12,
+                "Index": 406
+              },
+              "End": {
+                "Line": 18,
+                "Column": 16,
+                "Index": 410
+              }
+            },
+            "IsError": true,
+            "Start": {
+              "Line": 18,
+              "Column": 5,
+              "Index": 399
+            },
+            "End": {
+              "Line": 18,
+              "Column": 18,
+              "Index": 412
+            }
+          }
+        ],
+        "Start": {
+          "Line": 17,
+          "Column": 44,
+          "Index": 392
+        },
+        "End": {
+          "Line": 19,
+          "Column": 2,
+          "Index": 415
+        }
+      },
+      "Start": {
+        "Line": 17,
+        "Column": 1,
+        "Index": 349
+      },
+      "End": {
+        "Line": 19,
+        "Column": 2,
+        "Index": 415
+      }
+    },
+    {
+      "Name": {
+        "Name": "findUser",
+        "Start": {
+          "Line": 22,
+          "Column": 4,
+          "Index": 463
+        },
+        "End": {
+          "Line": 22,
+          "Column": 12,
+          "Index": 471
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "id",
+                "Start": {
+                  "Line": 22,
+                  "Column": 13,
+                  "Index": 472
+                },
+                "End": {
+                  "Line": 22,
+                  "Column": 15,
+                  "Index": 474
+                }
+              },
+              "Type": {
+                "Name": "i32",
+                "Start": {
+                  "Line": 22,
+                  "Column": 17,
+                  "Index": 476
+                },
+                "End": {
+                  "Line": 22,
+                  "Column": 20,
+                  "Index": 479
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 22,
+                "Column": 13,
+                "Index": 472
+              },
+              "End": {
+                "Line": 22,
+                "Column": 20,
+                "Index": 479
+              }
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Result": {
+          "Value": {
+            "Base": {
+              "Name": "User",
+              "Start": {
+                "Line": 22,
+                "Column": 25,
+                "Index": 484
+              },
+              "End": {
+                "Line": 22,
+                "Column": 29,
+                "Index": 488
+              }
+            },
+            "Start": {
+              "Line": 22,
+              "Column": 25,
+              "Index": 484
+            },
+            "End": {
+              "Line": 22,
+              "Column": 29,
+              "Index": 488
+            }
+          },
+          "Error": {
+            "Name": "str",
+            "Start": {
+              "Line": 22,
+              "Column": 31,
+              "Index": 490
+            },
+            "End": {
+              "Line": 22,
+              "Column": 31,
+              "Index": 490
+            }
+          },
+          "Start": {
+            "Line": 22,
+            "Column": 25,
+            "Index": 484
+          },
+          "End": {
+            "Line": 22,
+            "Column": 31,
+            "Index": 490
+          }
+        },
+        "Start": {
+          "Line": 22,
+          "Column": 12,
+          "Index": 471
+        },
+        "End": {
+          "Line": 22,
+          "Column": 31,
+          "Index": 490
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Name": "user",
+              "Start": {
+                "Line": 23,
+                "Column": 12,
+                "Index": 505
+              },
+              "End": {
+                "Line": 23,
+                "Column": 16,
+                "Index": 509
+              }
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 23,
+              "Column": 5,
+              "Index": 498
+            },
+            "End": {
+              "Line": 23,
+              "Column": 17,
+              "Index": 510
+            }
+          }
+        ],
+        "Start": {
+          "Line": 22,
+          "Column": 32,
+          "Index": 491
+        },
+        "End": {
+          "Line": 24,
+          "Column": 2,
+          "Index": 513
+        }
+      },
+      "Start": {
+        "Line": 22,
+        "Column": 1,
+        "Index": 460
+      },
+      "End": {
+        "Line": 24,
+        "Column": 2,
+        "Index": 513
+      }
+    },
+    {
+      "Name": {
+        "Name": "processItems",
+        "Start": {
+          "Line": 27,
+          "Column": 4,
+          "Index": 552
+        },
+        "End": {
+          "Line": 27,
+          "Column": 16,
+          "Index": 564
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "items",
+                "Start": {
+                  "Line": 27,
+                  "Column": 17,
+                  "Index": 565
+                },
+                "End": {
+                  "Line": 27,
+                  "Column": 22,
+                  "Index": 570
+                }
+              },
+              "Type": {
+                "Len": null,
+                "ElType": {
+                  "Name": "str",
+                  "Start": {
+                    "Line": 27,
+                    "Column": 26,
+                    "Index": 574
+                  },
+                  "End": {
+                    "Line": 27,
+                    "Column": 29,
+                    "Index": 577
+                  }
+                },
+                "Start": {
+                  "Line": 27,
+                  "Column": 24,
+                  "Index": 572
+                },
+                "End": {
+                  "Line": 27,
+                  "Column": 29,
+                  "Index": 577
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 27,
+                "Column": 17,
+                "Index": 565
+              },
+              "End": {
+                "Line": 27,
+                "Column": 29,
+                "Index": 577
+              }
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Result": {
+          "Len": null,
+          "ElType": {
+            "Value": {
+              "Name": "i32",
+              "Start": {
+                "Line": 27,
+                "Column": 36,
+                "Index": 584
+              },
+              "End": {
+                "Line": 27,
+                "Column": 39,
+                "Index": 587
+              }
+            },
+            "Error": {
+              "Name": "str",
+              "Start": {
+                "Line": 27,
+                "Column": 40,
+                "Index": 588
+              },
+              "End": {
+                "Line": 27,
+                "Column": 40,
+                "Index": 588
+              }
+            },
+            "Start": {
+              "Line": 27,
+              "Column": 36,
+              "Index": 584
+            },
+            "End": {
+              "Line": 27,
+              "Column": 40,
+              "Index": 588
+            }
+          },
+          "Start": {
+            "Line": 27,
+            "Column": 34,
+            "Index": 582
+          },
+          "End": {
+            "Line": 27,
+            "Column": 40,
+            "Index": 588
+          }
+        },
+        "Start": {
+          "Line": 27,
+          "Column": 16,
+          "Index": 564
+        },
+        "End": {
+          "Line": 27,
+          "Column": 40,
+          "Index": 588
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Name": "result",
+              "Start": {
+                "Line": 28,
+                "Column": 12,
+                "Index": 603
+              },
+              "End": {
+                "Line": 28,
+                "Column": 18,
+                "Index": 609
+              }
+            },
+            "IsError": true,
+            "Start": {
+              "Line": 28,
+              "Column": 5,
+              "Index": 596
+            },
+            "End": {
+              "Line": 28,
+              "Column": 20,
+              "Index": 611
+            }
+          }
+        ],
+        "Start": {
+          "Line": 27,
+          "Column": 41,
+          "Index": 589
+        },
+        "End": {
+          "Line": 29,
+          "Column": 2,
+          "Index": 614
+        }
+      },
+      "Start": {
+        "Line": 27,
+        "Column": 1,
+        "Index": 549
+      },
+      "End": {
+        "Line": 29,
+        "Column": 2,
+        "Index": 614
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "handler",
+            "Start": {
+              "Line": 32,
+              "Column": 7,
+              "Index": 669
+            },
+            "End": {
+              "Line": 32,
+              "Column": 14,
+              "Index": 676
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Type": {
+              "Params": {
+                "List": [
+                  {
+                    "Name": {
+                      "Name": "code",
+                      "Start": {
+                        "Line": 32,
+                        "Column": 22,
+                        "Index": 684
+                      },
+                      "End": {
+                        "Line": 32,
+                        "Column": 26,
+                        "Index": 688
+                      }
+                    },
+                    "Type": {
+                      "Name": "i32",
+                      "Start": {
+                        "Line": 32,
+                        "Column": 28,
+                        "Index": 690
+                      },
+                      "End": {
+                        "Line": 32,
+                        "Column": 31,
+                        "Index": 693
+                      }
+                    },
+                    "Value": null,
+                    "IsVariadic": false,
+                    "Start": {
+                      "Line": 32,
+                      "Column": 22,
+                      "Index": 684
+                    },
+                    "End": {
+                      "Line": 32,
+                      "Column": 31,
+                      "Index": 693
+                    }
+                  }
+                ],
+                "Start": {
+                  "Line": 32,
+                  "Column": 18,
+                  "Index": 680
+                },
+                "End": {
+                  "Line": 32,
+                  "Column": 32,
+                  "Index": 694
+                }
+              },
+              "Result": {
+                "Value": {
+                  "Name": "str",
+                  "Start": {
+                    "Line": 32,
+                    "Column": 36,
+                    "Index": 698
+                  },
+                  "End": {
+                    "Line": 32,
+                    "Column": 39,
+                    "Index": 701
+                  }
+                },
+                "Error": {
+                  "Name": "str",
+                  "Start": {
+                    "Line": 32,
+                    "Column": 40,
+                    "Index": 702
+                  },
+                  "End": {
+                    "Line": 32,
+                    "Column": 40,
+                    "Index": 702
+                  }
+                },
+                "Start": {
+                  "Line": 32,
+                  "Column": 36,
+                  "Index": 698
+                },
+                "End": {
+                  "Line": 32,
+                  "Column": 40,
+                  "Index": 702
+                }
+              },
+              "Start": {
+                "Line": 32,
+                "Column": 18,
+                "Index": 680
+              },
+              "End": {
+                "Line": 32,
+                "Column": 40,
+                "Index": 702
+              }
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Result": {
+                    "Kind": 2,
+                    "Value": "error",
+                    "Start": {
+                      "Line": 33,
+                      "Column": 12,
+                      "Index": 717
+                    },
+                    "End": {
+                      "Line": 33,
+                      "Column": 19,
+                      "Index": 724
+                    }
+                  },
+                  "IsError": false,
+                  "Start": {
+                    "Line": 33,
+                    "Column": 5,
+                    "Index": 710
+                  },
+                  "End": {
+                    "Line": 33,
+                    "Column": 20,
+                    "Index": 725
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 32,
+                "Column": 41,
+                "Index": 703
+              },
+              "End": {
+                "Line": 34,
+                "Column": 2,
+                "Index": 728
+              }
+            },
+            "Start": {
+              "Line": 32,
+              "Column": 18,
+              "Index": 680
+            },
+            "End": {
+              "Line": 34,
+              "Column": 2,
+              "Index": 728
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 32,
+        "Column": 1,
+        "Index": 663
+      },
+      "End": {
+        "Line": 34,
+        "Column": 3,
+        "Index": 729
+      }
+    },
+    {
+      "Name": {
+        "Name": "complexOp",
+        "Start": {
+          "Line": 37,
+          "Column": 4,
+          "Index": 805
+        },
+        "End": {
+          "Line": 37,
+          "Column": 13,
+          "Index": 814
+        }
+      },
+      "Type": {
+        "Params": {
+          "List": [
+            {
+              "Name": {
+                "Name": "a",
+                "Start": {
+                  "Line": 37,
+                  "Column": 14,
+                  "Index": 815
+                },
+                "End": {
+                  "Line": 37,
+                  "Column": 15,
+                  "Index": 816
+                }
+              },
+              "Type": {
+                "Value": {
+                  "Name": "i32",
+                  "Start": {
+                    "Line": 37,
+                    "Column": 17,
+                    "Index": 818
+                  },
+                  "End": {
+                    "Line": 37,
+                    "Column": 20,
+                    "Index": 821
+                  }
+                },
+                "Error": {
+                  "Name": "str",
+                  "Start": {
+                    "Line": 37,
+                    "Column": 21,
+                    "Index": 822
+                  },
+                  "End": {
+                    "Line": 37,
+                    "Column": 21,
+                    "Index": 822
+                  }
+                },
+                "Start": {
+                  "Line": 37,
+                  "Column": 17,
+                  "Index": 818
+                },
+                "End": {
+                  "Line": 37,
+                  "Column": 21,
+                  "Index": 822
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 37,
+                "Column": 14,
+                "Index": 815
+              },
+              "End": {
+                "Line": 37,
+                "Column": 21,
+                "Index": 822
+              }
+            },
+            {
+              "Name": {
+                "Name": "b",
+                "Start": {
+                  "Line": 37,
+                  "Column": 23,
+                  "Index": 824
+                },
+                "End": {
+                  "Line": 37,
+                  "Column": 24,
+                  "Index": 825
+                }
+              },
+              "Type": {
+                "Value": {
+                  "Name": "str",
+                  "Start": {
+                    "Line": 37,
+                    "Column": 26,
+                    "Index": 827
+                  },
+                  "End": {
+                    "Line": 37,
+                    "Column": 29,
+                    "Index": 830
+                  }
+                },
+                "Error": {
+                  "Name": "CustomError",
+                  "Start": {
+                    "Line": 37,
+                    "Column": 32,
+                    "Index": 833
+                  },
+                  "End": {
+                    "Line": 37,
+                    "Column": 43,
+                    "Index": 844
+                  }
+                },
+                "Start": {
+                  "Line": 37,
+                  "Column": 26,
+                  "Index": 827
+                },
+                "End": {
+                  "Line": 37,
+                  "Column": 43,
+                  "Index": 844
+                }
+              },
+              "Value": null,
+              "IsVariadic": false,
+              "Start": {
+                "Line": 37,
+                "Column": 23,
+                "Index": 824
+              },
+              "End": {
+                "Line": 37,
+                "Column": 43,
+                "Index": 844
+              }
+            }
+          ],
+          "Start": null,
+          "End": null
+        },
+        "Result": {
+          "Value": {
+            "Name": "bool",
+            "Start": {
+              "Line": 37,
+              "Column": 48,
+              "Index": 849
+            },
+            "End": {
+              "Line": 37,
+              "Column": 52,
+              "Index": 853
+            }
+          },
+          "Error": {
+            "Name": "str",
+            "Start": {
+              "Line": 37,
+              "Column": 53,
+              "Index": 854
+            },
+            "End": {
+              "Line": 37,
+              "Column": 53,
+              "Index": 854
+            }
+          },
+          "Start": {
+            "Line": 37,
+            "Column": 48,
+            "Index": 849
+          },
+          "End": {
+            "Line": 37,
+            "Column": 53,
+            "Index": 854
+          }
+        },
+        "Start": {
+          "Line": 37,
+          "Column": 13,
+          "Index": 814
+        },
+        "End": {
+          "Line": 37,
+          "Column": 53,
+          "Index": 854
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Name": "true",
+              "Start": {
+                "Line": 38,
+                "Column": 12,
+                "Index": 869
+              },
+              "End": {
+                "Line": 38,
+                "Column": 16,
+                "Index": 873
+              }
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 38,
+              "Column": 5,
+              "Index": 862
+            },
+            "End": {
+              "Line": 38,
+              "Column": 17,
+              "Index": 874
+            }
+          }
+        ],
+        "Start": {
+          "Line": 37,
+          "Column": 54,
+          "Index": 855
+        },
+        "End": {
+          "Line": 39,
+          "Column": 2,
+          "Index": 877
+        }
+      },
+      "Start": {
+        "Line": 37,
+        "Column": 1,
+        "Index": 802
+      },
+      "End": {
+        "Line": 39,
+        "Column": 2,
+        "Index": 877
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

@@ -88,8 +88,8 @@ catch     // catch block for T! functions
 ## Miscellaneous
 ```ts
 as        // type cast
-return    // replaces ret
-spawn     // start coroutine
+return
+fork     // start coroutine
 ```
 
 ## Special Operators

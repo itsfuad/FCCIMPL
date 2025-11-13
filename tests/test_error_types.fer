@@ -1,0 +1,25 @@
+// Test error types and catch expressions
+
+fn div(a: i32, b: i32) -> i32 ! {
+    if b == 0 {
+        return "error: division by zero"!;
+    }
+
+    return a / b;
+}
+
+fn test() {
+    // Test 1: catch with error handler and fallback value
+    let result := div(10, 0) catch err {
+        // Handle the error
+    } 0; // Default value if error occurs
+
+    // Test 2: catch with error handler, no fallback (handler must handle control flow)
+    let x := div(10, 2) catch err {
+        // Handle the error
+        return 0; // default value not needed here because we do not proceed to next line.
+    };
+
+    // Test 3: catch with just fallback value, no handler
+    let y := div(10, 2) catch 0;
+}
