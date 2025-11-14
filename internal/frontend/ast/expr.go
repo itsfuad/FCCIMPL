@@ -134,18 +134,6 @@ func (e *ElvisExpr) INode()                {} // Implements Node interface
 func (e *ElvisExpr) Expr()                 {} // Expr is a marker interface for all expressions
 func (e *ElvisExpr) Loc() *source.Location { return &e.Location }
 
-// CatchExpr represents a try expression with catch block
-// Example: fetch("...") catch error { println(error) } fallback
-type CatchExpr struct {
-	X     Expression  // expression that might return an error (T ! E)
-	Catch *CatchBlock // catch block for error handling
-	source.Location
-}
-
-func (t *CatchExpr) INode()                {} // Implements Node interface
-func (t *CatchExpr) Expr()                 {} // Expr is a marker interface for all expressions
-func (t *CatchExpr) Loc() *source.Location { return &t.Location }
-
 // ForkExpr represents a fork expression for coroutines
 type ForkExpr struct {
 	Call Expression // the function call to fork
