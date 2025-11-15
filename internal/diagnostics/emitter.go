@@ -444,6 +444,16 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
 	colors.GREY.Println(" |")
 
+	// Try to get previous line for context (if not empty)
+	if line > 1 {
+		prevLine, err := e.cache.GetLine(filepath, line-1)
+		if err == nil && strings.TrimSpace(prevLine) != "" {
+			// Print previous line in grey for context
+			colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, line-1)
+			colors.GREY.Println(prevLine)
+		}
+	}
+
 	// Get source line
 	sourceLine, err := e.cache.GetLine(filepath, line)
 	if err != nil {
@@ -598,9 +608,27 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 			prevLine := lineNumbers[idx-1]
 			if lineNum-prevLine > 1 {
 				colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-				colors.GREY.Println(" ...")
+				colors.GREY.Println("...")
 				colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
 				colors.GREY.Println(" |")
+			}
+		}
+
+		// Try to get previous line for context (if not empty)
+		if lineNum > 1 {
+			// Check if previous line is not already shown
+			isPrevShown := false
+			if idx > 0 && lineNumbers[idx-1] == lineNum-1 {
+				isPrevShown = true
+			}
+
+			if !isPrevShown {
+				prevLine, err := e.cache.GetLine(filepath, lineNum-1)
+				if err == nil && strings.TrimSpace(prevLine) != "" {
+					// Print previous line in grey for context
+					colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, lineNum-1)
+					colors.GREY.Println(prevLine)
+				}
 			}
 		}
 

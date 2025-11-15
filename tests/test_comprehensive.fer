@@ -49,8 +49,10 @@ let a := 5;
 let b := 10;
 
 if a < b {
+    let ifa := 1;
     let max := b;
 } else if a > b {
+    let ifb := 1;
     let max := a;
 } else {
     let equal := 1;

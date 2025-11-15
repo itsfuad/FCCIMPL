@@ -105,10 +105,10 @@ func (c *Checker) checkVarDecl(decl *ast.VarDecl) semantics.Type {
 								c.typeString(sym.Type)),
 						).
 							WithCode(diagnostics.ErrTypeMismatch).
-							WithPrimaryLabel(c.currentFile, item.Name.Loc(),
-								fmt.Sprintf("variable has type %s", c.typeString(sym.Type))).
-							WithSecondaryLabel(c.currentFile, item.Value.Loc(),
-								fmt.Sprintf("type %s", c.typeString(valueType))),
+							WithPrimaryLabel(c.currentFile, item.Value.Loc(),
+								fmt.Sprintf("type %s", c.typeString(valueType))).
+							WithSecondaryLabel(c.currentFile, item.Name.Loc(),
+								fmt.Sprintf("variable has type %s", c.typeString(sym.Type))),
 					)
 				}
 			} else {
@@ -144,10 +144,10 @@ func (c *Checker) checkConstDecl(decl *ast.ConstDecl) semantics.Type {
 								c.typeString(sym.Type)),
 						).
 							WithCode(diagnostics.ErrTypeMismatch).
-							WithPrimaryLabel(c.currentFile, item.Name.Loc(),
-								fmt.Sprintf("constant has type %s", c.typeString(sym.Type))).
-							WithSecondaryLabel(c.currentFile, item.Value.Loc(),
-								fmt.Sprintf("type %s", c.typeString(valueType))),
+							WithPrimaryLabel(c.currentFile, item.Value.Loc(),
+								fmt.Sprintf("type %s", c.typeString(valueType))).
+							WithSecondaryLabel(c.currentFile, item.Name.Loc(),
+								fmt.Sprintf("constant has type %s", c.typeString(sym.Type))),
 					)
 				}
 			} else {
