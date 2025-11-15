@@ -44,11 +44,18 @@ const (
 	PhaseInitial      CompilationPhase = iota // Not started
 	PhaseLexing                               // Tokenizing source files
 	PhaseParsing                              // Building ASTs
-	PhaseCollecting                           // Building symbol tables (TODO)
-	PhaseResolving                            // Resolving symbols and imports (TODO)
-	PhaseTypeChecking                         // Validating types (TODO)
-	PhaseCodeGen                              // Generating output code (TODO)
+	PhaseCollecting                           // Building symbol tables
+	PhaseResolving                            // Resolving symbols and imports
+	PhaseTypeChecking                         // Validating types
+	PhaseCodeGen                              // Generating output code
 	PhaseComplete                             // Compilation finished
+)
+
+// Phase runner function types - these will be set by the semantic packages
+var (
+	CollectorRun func(*CompilerContext)
+	ResolverRun  func(*CompilerContext)
+	CheckerRun   func(*CompilerContext)
 )
 
 // DependencyGraph tracks the import relationships between files
@@ -344,17 +351,26 @@ func (ctx *CompilerContext) Compile(entryPoint string) error {
 		return fmt.Errorf("lex/parse failed: %w", err)
 	}
 
-	// TODO: Phase 3 - Collector
-	// collector.Run(ctx)
+	// Phase 3: Collector
 	// Walks ASTs and builds symbol tables for each module
+	if ctx.Options.Debug {
+		fmt.Printf("\n[Phase 3] Declaration Collection\n")
+	}
+	ctx.RunCollectorPhase()
 
-	// TODO: Phase 4 - Resolver
-	// resolver.Run(ctx)
+	// Phase 4: Resolver
 	// Resolves all symbol references and import dependencies
+	if ctx.Options.Debug {
+		fmt.Printf("\n[Phase 4] Type Resolution\n")
+	}
+	ctx.RunResolverPhase()
 
-	// TODO: Phase 5 - Type Checker
-	// typechecker.Run(ctx)
+	// Phase 5: Type Checker
 	// Validates type correctness of all expressions
+	if ctx.Options.Debug {
+		fmt.Printf("\n[Phase 5] Type Checking\n")
+	}
+	ctx.RunCheckerPhase()
 
 	// TODO: Phase 6 - Code Generator
 	// codegen.Run(ctx)
@@ -618,6 +634,47 @@ func (ctx *CompilerContext) RunLexAndParsePhase() error {
 	}
 
 	return nil
+}
+
+// RunCollectorPhase walks ASTs and builds symbol tables (Phase 3)
+func (ctx *CompilerContext) RunCollectorPhase() {
+	// Initialize semantics for all files
+	for _, file := range ctx.GetAllFiles() {
+		ctx.InitializeSemantics(file)
+	}
+	
+	// Run the collector if it's been registered
+	if CollectorRun != nil {
+		CollectorRun(ctx)
+	}
+	
+	if ctx.Options.Debug {
+		fmt.Printf("  ✓ Collected symbols from %d file(s)\n", len(ctx.GetAllFiles()))
+	}
+}
+
+// RunResolverPhase resolves all types (Phase 4)
+func (ctx *CompilerContext) RunResolverPhase() {
+	// Run the type resolver if it's been registered
+	if ResolverRun != nil {
+		ResolverRun(ctx)
+	}
+	
+	if ctx.Options.Debug {
+		fmt.Printf("  ✓ Resolved types for %d file(s)\n", len(ctx.GetAllFiles()))
+	}
+}
+
+// RunCheckerPhase validates type correctness (Phase 5)
+func (ctx *CompilerContext) RunCheckerPhase() {
+	// Run the type checker if it's been registered
+	if CheckerRun != nil {
+		CheckerRun(ctx)
+	}
+	
+	if ctx.Options.Debug {
+		fmt.Printf("  ✓ Type checked %d file(s)\n", len(ctx.GetAllFiles()))
+	}
 }
 
 // RunLexerPhase tokenizes all registered source files (sequential fallback)

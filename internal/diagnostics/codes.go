@@ -38,6 +38,7 @@ const (
 	ErrNonExhaustiveMatch      = "T0014"
 	ErrInvalidReturn           = "T0015"
 	ErrMissingReturn           = "T0016"
+	ErrConstantReassignment    = "T0017"
 
 	// Module/Import errors (M prefix)
 	ErrModuleNotFound    = "M0001"

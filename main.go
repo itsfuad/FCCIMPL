@@ -2,6 +2,9 @@ package main
 
 import (
 	"compiler/internal/context"
+	"compiler/internal/semantics/checker"
+	"compiler/internal/semantics/collector"
+	"compiler/internal/semantics/resolver"
 	"flag"
 	"fmt"
 	"os"
@@ -9,6 +12,11 @@ import (
 )
 
 func main() {
+	// Register semantic phase runners
+	context.CollectorRun = collector.Run
+	context.ResolverRun = resolver.Run
+	context.CheckerRun = checker.Run
+	
 	// Parse command-line flags
 	debugFlag := flag.Bool("debug", false, "Enable debug output")
 	flag.Parse()
