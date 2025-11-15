@@ -103,14 +103,3 @@ type DeferStmt struct {
 func (d *DeferStmt) INode()                {} // Implements Node interface
 func (d *DeferStmt) Stmt()                 {} // Stmt is a marker interface for all statements
 func (d *DeferStmt) Loc() *source.Location { return &d.Location }
-
-// CatchBlock represents a catch block for error handling
-type CatchBlock struct {
-	ErrorVar *IdentifierExpr // error variable (can be nil for anonymous)
-	Body     *Block          // catch body
-	Fallback Expression      // fallback value
-	source.Location
-}
-
-func (c *CatchBlock) INode()                {} // Implements Node interface
-func (c *CatchBlock) Loc() *source.Location { return &c.Location }
