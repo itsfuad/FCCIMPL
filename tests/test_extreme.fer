@@ -1,0 +1,70 @@
+// Extreme edge cases
+
+// Test 1: Error on line 1 (no previous line)
+let firstLine: i32 = "error";
+
+// Test 2: Many redeclarations far apart
+let name := 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let name := 2;
+
+// Test 3: Very deep nesting
+if true {
+    if true {
+        if true {
+            if true {
+                if true {
+                    let deep: i32 = "nested_error";
+                }
+            }
+        }
+    }
+}
+
+// Test 4: Single character identifier
+let x: i32 = "a";
+
+// Test 5: Operator in error
+let result: i32 = "text" + "more";

@@ -88,6 +88,10 @@ type CompilerContext struct {
 	// Each SourceFile contains both syntax (AST) and semantics (Scope, Imports)
 	Files map[string]*SourceFile
 
+	// BlockScopes - maps Block AST nodes to their symbol tables
+	// Blocks (if/else/for/while/etc) create child scopes for their declarations
+	BlockScopes map[interface{}]*semantics.SymbolTable
+
 	// DependencyGraph - tracks import relationships for parallel compilation
 	Graph *DependencyGraph
 
@@ -189,6 +193,7 @@ func New(options *CompilerOptions) *CompilerContext {
 	return &CompilerContext{
 		Diagnostics:   diagnostics.NewDiagnosticBag(""),
 		Files:         make(map[string]*SourceFile),
+		BlockScopes:   make(map[interface{}]*semantics.SymbolTable),
 		UniverseScope: universeScope,
 		Graph: &DependencyGraph{
 			Dependencies: make(map[string][]string),
@@ -230,6 +235,25 @@ func registerBuiltins(scope *semantics.SymbolTable) {
 			Type: bt.typeName,
 		}
 		scope.Declare(bt.name, sym)
+	}
+
+	// Built-in constants
+	builtinConstants := []struct {
+		name string
+		typ  types.TYPE_NAME
+	}{
+		{"true", types.TYPE_BOOL},
+		{"false", types.TYPE_BOOL},
+		{"none", types.TYPE_NONE}, // or could be a special option type
+	}
+
+	for _, bc := range builtinConstants {
+		sym := &semantics.Symbol{
+			Name: bc.name,
+			Kind: semantics.SymbolConst,
+			Type: bc.typ,
+		}
+		scope.Declare(bc.name, sym)
 	}
 }
 
@@ -764,4 +788,18 @@ func (ctx *CompilerContext) parseFile(file *SourceFile) error {
 	}
 
 	return nil
+}
+
+// SetBlockScope associates a scope with a block AST node
+func (ctx *CompilerContext) SetBlockScope(block interface{}, scope *semantics.SymbolTable) {
+	ctx.mu.Lock()
+	defer ctx.mu.Unlock()
+	ctx.BlockScopes[block] = scope
+}
+
+// GetBlockScope retrieves the scope associated with a block AST node
+func (ctx *CompilerContext) GetBlockScope(block interface{}) *semantics.SymbolTable {
+	ctx.mu.RLock()
+	defer ctx.mu.RUnlock()
+	return ctx.BlockScopes[block]
 }

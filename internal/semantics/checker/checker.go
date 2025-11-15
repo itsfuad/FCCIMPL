@@ -250,10 +250,18 @@ func (c *Checker) checkFuncDecl(decl *ast.FuncDecl) semantics.Type {
 
 // checkBlock checks a block of statements
 func (c *Checker) checkBlock(block *ast.Block) semantics.Type {
+	// Switch to the block's scope if it exists
+	prevScope := c.currentScope
+	if blockScope := c.ctx.GetBlockScope(block); blockScope != nil {
+		c.currentScope = blockScope
+	}
+
 	var lastType semantics.Type
 	for _, node := range block.Nodes {
 		lastType = c.checkNode(node)
 	}
+
+	c.currentScope = prevScope
 	return lastType
 }
 

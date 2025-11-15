@@ -307,13 +307,25 @@ func (c *Collector) collectParam(param *ast.Field) {
 
 // collectBlock collects declarations within a block statement
 func (c *Collector) collectBlock(block *ast.Block) {
+	// Create a new child scope for this block
+	prevScope := c.currentScope
+	blockScope := semantics.NewSymbolTable(c.currentScope)
+	blockScope.ScopeName = semantics.SYMBOL_TABLE_BLOCK
+	c.currentScope = blockScope
+
+	// Store the scope in the AST node metadata (we'll use a map for this)
+	c.ctx.SetBlockScope(block, blockScope)
+
 	for _, stmt := range block.Nodes {
 		c.collectDecl(stmt)
 	}
+
+	c.currentScope = prevScope
 }
 
 // collectIfStmt collects declarations in if statement branches
 func (c *Collector) collectIfStmt(stmt *ast.IfStmt) {
+	// Each branch of an if statement gets its own scope
 	if stmt.Body != nil {
 		c.collectBlock(stmt.Body)
 	}
