@@ -27,7 +27,7 @@ func New(ctx *context.CompilerContext) *Resolver {
 // Run executes Pass 2: Type Resolution for all files
 func Run(ctx *context.CompilerContext) {
 	resolver := New(ctx)
-	
+
 	for _, file := range ctx.GetAllFiles() {
 		resolver.ResolveFile(file)
 	}
@@ -37,11 +37,11 @@ func Run(ctx *context.CompilerContext) {
 func (r *Resolver) ResolveFile(file *context.SourceFile) {
 	r.currentFile = file.Path
 	r.currentScope = file.Scope
-	
+
 	if file.Scope == nil {
 		return // No symbols to resolve
 	}
-	
+
 	// Walk all symbols and resolve their types
 	for _, sym := range file.Scope.AllSymbols() {
 		r.resolveSymbolType(sym)
@@ -53,7 +53,7 @@ func (r *Resolver) resolveSymbolType(sym *semantics.Symbol) {
 	if sym.Type != nil {
 		return // Already resolved
 	}
-	
+
 	switch sym.Kind {
 	case semantics.SymbolVar:
 		r.resolveVarType(sym)
@@ -74,7 +74,7 @@ func (r *Resolver) resolveVarType(sym *semantics.Symbol) {
 	if !ok {
 		return
 	}
-	
+
 	// Find this variable's DeclItem
 	for _, item := range varDecl.Decls {
 		if item.Name.Name == sym.Name {
@@ -104,7 +104,7 @@ func (r *Resolver) resolveConstType(sym *semantics.Symbol) {
 	if !ok {
 		return
 	}
-	
+
 	// Find this constant's DeclItem
 	for _, item := range constDecl.Decls {
 		if item.Name.Name == sym.Name {
@@ -124,7 +124,7 @@ func (r *Resolver) resolveParamType(sym *semantics.Symbol) {
 	if !ok || field.Type == nil {
 		return
 	}
-	
+
 	sym.Type = r.resolveTypeNode(field.Type)
 }
 
@@ -134,16 +134,16 @@ func (r *Resolver) resolveUserType(sym *semantics.Symbol) {
 	if !ok {
 		return
 	}
-	
+
 	// Create a UserType
 	userType := &semantics.UserType{
 		Name:    sym.Name,
 		Methods: make(map[string]*semantics.FunctionType),
 		State:   semantics.TypeNotStarted,
 	}
-	
+
 	sym.Type = userType
-	
+
 	// Resolve the underlying type definition
 	if typeDecl.Type != nil {
 		userType.State = semantics.TypeResolving
@@ -158,11 +158,11 @@ func (r *Resolver) resolveFuncType(sym *semantics.Symbol) {
 	if !ok || funcDecl.Type == nil {
 		return
 	}
-	
+
 	funcType := &semantics.FunctionType{
 		Parameters: []semantics.ParamsType{},
 	}
-	
+
 	// Resolve parameters
 	for _, param := range funcDecl.Type.Params {
 		paramType := r.resolveTypeNode(param.Type)
@@ -172,25 +172,25 @@ func (r *Resolver) resolveFuncType(sym *semantics.Symbol) {
 			IsVariadic: param.IsVariadic,
 		})
 	}
-	
+
 	// Resolve return type
 	if funcDecl.Type.Result != nil {
 		funcType.ReturnType = r.resolveTypeNode(funcDecl.Type.Result)
 	}
-	
+
 	sym.Type = funcType
-	
+
 	// Resolve types for parameters in function scope
 	if sym.SelfScope != nil {
 		prevScope := r.currentScope
 		r.currentScope = sym.SelfScope
-		
+
 		for _, paramSym := range sym.SelfScope.AllSymbols() {
 			if paramSym.Kind == semantics.SymbolParam {
 				r.resolveParamType(paramSym)
 			}
 		}
-		
+
 		r.currentScope = prevScope
 	}
 }
@@ -200,12 +200,12 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 	if node == nil {
 		return nil
 	}
-	
+
 	switch t := node.(type) {
 	case *ast.IdentifierExpr:
 		// Primitive type or user-defined type
 		return r.resolveNamedType(t.Name)
-		
+
 	case *ast.ArrayType:
 		elemType := r.resolveTypeNode(t.ElType)
 		arrayType := &semantics.ArrayType{
@@ -214,7 +214,7 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 		}
 		// TODO: Evaluate t.Len expression for size
 		return arrayType
-		
+
 	case *ast.StructType:
 		structType := &semantics.StructType{
 			Fields: make(map[string]semantics.Type),
@@ -226,7 +226,7 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 			}
 		}
 		return structType
-		
+
 	case *ast.FuncType:
 		funcType := &semantics.FunctionType{
 			Parameters: []semantics.ParamsType{},
@@ -243,12 +243,12 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 			funcType.ReturnType = r.resolveTypeNode(t.Result)
 		}
 		return funcType
-		
+
 	case *ast.MapType:
 		// Map types not yet implemented in semantic type system
 		// For now, return a simple representation
 		return &semantics.PrimitiveType{TypeName: types.TYPE_MAP}
-		
+
 	case *ast.InterfaceType:
 		interfaceType := &semantics.InterfaceType{
 			Methods: make(map[string]*semantics.FunctionType),
@@ -262,11 +262,11 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 			}
 		}
 		return interfaceType
-		
+
 	case *ast.OptionalType:
 		baseType := r.resolveTypeNode(t.Base)
 		return &semantics.OptionalType{Base: baseType}
-		
+
 	case *ast.ErrorType:
 		valueType := r.resolveTypeNode(t.Value)
 		errorType := r.resolveTypeNode(t.Error)
@@ -274,7 +274,7 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 			Valid: valueType,
 			Error: errorType,
 		}
-		
+
 	default:
 		// Unknown type - return invalid
 		return &semantics.Invalid{}
@@ -314,7 +314,7 @@ func (r *Resolver) resolveNamedType(name string) semantics.Type {
 	case "byte":
 		return &semantics.PrimitiveType{TypeName: types.TYPE_BYTE}
 	}
-	
+
 	// Look up user-defined type in symbol table
 	if sym, ok := r.currentScope.Lookup(name); ok {
 		if sym.Kind == semantics.SymbolType {
@@ -325,12 +325,12 @@ func (r *Resolver) resolveNamedType(name string) semantics.Type {
 			return sym.Type
 		}
 	}
-	
+
 	// Type not found - report error and return invalid
 	r.ctx.Diagnostics.Add(
 		diagnostics.NewError(fmt.Sprintf("undefined type: %s", name)).
 			WithCode(diagnostics.ErrUndefinedSymbol),
 	)
-	
+
 	return &semantics.Invalid{}
 }

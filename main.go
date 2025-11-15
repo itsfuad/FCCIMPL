@@ -16,7 +16,7 @@ func main() {
 	context.CollectorRun = collector.Run
 	context.ResolverRun = resolver.Run
 	context.CheckerRun = checker.Run
-	
+
 	// Parse command-line flags
 	debugFlag := flag.Bool("debug", false, "Enable debug output")
 	flag.Parse()

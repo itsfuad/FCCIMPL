@@ -1,0 +1,157 @@
+{
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_const_same_line.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "test",
+        "Start": {
+          "Line": 2,
+          "Column": 4,
+          "Index": 83
+        },
+        "End": {
+          "Line": 2,
+          "Column": 8,
+          "Index": 87
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 2,
+          "Column": 8,
+          "Index": 87
+        },
+        "End": {
+          "Line": 2,
+          "Column": 10,
+          "Index": 89
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "X",
+                  "Start": {
+                    "Line": 3,
+                    "Column": 11,
+                    "Index": 103
+                  },
+                  "End": {
+                    "Line": 3,
+                    "Column": 12,
+                    "Index": 104
+                  }
+                },
+                "Type": {
+                  "Name": "i32",
+                  "Start": {
+                    "Line": 3,
+                    "Column": 14,
+                    "Index": 106
+                  },
+                  "End": {
+                    "Line": 3,
+                    "Column": 17,
+                    "Index": 109
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "10",
+                  "Start": {
+                    "Line": 3,
+                    "Column": 20,
+                    "Index": 112
+                  },
+                  "End": {
+                    "Line": 3,
+                    "Column": 22,
+                    "Index": 114
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 3,
+              "Column": 5,
+              "Index": 97
+            },
+            "End": {
+              "Line": 3,
+              "Column": 23,
+              "Index": 115
+            }
+          },
+          {
+            "Lhs": {
+              "Name": "X",
+              "Start": {
+                "Line": 3,
+                "Column": 24,
+                "Index": 116
+              },
+              "End": {
+                "Line": 3,
+                "Column": 25,
+                "Index": 117
+              }
+            },
+            "Rhs": {
+              "Kind": 0,
+              "Value": "20",
+              "Start": {
+                "Line": 3,
+                "Column": 28,
+                "Index": 120
+              },
+              "End": {
+                "Line": 3,
+                "Column": 30,
+                "Index": 122
+              }
+            },
+            "Start": {
+              "Line": 3,
+              "Column": 24,
+              "Index": 116
+            },
+            "End": {
+              "Line": 3,
+              "Column": 31,
+              "Index": 123
+            }
+          }
+        ],
+        "Start": {
+          "Line": 2,
+          "Column": 11,
+          "Index": 90
+        },
+        "End": {
+          "Line": 4,
+          "Column": 2,
+          "Index": 172
+        }
+      },
+      "Start": {
+        "Line": 2,
+        "Column": 1,
+        "Index": 80
+      },
+      "End": {
+        "Line": 4,
+        "Column": 2,
+        "Index": 172
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

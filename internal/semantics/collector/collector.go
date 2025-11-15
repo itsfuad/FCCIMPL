@@ -26,7 +26,7 @@ func New(ctx *context.CompilerContext) *Collector {
 // Run executes Pass 1: Declaration Collection for all files
 func Run(ctx *context.CompilerContext) {
 	collector := New(ctx)
-	
+
 	for _, file := range ctx.GetAllFiles() {
 		collector.CollectFile(file)
 	}
@@ -35,15 +35,15 @@ func Run(ctx *context.CompilerContext) {
 // CollectFile collects declarations from a single source file
 func (c *Collector) CollectFile(file *context.SourceFile) {
 	c.currentFile = file.Path
-	
+
 	// Initialize symbol table if not already done
 	if file.Scope == nil {
 		ctx := c.ctx
 		ctx.InitializeSemantics(file)
 	}
-	
+
 	c.currentScope = file.Scope
-	
+
 	// Walk the AST module
 	if file.AST != nil {
 		c.collectModule(file.AST)
@@ -85,10 +85,10 @@ func (c *Collector) collectDecl(node ast.Node) {
 func (c *Collector) collectVarDecl(decl *ast.VarDecl) {
 	for _, item := range decl.Decls {
 		name := item.Name.Name
-		
+
 		// Create symbol (type will be resolved in Pass 2)
 		sym := semantics.NewSymbolWithDecl(name, semantics.SymbolVar, decl)
-		
+
 		// Try to declare in current scope
 		if err := c.currentScope.Declare(name, sym); err != nil {
 			// Symbol already declared - find previous declaration
@@ -97,7 +97,7 @@ func (c *Collector) collectVarDecl(decl *ast.VarDecl) {
 				if prevSym.Decl != nil {
 					prevLoc = prevSym.Decl.Loc()
 				}
-				
+
 				c.ctx.Diagnostics.Add(
 					diagnostics.RedeclaredSymbol(
 						c.currentFile,
@@ -115,10 +115,10 @@ func (c *Collector) collectVarDecl(decl *ast.VarDecl) {
 func (c *Collector) collectConstDecl(decl *ast.ConstDecl) {
 	for _, item := range decl.Decls {
 		name := item.Name.Name
-		
+
 		// Create symbol (type will be resolved in Pass 2)
 		sym := semantics.NewSymbolWithDecl(name, semantics.SymbolConst, decl)
-		
+
 		// Try to declare in current scope
 		if err := c.currentScope.Declare(name, sym); err != nil {
 			// Symbol already declared
@@ -127,7 +127,7 @@ func (c *Collector) collectConstDecl(decl *ast.ConstDecl) {
 				if prevSym.Decl != nil {
 					prevLoc = prevSym.Decl.Loc()
 				}
-				
+
 				c.ctx.Diagnostics.Add(
 					diagnostics.RedeclaredSymbol(
 						c.currentFile,
@@ -147,12 +147,12 @@ func (c *Collector) collectTypeDecl(decl *ast.TypeDecl) {
 		// Anonymous type declaration at top level - skip
 		return
 	}
-	
+
 	name := decl.Name.Name
-	
+
 	// Create symbol (type definition will be resolved in Pass 2)
 	sym := semantics.NewSymbolWithDecl(name, semantics.SymbolType, decl)
-	
+
 	// Try to declare in current scope
 	if err := c.currentScope.Declare(name, sym); err != nil {
 		// Symbol already declared
@@ -161,7 +161,7 @@ func (c *Collector) collectTypeDecl(decl *ast.TypeDecl) {
 			if prevSym.Decl != nil {
 				prevLoc = prevSym.Decl.Loc()
 			}
-			
+
 			c.ctx.Diagnostics.Add(
 				diagnostics.RedeclaredSymbol(
 					c.currentFile,
@@ -177,10 +177,10 @@ func (c *Collector) collectTypeDecl(decl *ast.TypeDecl) {
 // collectFuncDecl collects function declarations: fn add(a: i32) -> i32 { ... }
 func (c *Collector) collectFuncDecl(decl *ast.FuncDecl) {
 	name := decl.Name.Name
-	
+
 	// Create symbol (function type will be resolved in Pass 2)
 	sym := semantics.NewSymbolWithDecl(name, semantics.SymbolFunc, decl)
-	
+
 	// Try to declare in current scope
 	if err := c.currentScope.Declare(name, sym); err != nil {
 		// Symbol already declared
@@ -189,7 +189,7 @@ func (c *Collector) collectFuncDecl(decl *ast.FuncDecl) {
 			if prevSym.Decl != nil {
 				prevLoc = prevSym.Decl.Loc()
 			}
-			
+
 			c.ctx.Diagnostics.Add(
 				diagnostics.RedeclaredSymbol(
 					c.currentFile,
@@ -200,26 +200,26 @@ func (c *Collector) collectFuncDecl(decl *ast.FuncDecl) {
 			)
 		}
 	}
-	
+
 	// Create a new scope for the function body
 	// This will contain parameters and local variables
 	if sym.SelfScope == nil {
 		sym.SelfScope = semantics.NewSymbolTable(c.currentScope)
 		sym.SelfScope.ScopeName = semantics.SYMBOL_TABLE_FUNCTION
 	}
-	
+
 	// Collect parameters in function scope
 	if decl.Type != nil {
 		prevScope := c.currentScope
 		c.currentScope = sym.SelfScope
-		
+
 		for i := range decl.Type.Params {
 			c.collectParam(&decl.Type.Params[i])
 		}
-		
+
 		c.currentScope = prevScope
 	}
-	
+
 	// Collect declarations in function body
 	if decl.Body != nil {
 		prevScope := c.currentScope
@@ -234,16 +234,16 @@ func (c *Collector) collectMethodDecl(decl *ast.MethodDecl) {
 	// Methods are collected differently - they're associated with types
 	// For now, we'll create a symbol for the method
 	name := decl.Name.Name
-	
+
 	// Create symbol (method type will be resolved in Pass 2)
 	sym := semantics.NewSymbolWithDecl(name, semantics.SymbolMethod, decl)
-	
+
 	// Create a new scope for the method body
 	if sym.SelfScope == nil {
 		sym.SelfScope = semantics.NewSymbolTable(c.currentScope)
 		sym.SelfScope.ScopeName = semantics.SYMBOL_TABLE_FUNCTION
 	}
-	
+
 	// Collect receiver as a parameter
 	if decl.Receiver != nil {
 		prevScope := c.currentScope
@@ -251,19 +251,19 @@ func (c *Collector) collectMethodDecl(decl *ast.MethodDecl) {
 		c.collectParam(decl.Receiver)
 		c.currentScope = prevScope
 	}
-	
+
 	// Collect parameters
 	if decl.Type != nil {
 		prevScope := c.currentScope
 		c.currentScope = sym.SelfScope
-		
+
 		for i := range decl.Type.Params {
 			c.collectParam(&decl.Type.Params[i])
 		}
-		
+
 		c.currentScope = prevScope
 	}
-	
+
 	// Collect declarations in method body
 	if decl.Body != nil {
 		prevScope := c.currentScope
@@ -278,12 +278,12 @@ func (c *Collector) collectParam(param *ast.Field) {
 	if param.Name == nil {
 		return
 	}
-	
+
 	name := param.Name.Name
-	
+
 	// Create symbol for parameter
 	sym := semantics.NewSymbolWithDecl(name, semantics.SymbolParam, param)
-	
+
 	// Declare in function scope
 	if err := c.currentScope.Declare(name, sym); err != nil {
 		// Parameter already declared
@@ -292,7 +292,7 @@ func (c *Collector) collectParam(param *ast.Field) {
 			if prevSym.Decl != nil {
 				prevLoc = prevSym.Decl.Loc()
 			}
-			
+
 			c.ctx.Diagnostics.Add(
 				diagnostics.RedeclaredSymbol(
 					c.currentFile,

@@ -642,12 +642,12 @@ func (ctx *CompilerContext) RunCollectorPhase() {
 	for _, file := range ctx.GetAllFiles() {
 		ctx.InitializeSemantics(file)
 	}
-	
+
 	// Run the collector if it's been registered
 	if CollectorRun != nil {
 		CollectorRun(ctx)
 	}
-	
+
 	if ctx.Options.Debug {
 		fmt.Printf("  ✓ Collected symbols from %d file(s)\n", len(ctx.GetAllFiles()))
 	}
@@ -659,7 +659,7 @@ func (ctx *CompilerContext) RunResolverPhase() {
 	if ResolverRun != nil {
 		ResolverRun(ctx)
 	}
-	
+
 	if ctx.Options.Debug {
 		fmt.Printf("  ✓ Resolved types for %d file(s)\n", len(ctx.GetAllFiles()))
 	}
@@ -671,7 +671,7 @@ func (ctx *CompilerContext) RunCheckerPhase() {
 	if CheckerRun != nil {
 		CheckerRun(ctx)
 	}
-	
+
 	if ctx.Options.Debug {
 		fmt.Printf("  ✓ Type checked %d file(s)\n", len(ctx.GetAllFiles()))
 	}

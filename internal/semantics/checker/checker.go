@@ -26,7 +26,7 @@ func New(ctx *context.CompilerContext) *Checker {
 // Run executes Pass 3: Type Checking for all files
 func Run(ctx *context.CompilerContext) {
 	checker := New(ctx)
-	
+
 	for _, file := range ctx.GetAllFiles() {
 		checker.CheckFile(file)
 	}
@@ -36,11 +36,11 @@ func Run(ctx *context.CompilerContext) {
 func (c *Checker) CheckFile(file *context.SourceFile) {
 	c.currentFile = file.Path
 	c.currentScope = file.Scope
-	
+
 	if file.AST == nil || file.Scope == nil {
 		return
 	}
-	
+
 	// Walk the AST and check types
 	c.checkModule(file.AST)
 }
@@ -57,7 +57,7 @@ func (c *Checker) checkNode(node ast.Node) semantics.Type {
 	if node == nil {
 		return nil
 	}
-	
+
 	switch n := node.(type) {
 	case *ast.VarDecl:
 		return c.checkVarDecl(n)
@@ -89,11 +89,11 @@ func (c *Checker) checkVarDecl(decl *ast.VarDecl) semantics.Type {
 		if !ok {
 			continue // Symbol not found (error already reported in collector)
 		}
-		
+
 		// If there's an initializer, check it
 		if item.Value != nil {
 			valueType := c.checkExpr(item.Value)
-			
+
 			// If type was explicitly specified, check compatibility
 			if sym.Type != nil {
 				if !c.isAssignable(sym.Type, valueType) {
@@ -104,9 +104,9 @@ func (c *Checker) checkVarDecl(decl *ast.VarDecl) semantics.Type {
 								c.typeString(sym.Type)),
 						).
 							WithCode(diagnostics.ErrTypeMismatch).
-							WithPrimaryLabel(c.currentFile, item.Value.Loc(), 
+							WithPrimaryLabel(c.currentFile, item.Value.Loc(),
 								fmt.Sprintf("type %s", c.typeString(valueType))).
-							WithSecondaryLabel(c.currentFile, item.Name.Loc(), 
+							WithSecondaryLabel(c.currentFile, item.Name.Loc(),
 								fmt.Sprintf("variable has type %s", c.typeString(sym.Type))),
 					)
 				}
@@ -116,7 +116,7 @@ func (c *Checker) checkVarDecl(decl *ast.VarDecl) semantics.Type {
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -128,11 +128,11 @@ func (c *Checker) checkConstDecl(decl *ast.ConstDecl) semantics.Type {
 		if !ok {
 			continue // Symbol not found (error already reported in collector)
 		}
-		
+
 		// Constants must have an initializer (checked in parser)
 		if item.Value != nil {
 			valueType := c.checkExpr(item.Value)
-			
+
 			// If type was explicitly specified, check compatibility
 			if sym.Type != nil {
 				if !c.isAssignable(sym.Type, valueType) {
@@ -143,9 +143,9 @@ func (c *Checker) checkConstDecl(decl *ast.ConstDecl) semantics.Type {
 								c.typeString(sym.Type)),
 						).
 							WithCode(diagnostics.ErrTypeMismatch).
-							WithPrimaryLabel(c.currentFile, item.Value.Loc(), 
+							WithPrimaryLabel(c.currentFile, item.Value.Loc(),
 								fmt.Sprintf("type %s", c.typeString(valueType))).
-							WithSecondaryLabel(c.currentFile, item.Name.Loc(), 
+							WithSecondaryLabel(c.currentFile, item.Name.Loc(),
 								fmt.Sprintf("constant has type %s", c.typeString(sym.Type))),
 					)
 				}
@@ -155,7 +155,7 @@ func (c *Checker) checkConstDecl(decl *ast.ConstDecl) semantics.Type {
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -164,7 +164,7 @@ func (c *Checker) checkAssignStmt(stmt *ast.AssignStmt) semantics.Type {
 	// Check LHS and RHS types
 	lhsType := c.checkExpr(stmt.Lhs)
 	rhsType := c.checkExpr(stmt.Rhs)
-	
+
 	// Check if assignment is valid
 	if lhsType != nil && rhsType != nil {
 		if !c.isAssignable(lhsType, rhsType) {
@@ -175,30 +175,44 @@ func (c *Checker) checkAssignStmt(stmt *ast.AssignStmt) semantics.Type {
 						c.typeString(lhsType)),
 				).
 					WithCode(diagnostics.ErrTypeMismatch).
-					WithPrimaryLabel(c.currentFile, stmt.Rhs.Loc(), 
+					WithPrimaryLabel(c.currentFile, stmt.Rhs.Loc(),
 						fmt.Sprintf("type %s", c.typeString(rhsType))).
-					WithSecondaryLabel(c.currentFile, stmt.Lhs.Loc(), 
+					WithSecondaryLabel(c.currentFile, stmt.Lhs.Loc(),
 						fmt.Sprintf("target has type %s", c.typeString(lhsType))),
 			)
 		}
 	}
-	
+
 	// Check if LHS is a constant (not allowed to reassign)
 	if ident, ok := stmt.Lhs.(*ast.IdentifierExpr); ok {
 		if sym, found := c.currentScope.Lookup(ident.Name); found {
 			if sym.Kind == semantics.SymbolConst {
-				c.ctx.Diagnostics.Add(
-					diagnostics.NewError(
-						fmt.Sprintf("cannot assign to constant '%s'", ident.Name),
-					).
-						WithCode(diagnostics.ErrConstantReassignment).
-						WithPrimaryLabel(c.currentFile, stmt.Lhs.Loc(), "constant declared here").
-						WithHelp("constants cannot be reassigned after declaration"),
-				)
+				diag := diagnostics.NewError(
+					fmt.Sprintf("cannot assign to constant '%s'", ident.Name),
+				).
+					WithCode(diagnostics.ErrConstantReassignment).
+					WithPrimaryLabel(c.currentFile, stmt.Lhs.Loc(), "cannot assign to constant").
+					WithHelp("constants cannot be reassigned after declaration")
+
+				// Add secondary label pointing to where the constant was declared
+				if sym.Decl != nil {
+					if constDecl, ok := sym.Decl.(*ast.ConstDecl); ok {
+						// Find the specific declaration item for this constant
+						for _, item := range constDecl.Decls {
+							if item.Name.Name == ident.Name {
+								diag.WithSecondaryLabel(c.currentFile, item.Name.Loc(),
+									fmt.Sprintf("constant '%s' declared here", ident.Name))
+								break
+							}
+						}
+					}
+				}
+
+				c.ctx.Diagnostics.Add(diag)
 			}
 		}
 	}
-	
+
 	return nil
 }
 
@@ -209,17 +223,17 @@ func (c *Checker) checkFuncDecl(decl *ast.FuncDecl) semantics.Type {
 	if !ok || sym.SelfScope == nil {
 		return nil
 	}
-	
+
 	// Check function body in function scope
 	prevScope := c.currentScope
 	c.currentScope = sym.SelfScope
-	
+
 	if decl.Body != nil {
 		c.checkBlock(decl.Body)
 	}
-	
+
 	c.currentScope = prevScope
-	
+
 	return sym.Type
 }
 
@@ -236,15 +250,15 @@ func (c *Checker) checkBlock(block *ast.Block) semantics.Type {
 func (c *Checker) checkIfStmt(stmt *ast.IfStmt) semantics.Type {
 	// Check condition
 	condType := c.checkExpr(stmt.Cond)
-	
+
 	// Condition should be boolean (we can add this check later)
 	_ = condType
-	
+
 	// Check then branch
 	if stmt.Body != nil {
 		c.checkBlock(stmt.Body)
 	}
-	
+
 	// Check else branch
 	if stmt.Else != nil {
 		switch e := stmt.Else.(type) {
@@ -254,7 +268,7 @@ func (c *Checker) checkIfStmt(stmt *ast.IfStmt) semantics.Type {
 			c.checkIfStmt(e)
 		}
 	}
-	
+
 	return nil
 }
 
@@ -271,7 +285,7 @@ func (c *Checker) checkExpr(expr ast.Expression) semantics.Type {
 	if expr == nil {
 		return nil
 	}
-	
+
 	switch e := expr.(type) {
 	case *ast.BasicLit:
 		return c.checkBasicLit(e)
@@ -320,7 +334,7 @@ func (c *Checker) checkIdentifier(ident *ast.IdentifierExpr) semantics.Type {
 		)
 		return &semantics.Invalid{}
 	}
-	
+
 	return sym.Type
 }
 
@@ -328,11 +342,11 @@ func (c *Checker) checkIdentifier(ident *ast.IdentifierExpr) semantics.Type {
 func (c *Checker) checkBinaryExpr(expr *ast.BinaryExpr) semantics.Type {
 	leftType := c.checkExpr(expr.X)
 	rightType := c.checkExpr(expr.Y)
-	
+
 	// For now, return left type (simple approximation)
 	// TODO: Add proper operator type checking
 	_ = rightType
-	
+
 	return leftType
 }
 
@@ -344,21 +358,21 @@ func (c *Checker) checkUnaryExpr(expr *ast.UnaryExpr) semantics.Type {
 // checkCallExpr checks a function call expression
 func (c *Checker) checkCallExpr(expr *ast.CallExpr) semantics.Type {
 	funcType := c.checkExpr(expr.Fun)
-	
+
 	// Check if it's a function type
 	if ft, ok := funcType.(*semantics.FunctionType); ok {
 		// Check argument count and types
 		// TODO: Implement argument checking
 		return ft.ReturnType
 	}
-	
+
 	return nil
 }
 
 // checkSelectorExpr checks a field access expression
 func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 	baseType := c.checkExpr(expr.X)
-	
+
 	// Check if base type has the field
 	if structType, ok := baseType.(*semantics.StructType); ok {
 		fieldType := structType.GetFieldType(expr.Sel.Name)
@@ -375,7 +389,7 @@ func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 		}
 		return fieldType
 	}
-	
+
 	return nil
 }
 
@@ -395,7 +409,7 @@ func (c *Checker) isAssignable(to, from semantics.Type) bool {
 	if to == nil || from == nil {
 		return false
 	}
-	
+
 	// Check for invalid types
 	if _, ok := to.(*semantics.Invalid); ok {
 		return false
@@ -403,28 +417,28 @@ func (c *Checker) isAssignable(to, from semantics.Type) bool {
 	if _, ok := from.(*semantics.Invalid); ok {
 		return false
 	}
-	
+
 	// Exact type match
 	if to.String() == from.String() {
 		return true
 	}
-	
+
 	// Check primitive type compatibility
 	toPrim, toIsPrim := to.(*semantics.PrimitiveType)
 	fromPrim, fromIsPrim := from.(*semantics.PrimitiveType)
-	
+
 	if toIsPrim && fromIsPrim {
 		// Allow compatible primitive types
 		// For now, require exact match
 		// TODO: Add numeric type conversions (i32 -> i64, etc.)
 		return toPrim.TypeName == fromPrim.TypeName
 	}
-	
+
 	// TODO: Add more type compatibility rules
 	// - Interface implementation
 	// - Struct compatibility
 	// - Array element type matching
-	
+
 	return false
 }
 
