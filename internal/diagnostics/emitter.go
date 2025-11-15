@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"compiler/colors"
+	"compiler/internal/source"
 )
 
 const (
@@ -392,8 +393,8 @@ func (e *Emitter) printHelp(help string) {
 	fmt.Fprintln(os.Stderr, help)
 }
 
-// printCompactDualLabel prints primary + one secondary label on same line (Rust-style)
-// Primary gets inline message, secondary gets connector line below
+// printCompactDualLabel prints two labels on same line (Rust-style)
+// Rightmost label gets inline message, leftmost gets connector line below
 func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondary Label, severity Severity) {
 	if primary.Location == nil || primary.Location.Start == nil {
 		return
@@ -416,8 +417,26 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 		secondaryEnd = secondaryStart
 	}
 
-	// Print location header (point to primary)
-	colors.BLUE.Printf("  --> %s:%d:%d\n", filepath, line, primaryStart.Column)
+	// Determine which label is leftmost (gets connector) and rightmost (gets inline)
+	var leftLabel, rightLabel Label
+	var leftStart, leftEnd, rightStart, rightEnd *source.Position
+
+	if primaryStart.Column < secondaryStart.Column {
+		// Primary is on the left
+		leftLabel = primary
+		leftStart, leftEnd = primaryStart, primaryEnd
+		rightLabel = secondary
+		rightStart, rightEnd = secondaryStart, secondaryEnd
+	} else {
+		// Secondary is on the left (or same position)
+		leftLabel = secondary
+		leftStart, leftEnd = secondaryStart, secondaryEnd
+		rightLabel = primary
+		rightStart, rightEnd = primaryStart, primaryEnd
+	}
+
+	// Print location header (point to rightmost/inline label)
+	colors.BLUE.Printf("  --> %s:%d:%d\n", filepath, line, rightStart.Column)
 
 	lineNumWidth := len(fmt.Sprintf("%d", line))
 
@@ -436,75 +455,84 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 	fmt.Fprintln(os.Stderr, sourceLine)
 
 	// Calculate positions
-	primaryPadding := primaryStart.Column - 1
-	primaryLength := primaryEnd.Column - primaryStart.Column
-	if primaryLength <= 0 {
-		primaryLength = 1
+	leftPadding := leftStart.Column - 1
+	leftLength := leftEnd.Column - leftStart.Column
+	if leftLength <= 0 {
+		leftLength = 1
 	}
 
-	secondaryPadding := secondaryStart.Column - 1
-	secondaryLength := secondaryEnd.Column - secondaryStart.Column
-	if secondaryLength <= 0 {
-		secondaryLength = 1
+	rightPadding := rightStart.Column - 1
+	rightLength := rightEnd.Column - rightStart.Column
+	if rightLength <= 0 {
+		rightLength = 1
 	}
 
-	// Get colors
-	primaryColor := e.getSeverityColor(severity)
-	secondaryColor := colors.BLUE
+	// Get colors based on label style
+	leftColor := colors.BLUE
+	rightColor := colors.BLUE
 
-	// Determine character style
-	primaryChar := "^"
-	if primaryLength > 1 {
-		primaryChar = "~"
+	if leftLabel.Style == Primary {
+		leftColor = e.getSeverityColor(severity)
 	}
-	secondaryChar := "-"
+	if rightLabel.Style == Primary {
+		rightColor = e.getSeverityColor(severity)
+	}
 
-	// Line 1: Show both underlines, primary message inline
+	// Determine character style based on label Style field
+	var leftChar, rightChar string
+
+	if leftLabel.Style == Primary {
+		if leftLength == 1 {
+			leftChar = "^"
+		} else {
+			leftChar = "~"
+		}
+	} else {
+		leftChar = "-"
+	}
+
+	if rightLabel.Style == Primary {
+		if rightLength == 1 {
+			rightChar = "^"
+		} else {
+			rightChar = "~"
+		}
+	} else {
+		rightChar = "-"
+	}
+
+	// Line 1: Show both underlines, right (inline) label's message
 	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
 	colors.GREY.Print(" | ")
 
-	if secondaryPadding < primaryPadding {
-		// Secondary is on the left
-		fmt.Fprint(os.Stderr, strings.Repeat(" ", secondaryPadding))
-		secondaryColor.Print(secondaryChar)
+	// Left label first
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	leftColor.Print(strings.Repeat(leftChar, leftLength))
 
-		spaceBetween := primaryPadding - secondaryPadding - 1
-		fmt.Fprint(os.Stderr, strings.Repeat(" ", spaceBetween))
+	// Space between labels
+	spaceBetween := rightPadding - leftPadding - leftLength
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", spaceBetween))
 
-		primaryColor.Print(strings.Repeat(primaryChar, primaryLength))
-		if primary.Message != "" {
-			primaryColor.Printf(" %s", primary.Message)
-		}
-	} else {
-		// Primary is on the left or same position
-		fmt.Fprint(os.Stderr, strings.Repeat(" ", primaryPadding))
-		primaryColor.Print(strings.Repeat(primaryChar, primaryLength))
-
-		if primaryPadding < secondaryPadding {
-			spaceBetween := secondaryPadding - primaryPadding - primaryLength
-			fmt.Fprint(os.Stderr, strings.Repeat(" ", spaceBetween))
-			secondaryColor.Print(secondaryChar)
-		}
-
-		if primary.Message != "" {
-			primaryColor.Printf(" %s", primary.Message)
-		}
+	// Right label with inline message
+	rightColor.Print(strings.Repeat(rightChar, rightLength))
+	if rightLabel.Message != "" {
+		rightColor.Printf(" %s", rightLabel.Message)
 	}
 	fmt.Fprintln(os.Stderr)
 
-	// Line 2: Show vertical connector for secondary
+	// Line 2: Show vertical connector for left label
 	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
 	colors.GREY.Print(" | ")
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", secondaryPadding))
-	secondaryColor.Println("|")
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	leftColor.Println("|")
 
-	// Line 3: Show secondary message
+	// Line 3: Show left label message with -- prefix (always dashes for connector)
 	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
 	colors.GREY.Print(" | ")
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", secondaryPadding))
-	secondaryColor.Print(strings.Repeat(secondaryChar, 2))
-	if secondary.Message != "" {
-		secondaryColor.Printf(" %s", secondary.Message)
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	leftColor.Print("--") // Always use -- for connector message, regardless of style
+	if leftLabel.Message != "" {
+		leftColor.Printf(" %s", leftLabel.Message)
 	}
 	fmt.Fprintln(os.Stderr)
 

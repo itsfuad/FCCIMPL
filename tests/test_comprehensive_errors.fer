@@ -2,7 +2,8 @@
 
 // Test 1: Same-line labels (compact format)
 fn test1() {
-    const X: i32 = 10; X = 20;
+    const XXX: i32 = "str"; 
+    XXX = 20;
 }
 
 // Test 2: Different-line labels (routed format)

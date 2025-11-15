@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_comprehensive.fer",
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_comprehensive.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -18,74 +18,72 @@
         }
       },
       "Type": {
-        "Fields": {
-          "List": [
-            {
-              "Name": {
-                "Name": "x",
-                "Start": {
-                  "Line": 6,
-                  "Column": 6,
-                  "Index": 200
-                },
-                "End": {
-                  "Line": 6,
-                  "Column": 7,
-                  "Index": 201
-                }
+        "Fields": [
+          {
+            "Name": {
+              "Name": "x",
+              "Start": {
+                "Line": 6,
+                "Column": 6,
+                "Index": 200
               },
-              "Type": {
-                "Name": "i32",
-                "Start": {
-                  "Line": 6,
-                  "Column": 9,
-                  "Index": 203
-                },
-                "End": {
-                  "Line": 6,
-                  "Column": 12,
-                  "Index": 206
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
+              "End": {
+                "Line": 6,
+                "Column": 7,
+                "Index": 201
+              }
             },
-            {
-              "Name": {
-                "Name": "y",
-                "Start": {
-                  "Line": 7,
-                  "Column": 6,
-                  "Index": 214
-                },
-                "End": {
-                  "Line": 7,
-                  "Column": 7,
-                  "Index": 215
-                }
+            "Type": {
+              "Name": "i32",
+              "Start": {
+                "Line": 6,
+                "Column": 9,
+                "Index": 203
               },
-              "Type": {
-                "Name": "i32",
-                "Start": {
-                  "Line": 7,
-                  "Column": 9,
-                  "Index": 217
-                },
-                "End": {
-                  "Line": 7,
-                  "Column": 12,
-                  "Index": 220
-                }
+              "End": {
+                "Line": 6,
+                "Column": 12,
+                "Index": 206
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "y",
+              "Start": {
+                "Line": 7,
+                "Column": 6,
+                "Index": 214
               },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
-        },
+              "End": {
+                "Line": 7,
+                "Column": 7,
+                "Index": 215
+              }
+            },
+            "Type": {
+              "Name": "i32",
+              "Start": {
+                "Line": 7,
+                "Column": 9,
+                "Index": 217
+              },
+              "End": {
+                "Line": 7,
+                "Column": 12,
+                "Index": 220
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
         "Start": {
           "Line": 5,
           "Column": 12,
@@ -600,74 +598,72 @@
         }
       },
       "Type": {
-        "Fields": {
-          "List": [
-            {
-              "Name": {
-                "Name": "start",
-                "Start": {
-                  "Line": 20,
-                  "Column": 6,
-                  "Index": 484
-                },
-                "End": {
-                  "Line": 20,
-                  "Column": 11,
-                  "Index": 489
-                }
+        "Fields": [
+          {
+            "Name": {
+              "Name": "start",
+              "Start": {
+                "Line": 20,
+                "Column": 6,
+                "Index": 484
               },
-              "Type": {
-                "Name": "Point",
-                "Start": {
-                  "Line": 20,
-                  "Column": 13,
-                  "Index": 491
-                },
-                "End": {
-                  "Line": 20,
-                  "Column": 18,
-                  "Index": 496
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
+              "End": {
+                "Line": 20,
+                "Column": 11,
+                "Index": 489
+              }
             },
-            {
-              "Name": {
-                "Name": "end",
-                "Start": {
-                  "Line": 21,
-                  "Column": 6,
-                  "Index": 504
-                },
-                "End": {
-                  "Line": 21,
-                  "Column": 9,
-                  "Index": 507
-                }
+            "Type": {
+              "Name": "Point",
+              "Start": {
+                "Line": 20,
+                "Column": 13,
+                "Index": 491
               },
-              "Type": {
-                "Name": "Point",
-                "Start": {
-                  "Line": 21,
-                  "Column": 11,
-                  "Index": 509
-                },
-                "End": {
-                  "Line": 21,
-                  "Column": 16,
-                  "Index": 514
-                }
+              "End": {
+                "Line": 20,
+                "Column": 18,
+                "Index": 496
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "end",
+              "Start": {
+                "Line": 21,
+                "Column": 6,
+                "Index": 504
               },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
-        },
+              "End": {
+                "Line": 21,
+                "Column": 9,
+                "Index": 507
+              }
+            },
+            "Type": {
+              "Name": "Point",
+              "Start": {
+                "Line": 21,
+                "Column": 11,
+                "Index": 509
+              },
+              "End": {
+                "Line": 21,
+                "Column": 16,
+                "Index": 514
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
         "Start": {
           "Line": 19,
           "Column": 11,
@@ -1411,11 +1407,7 @@
         }
       },
       "Type": {
-        "Fields": {
-          "List": [],
-          "Start": null,
-          "End": null
-        },
+        "Fields": [],
         "Start": {
           "Line": 34,
           "Column": 12,
@@ -2166,7 +2158,6 @@
       }
     }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }

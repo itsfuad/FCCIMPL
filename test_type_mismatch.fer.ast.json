@@ -1,0 +1,212 @@
+{
+  "FullPath": "E:\\Dev\\FCCIMPL\\test_type_mismatch.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "main",
+        "Start": {
+          "Line": 1,
+          "Column": 4,
+          "Index": 3
+        },
+        "End": {
+          "Line": 1,
+          "Column": 8,
+          "Index": 7
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 1,
+          "Column": 8,
+          "Index": 7
+        },
+        "End": {
+          "Line": 1,
+          "Column": 10,
+          "Index": 9
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "x",
+                  "Start": {
+                    "Line": 2,
+                    "Column": 9,
+                    "Index": 21
+                  },
+                  "End": {
+                    "Line": 2,
+                    "Column": 10,
+                    "Index": 22
+                  }
+                },
+                "Type": {
+                  "Name": "string",
+                  "Start": {
+                    "Line": 2,
+                    "Column": 13,
+                    "Index": 25
+                  },
+                  "End": {
+                    "Line": 2,
+                    "Column": 19,
+                    "Index": 31
+                  }
+                },
+                "Value": {
+                  "Kind": 2,
+                  "Value": "hello",
+                  "Start": {
+                    "Line": 2,
+                    "Column": 22,
+                    "Index": 34
+                  },
+                  "End": {
+                    "Line": 2,
+                    "Column": 29,
+                    "Index": 41
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 2,
+              "Column": 5,
+              "Index": 17
+            },
+            "End": {
+              "Line": 2,
+              "Column": 30,
+              "Index": 42
+            }
+          },
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "y",
+                  "Start": {
+                    "Line": 3,
+                    "Column": 9,
+                    "Index": 52
+                  },
+                  "End": {
+                    "Line": 3,
+                    "Column": 10,
+                    "Index": 53
+                  }
+                },
+                "Type": {
+                  "Name": "i32",
+                  "Start": {
+                    "Line": 3,
+                    "Column": 13,
+                    "Index": 56
+                  },
+                  "End": {
+                    "Line": 3,
+                    "Column": 16,
+                    "Index": 59
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "42",
+                  "Start": {
+                    "Line": 3,
+                    "Column": 19,
+                    "Index": 62
+                  },
+                  "End": {
+                    "Line": 3,
+                    "Column": 21,
+                    "Index": 64
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 3,
+              "Column": 5,
+              "Index": 48
+            },
+            "End": {
+              "Line": 3,
+              "Column": 22,
+              "Index": 65
+            }
+          },
+          {
+            "Lhs": {
+              "Name": "x",
+              "Start": {
+                "Line": 5,
+                "Column": 5,
+                "Index": 77
+              },
+              "End": {
+                "Line": 5,
+                "Column": 6,
+                "Index": 78
+              }
+            },
+            "Rhs": {
+              "Name": "y",
+              "Start": {
+                "Line": 5,
+                "Column": 9,
+                "Index": 81
+              },
+              "End": {
+                "Line": 5,
+                "Column": 10,
+                "Index": 82
+              }
+            },
+            "Start": {
+              "Line": 5,
+              "Column": 5,
+              "Index": 77
+            },
+            "End": {
+              "Line": 5,
+              "Column": 11,
+              "Index": 83
+            }
+          }
+        ],
+        "Start": {
+          "Line": 1,
+          "Column": 11,
+          "Index": 10
+        },
+        "End": {
+          "Line": 6,
+          "Column": 2,
+          "Index": 86
+        }
+      },
+      "Start": {
+        "Line": 1,
+        "Column": 1,
+        "Index": 0
+      },
+      "End": {
+        "Line": 6,
+        "Column": 2,
+        "Index": 86
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

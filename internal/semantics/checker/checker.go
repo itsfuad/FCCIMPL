@@ -5,6 +5,7 @@ import (
 	"compiler/internal/diagnostics"
 	"compiler/internal/frontend/ast"
 	"compiler/internal/semantics"
+	"compiler/internal/source"
 	"fmt"
 )
 
@@ -104,10 +105,10 @@ func (c *Checker) checkVarDecl(decl *ast.VarDecl) semantics.Type {
 								c.typeString(sym.Type)),
 						).
 							WithCode(diagnostics.ErrTypeMismatch).
-							WithPrimaryLabel(c.currentFile, item.Value.Loc(),
-								fmt.Sprintf("type %s", c.typeString(valueType))).
-							WithSecondaryLabel(c.currentFile, item.Name.Loc(),
-								fmt.Sprintf("variable has type %s", c.typeString(sym.Type))),
+							WithPrimaryLabel(c.currentFile, item.Name.Loc(),
+								fmt.Sprintf("variable has type %s", c.typeString(sym.Type))).
+							WithSecondaryLabel(c.currentFile, item.Value.Loc(),
+								fmt.Sprintf("type %s", c.typeString(valueType))),
 					)
 				}
 			} else {
@@ -143,10 +144,10 @@ func (c *Checker) checkConstDecl(decl *ast.ConstDecl) semantics.Type {
 								c.typeString(sym.Type)),
 						).
 							WithCode(diagnostics.ErrTypeMismatch).
-							WithPrimaryLabel(c.currentFile, item.Value.Loc(),
-								fmt.Sprintf("type %s", c.typeString(valueType))).
-							WithSecondaryLabel(c.currentFile, item.Name.Loc(),
-								fmt.Sprintf("constant has type %s", c.typeString(sym.Type))),
+							WithPrimaryLabel(c.currentFile, item.Name.Loc(),
+								fmt.Sprintf("constant has type %s", c.typeString(sym.Type))).
+							WithSecondaryLabel(c.currentFile, item.Value.Loc(),
+								fmt.Sprintf("type %s", c.typeString(valueType))),
 					)
 				}
 			} else {
@@ -200,7 +201,17 @@ func (c *Checker) checkAssignStmt(stmt *ast.AssignStmt) semantics.Type {
 						// Find the specific declaration item for this constant
 						for _, item := range constDecl.Decls {
 							if item.Name.Name == ident.Name {
-								diag.WithSecondaryLabel(c.currentFile, item.Name.Loc(),
+								// Create a location that spans the full identifier name
+								nameLoc := item.Name.Loc()
+								fullLoc := &source.Location{
+									Start: nameLoc.Start,
+									End: &source.Position{
+										Line:   nameLoc.Start.Line,
+										Column: nameLoc.Start.Column + len(ident.Name),
+										Index:  nameLoc.Start.Index + len(ident.Name),
+									},
+								}
+								diag.WithSecondaryLabel(c.currentFile, fullLoc,
 									fmt.Sprintf("constant '%s' declared here", ident.Name))
 								break
 							}
