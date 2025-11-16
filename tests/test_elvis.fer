@@ -1,0 +1,22 @@
+// Test file for elvis operator
+
+// Test 1: Basic elvis with optional types
+let opt1: i32? = 10;
+let result1: i32 = opt1 ?: 0;  // Should unwrap i32? to i32
+
+// Test 2: Elvis with none
+let opt2: i32? = none;
+let result2: i32 = opt2 ?: -1;  // Should use default -1
+
+// Test 3: Elvis with string optional
+let opt3: str? = "hello";
+let result3: str = opt3 ?: "default";  // Should unwrap to "hello"
+
+// Test 4: Elvis with none string
+let opt4: str? = none;
+let result4: str = opt4 ?: "fallback";  // Should use "fallback"
+
+// Test 5: Chained elvis (if supported)
+let opt5: i32? = none;
+let opt6: i32? = 20;
+let result5: i32 = opt5 ?: opt6 ?: 999;  // Should resolve to 20

@@ -219,7 +219,28 @@ func (p *Parser) parseExprOrAssign() ast.Node {
 
 // parseExpr parses an expression
 func (p *Parser) parseExpr() ast.Expression {
-	return p.parseLogicalOr()
+	return p.parseElvis()
+}
+
+// parseElvis parses elvis operator (a ?: b)
+// Elvis has lower precedence than logical operators and is right-associative
+func (p *Parser) parseElvis() ast.Expression {
+	left := p.parseLogicalOr()
+
+	if p.match(lexer.ELVIS_TOKEN) {
+		p.advance()             // consume ?:
+		right := p.parseElvis() // Right-associative: recursively parse elvis on the right
+		return &ast.ElvisExpr{
+			Cond:    left,
+			Default: right,
+			Location: source.Location{
+				Start: left.Loc().Start,
+				End:   right.Loc().End,
+			},
+		}
+	}
+
+	return left
 }
 
 func (p *Parser) parseLogicalOr() ast.Expression {

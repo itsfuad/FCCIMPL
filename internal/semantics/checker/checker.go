@@ -6,6 +6,7 @@ import (
 	"compiler/internal/frontend/ast"
 	"compiler/internal/semantics"
 	"compiler/internal/source"
+	"compiler/internal/types"
 	"fmt"
 )
 
@@ -98,18 +99,7 @@ func (c *Checker) checkVarDecl(decl *ast.VarDecl) semantics.Type {
 			// If type was explicitly specified, check compatibility
 			if sym.Type != nil {
 				if !c.isAssignable(sym.Type, valueType) {
-					c.ctx.Diagnostics.Add(
-						diagnostics.NewError(
-							fmt.Sprintf("cannot assign value of type %s to variable of type %s",
-								c.typeString(valueType),
-								c.typeString(sym.Type)),
-						).
-							WithCode(diagnostics.ErrTypeMismatch).
-							WithPrimaryLabel(c.currentFile, item.Value.Loc(),
-								fmt.Sprintf("type %s", c.typeString(valueType))).
-							WithSecondaryLabel(c.currentFile, item.Name.Loc(),
-								fmt.Sprintf("variable has type %s", c.typeString(sym.Type))),
-					)
+					c.reportAssignmentError(sym.Type, valueType, item.Value.Loc(), item.Name.Loc(), "variable")
 				}
 			} else {
 				// Type inference: set symbol type from initializer
@@ -169,18 +159,7 @@ func (c *Checker) checkAssignStmt(stmt *ast.AssignStmt) semantics.Type {
 	// Check if assignment is valid
 	if lhsType != nil && rhsType != nil {
 		if !c.isAssignable(lhsType, rhsType) {
-			c.ctx.Diagnostics.Add(
-				diagnostics.NewError(
-					fmt.Sprintf("cannot assign value of type %s to variable of type %s",
-						c.typeString(rhsType),
-						c.typeString(lhsType)),
-				).
-					WithCode(diagnostics.ErrTypeMismatch).
-					WithPrimaryLabel(c.currentFile, stmt.Rhs.Loc(),
-						fmt.Sprintf("type %s", c.typeString(rhsType))).
-					WithSecondaryLabel(c.currentFile, stmt.Lhs.Loc(),
-						fmt.Sprintf("target has type %s", c.typeString(lhsType))),
-			)
+			c.reportAssignmentError(lhsType, rhsType, stmt.Rhs.Loc(), stmt.Lhs.Loc(), "target")
 		}
 	}
 
@@ -320,6 +299,8 @@ func (c *Checker) checkExpr(expr ast.Expression) semantics.Type {
 		return c.checkSelectorExpr(e)
 	case *ast.CompositeLit:
 		return c.checkCompositeLit(e)
+	case *ast.ElvisExpr:
+		return c.checkElvisExpr(e)
 	// Add more expression types as needed
 	default:
 		return nil
@@ -331,14 +312,18 @@ func (c *Checker) checkBasicLit(lit *ast.BasicLit) semantics.Type {
 	switch lit.Kind {
 	case ast.INT:
 		// Default integer type is i32
-		return &semantics.PrimitiveType{TypeName: "i32"}
+		return &semantics.PrimitiveType{TypeName: types.TYPE_I32}
 	case ast.FLOAT:
 		// Default float type is f64
-		return &semantics.PrimitiveType{TypeName: "f64"}
+		return &semantics.PrimitiveType{TypeName: types.TYPE_F64}
 	case ast.STRING:
-		return &semantics.PrimitiveType{TypeName: "string"}
+		return &semantics.PrimitiveType{TypeName: types.TYPE_STRING}
 	case ast.BOOL:
-		return &semantics.PrimitiveType{TypeName: "bool"}
+		return &semantics.PrimitiveType{TypeName: types.TYPE_BOOL}
+	case ast.NONE:
+		// 'none' is a special type that can be assigned to any optional type
+		// We represent it as a special marker type
+		return &semantics.NoneType{}
 	default:
 		return nil
 	}
@@ -346,6 +331,11 @@ func (c *Checker) checkBasicLit(lit *ast.BasicLit) semantics.Type {
 
 // checkIdentifier checks an identifier expression
 func (c *Checker) checkIdentifier(ident *ast.IdentifierExpr) semantics.Type {
+	// Handle 'none' as a special built-in value
+	if ident.Name == "none" {
+		return &semantics.NoneType{}
+	}
+
 	sym, ok := c.currentScope.Lookup(ident.Name)
 	if !ok {
 		c.ctx.Diagnostics.Add(
@@ -382,10 +372,127 @@ func (c *Checker) checkCallExpr(expr *ast.CallExpr) semantics.Type {
 	if ft, ok := funcType.(*semantics.FunctionType); ok {
 		// Check argument count and types
 		// TODO: Implement argument checking
-		return ft.ReturnType
+
+		returnType := ft.ReturnType
+
+		// Handle catch clause if present
+		if expr.Catch != nil {
+			returnType = c.checkCatchClause(expr.Catch, returnType)
+		}
+
+		return returnType
 	}
 
 	return nil
+}
+
+// checkCatchClause validates a catch clause and returns the effective return type
+func (c *Checker) checkCatchClause(catch *ast.CatchClause, funcReturnType semantics.Type) semantics.Type {
+	if catch == nil {
+		return funcReturnType
+	}
+
+	// The function must return an error type (T ! E) to use catch
+	errorType, isErrorType := funcReturnType.(*semantics.ErrorType)
+	if !isErrorType {
+		// Report error: catch can only be used with functions that return error types
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError(
+				"catch can only be used with functions that return error types (T ! E)",
+			).
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(c.currentFile, catch.Loc(), "catch clause used here"),
+		)
+		return &semantics.Invalid{}
+	}
+
+	// If there's an error identifier, add it to the scope within the handler
+	if catch.ErrIdent != nil && catch.Handler != nil {
+		// Create a new scope for the handler block
+		handlerScope := semantics.NewSymbolTable(c.currentScope)
+		prevScope := c.currentScope
+		c.currentScope = handlerScope
+
+		// Add the error variable to the handler scope
+		errorSym := &semantics.Symbol{
+			Name: catch.ErrIdent.Name,
+			Type: errorType.Error,
+			Kind: semantics.SymbolVar,
+		}
+		handlerScope.Declare(catch.ErrIdent.Name, errorSym)
+
+		// Check the handler block
+		c.checkBlock(catch.Handler)
+
+		// Restore the previous scope
+		c.currentScope = prevScope
+	} else if catch.Handler != nil {
+		// Handler without error identifier - just check the block
+		c.checkBlock(catch.Handler)
+	}
+
+	// Check the fallback expression if present
+	if catch.Fallback != nil {
+		fallbackType := c.checkExpr(catch.Fallback)
+
+		// The fallback must be assignable to the valid type
+		if !c.isAssignable(errorType.Valid, fallbackType) {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("catch fallback type '%s' is not assignable to expected type '%s'",
+						c.typeString(fallbackType),
+						c.typeString(errorType.Valid)),
+				).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, catch.Fallback.Loc(),
+						fmt.Sprintf("expression has type %s", c.typeString(fallbackType))).
+					WithSecondaryLabel(c.currentFile, catch.Loc(),
+						fmt.Sprintf("expected type %s", c.typeString(errorType.Valid))),
+			)
+		}
+	}
+
+	// After catch, the effective return type is the valid type (error is handled)
+	return errorType.Valid
+}
+
+// checkElvisExpr checks an elvis operator expression (a ?: b)
+func (c *Checker) checkElvisExpr(expr *ast.ElvisExpr) semantics.Type {
+	condType := c.checkExpr(expr.Cond)
+	defaultType := c.checkExpr(expr.Default)
+
+	// The condition should be an optional type
+	optionalType, isOptional := condType.(*semantics.OptionalType)
+	if !isOptional {
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError(
+				"elvis operator (?:) is only used with optional types",
+			).
+				WithPrimaryLabel(c.currentFile, expr.Cond.Loc(),
+					fmt.Sprintf("expression has type %s", c.typeString(condType))),
+		)
+		return condType
+	}
+
+	// The default value must be assignable to the base type of the optional
+	if !c.isAssignable(optionalType.Base, defaultType) {
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError(
+				fmt.Sprintf("elvis default value type '%s' is not compatible with optional base type '%s'",
+					c.typeString(defaultType),
+					c.typeString(optionalType.Base)),
+			).
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(c.currentFile, expr.Default.Loc(),
+					fmt.Sprintf("expression has type %s", c.typeString(defaultType))).
+				WithSecondaryLabel(c.currentFile, expr.Cond.Loc(),
+					fmt.Sprintf("expression has type %s", c.typeString(condType))),
+		)
+		return &semantics.Invalid{}
+	}
+
+	// The result type is the base type (unwrapped) since we provide a default
+	return optionalType.Base
 }
 
 // checkSelectorExpr checks a field access expression
@@ -437,6 +544,31 @@ func (c *Checker) isAssignable(to, from semantics.Type) bool {
 		return false
 	}
 
+	// 'none' can be assigned to any optional type
+	if _, isNone := from.(*semantics.NoneType); isNone {
+		_, toIsOptional := to.(*semantics.OptionalType)
+		return toIsOptional
+	}
+
+	// Handle optional type assignments
+	toOptional, toIsOptional := to.(*semantics.OptionalType)
+	fromOptional, fromIsOptional := from.(*semantics.OptionalType)
+
+	if toIsOptional {
+		// T? can accept T (wrapping)
+		if !fromIsOptional {
+			// Check if the base type matches
+			return c.isAssignable(toOptional.Base, from)
+		}
+		// T? can accept T? if base types match
+		return c.isAssignable(toOptional.Base, fromOptional.Base)
+	}
+
+	if fromIsOptional {
+		// T cannot accept T? without unwrapping (this is an error)
+		return false
+	}
+
 	// Exact type match
 	if to.String() == from.String() {
 		return true
@@ -467,4 +599,47 @@ func (c *Checker) typeString(t semantics.Type) string {
 		return "unknown"
 	}
 	return t.String()
+}
+
+// reportAssignmentError reports a type mismatch error with helpful context
+func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type, valueLoc, declLoc *source.Location, context string) {
+	mainMessage := fmt.Sprintf("cannot assign value of type %s to %s of type %s",
+		c.typeString(actualType),
+		context,
+		c.typeString(expectedType))
+
+	// Check if it's an optional type mismatch and provide helpful note
+	var note string
+	var help string
+	if optType, isOptional := expectedType.(*semantics.OptionalType); isOptional {
+		// Expected is optional, actual is not compatible
+		note = fmt.Sprintf("%s accepts values of type %s or 'none'",
+			c.typeString(expectedType),
+			c.typeString(optType.Base))
+	} else if _, actualIsOptional := actualType.(*semantics.OptionalType); actualIsOptional {
+		// Trying to assign optional to non-optional
+		note = "optional types must be unwrapped before assigning to non-optional types"
+		help = "use the elvis operator (?:) or a catch clause to unwrap"
+	} else if _, actualIsNone := actualType.(*semantics.NoneType); actualIsNone {
+		// Trying to assign none to non-optional
+		note = "'none' can only be assigned to optional types"
+		help = fmt.Sprintf("change %s type to %s?", context, c.typeString(expectedType))
+	}
+
+	diag := diagnostics.NewError(mainMessage).
+		WithCode(diagnostics.ErrTypeMismatch).
+		WithPrimaryLabel(c.currentFile, valueLoc,
+			fmt.Sprintf("expression has type %s", c.typeString(actualType))).
+		WithSecondaryLabel(c.currentFile, declLoc,
+			fmt.Sprintf("%s has type %s", context, c.typeString(expectedType)))
+
+	if note != "" {
+		diag = diag.WithNote(note)
+	}
+
+	if help != "" {
+		diag = diag.WithHelp(help)
+	}
+
+	c.ctx.Diagnostics.Add(diag)
 }

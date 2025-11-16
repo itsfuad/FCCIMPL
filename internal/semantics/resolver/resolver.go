@@ -285,33 +285,33 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 func (r *Resolver) resolveNamedType(name string) semantics.Type {
 	// Check if it's a primitive type
 	switch name {
-	case "i8":
+	case string(types.TYPE_I8):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_I8}
-	case "i16":
+	case string(types.TYPE_I16):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_I16}
-	case "i32":
+	case string(types.TYPE_I32):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_I32}
-	case "i64":
+	case string(types.TYPE_I64):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_I64}
-	case "u8":
+	case string(types.TYPE_U8):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_U8}
-	case "u16":
+	case string(types.TYPE_U16):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_U16}
-	case "u32":
+	case string(types.TYPE_U32):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_U32}
-	case "u64":
+	case string(types.TYPE_U64):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_U64}
-	case "f32":
+	case string(types.TYPE_F32):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_F32}
-	case "f64":
+	case string(types.TYPE_F64):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_F64}
-	case "bool":
+	case string(types.TYPE_BOOL):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_BOOL}
-	case "string", "str":
+	case string(types.TYPE_STRING):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_STRING}
-	case "void":
+	case string(types.TYPE_VOID):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_VOID}
-	case "byte":
+	case string(types.TYPE_BYTE):
 		return &semantics.PrimitiveType{TypeName: types.TYPE_BYTE}
 	}
 
