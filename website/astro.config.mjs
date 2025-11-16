@@ -42,6 +42,10 @@ export default defineConfig({
           components: {
               // Override the Head component to add View Transitions
               Head: './src/components/Head.astro',
+              // Modern shadcn-style theme toggle
+              ThemeSelect: './src/components/ThemeSelect.astro',
+              // Use ferret image instead of text
+              SiteTitle: './src/components/SiteTitle.astro',
           },
           sidebar: [
               {

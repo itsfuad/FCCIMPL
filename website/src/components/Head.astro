@@ -1,12 +1,12 @@
 ---
-import type { Props } from '@astrojs/starlight/props';
 import StarlightHead from '@astrojs/starlight/components/Head.astro';
-import { ViewTransitions } from 'astro:transitions';
+// import { ViewTransitions } from 'astro:transitions';
 import ProgressBar from './ProgressBar.astro';
 ---
 
 <StarlightHead {...Astro.props}><slot /></StarlightHead>
-<ViewTransitions />
+<!-- View Transitions: Uncomment to enable -->
+<!-- <ViewTransitions /> -->
 <ProgressBar />
 
 <script is:inline>
