@@ -3,77 +3,61 @@ title: Error Handling
 description: Working with errors and result types in Ferret
 ---
 
-Ferret uses explicit error handling with result types.
+Ferret uses explicit error handling with Error Types to manage failures safely.
 
 ## Result Types
 
-Functions that can fail return `T ! E` (Result type):
+Functions that can fail return `T ! E` (Error type). Here `T` is the normal return type, and `E` is the error type.
 
 ```ferret
 fn divide(a: i32, b: i32) -> i32 ! str {
     if b == 0 {
-        return error("Division by zero");
+        return "Division by zero"!; // Look at the `!` operator here. It constructs an error value.
     }
     return a / b;
 }
 ```
+
+You can skip the error type if you don't care about the specific error. Ferret will use `str` as the default error type.
+
+```ferret
+fn divide(a: i32, b: i32) -> i32 ! {
+    if b == 0 {
+        return "Division by zero"!;
+    }
+    return a / b;
+}
 
 ## Handling Errors
 
 Use match to handle success and error cases:
 
 ```ferret
-let result := divide(10, 2);
-
-match result {
-    ok(value) => print("Result: " + value),
-    error(msg) => print("Error: " + msg),
-}
+let result := divide(10, 2); // You cannot call the function without handling the error
 ```
-
-## Error Propagation
-
-Use `?` operator to propagate errors:
+So you must handle it using `catch` clause:
 
 ```ferret
-fn calculate() -> i32 ! str {
-    let x := divide(10, 2)?;  // Propagate error if any
-    let y := divide(x, 3)?;
-    return y;
-}
+let result := divide(10, 0) catch e { // e holds the error value
+    // Handle error case
+    print("Error occurred: " + e);
+    return; // Early return
+};
 ```
-
-## Try-Catch Alternative
-
-Ferret doesn't use exceptions, preferring explicit error handling:
+If you want to provide a default value on error, you can use `catch` with a value:
 
 ```ferret
-// No try-catch - use match instead
-let result := risky_operation();
-match result {
-    ok(value) => {
-        // Handle success
-    },
-    error(e) => {
-        // Handle error
-    },
-}
+let result := divide(10, 0) catch e {
+    // handle error case and provide default
+} -1 ; // default value if error occurs, result will be -1
 ```
+You either have to return so you don't continue with an invalid state, or provide a default value.
 
-## Custom Error Types
-
-Define your own error types:
+## Shorthand
+You can just provide the default value directly:
 
 ```ferret
-enum FileError {
-    NotFound,
-    PermissionDenied,
-    IOError(str),
-}
-
-fn read_file(path: str) -> str ! FileError {
-    // Implementation
-}
+let result := divide(10, 0) catch -1; // result will be -1 on error
 ```
 
 ## Next Steps

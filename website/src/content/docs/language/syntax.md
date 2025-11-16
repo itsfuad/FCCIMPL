@@ -47,7 +47,7 @@ const MAX_SIZE := 1000;
 | `f64` | 64-bit float | `2.718` |
 | `str` | String | `"hello"` |
 | `bool` | Boolean | `true`, `false` |
-| `char` | Character | `'a'` |
+| `byte` | Character | `'a'` |
 
 ## Optional Types
 

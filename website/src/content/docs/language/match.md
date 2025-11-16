@@ -1,16 +1,16 @@
 ---
-title: Match Expressions
+title: When Expressions
 description: Pattern matching in Ferret
 ---
 
-Match expressions provide powerful pattern matching capabilities.
+When expressions provide powerful pattern matching capabilities.
 
-## Basic Match
+## Basic When
 
 ```ferret
 let status := 200;
 
-match status {
+when status {
     200 => print("OK"),
     404 => print("Not Found"),
     500 => print("Server Error"),
@@ -18,28 +18,33 @@ match status {
 }
 ```
 
-## Match with Values
+## When with Values
 
-Match expressions return values:
+When expressions return values:
 
 ```ferret
-let message := match status {
+let message := when status {
     200 => "Success",
     404 => "Not Found",
     _ => "Error",
 };
 ```
 
-## Pattern Matching
-
-Match on complex patterns:
+## Pattern Matching with Enums
 
 ```ferret
-match value {
-    0 => "zero",
-    1..=10 => "small",
-    11..=100 => "medium",
-    _ => "large",
+type Status enum {
+    Pending,
+    Active,
+    Done,
+};
+
+let status := Status::Active;
+
+when status {
+    Status::Pending => print("Waiting"),
+    Status::Active => print("In Progress"),
+    Status::Done => print("Complete"),
 }
 ```
 

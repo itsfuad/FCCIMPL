@@ -19,55 +19,43 @@ let text := identity("hello");   // T = str
 ## Generic Structs
 
 ```ferret
-struct Box<T> {
-    value: T,
-}
+type Box<T> struct {
+    .value: T,
+};
 
-let int_box := Box{ value: 42 };
-let str_box := Box{ value: "hello" };
+let int_box := Box{.value = 42};
+let str_box := Box{.value = "hello"};
 ```
 
 ## Generic Interfaces
 
 ```ferret
-interface Container<T> {
-    fn get(self) -> T;
-    fn set(self, value: T);
-}
-```
-
-## Type Constraints
-
-Constrain generic types:
-
-```ferret
-fn print_if_displayable<T: Display>(value: T) {
-    print(value.to_string());
-}
+type Container<T> interface {
+    get() -> T;
+    set(value: T);
+};
 ```
 
 ## Multiple Type Parameters
 
 ```ferret
-struct Pair<K, V> {
-    key: K,
-    value: V,
-}
+type Pair<K, V> struct {
+    .key: K,
+    .value: V,
+};
 
-let entry := Pair{ key: "age", value: 30 };
+let entry := Pair{.key = "age", .value = 30};
 ```
 
 ## Generic Methods
 
 ```ferret
-impl<T> Box<T> {
-    fn new(value: T) -> Box<T> {
-        return Box{ value: value };
-    }
-    
-    fn get(self) -> T {
-        return self.value;
-    }
+type Box<T> struct {
+    .value: T,
+};
+
+fn (b: Box<T>) get() -> T {
+    return b.value;
 }
 ```
 

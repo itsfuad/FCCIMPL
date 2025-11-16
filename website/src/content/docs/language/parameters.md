@@ -26,19 +26,6 @@ fn greet(name: str, title: str?) -> str {
 }
 ```
 
-## Default Values
-
-Parameters with default values:
-
-```ferret
-fn power(base: i32, exponent: i32 = 2) -> i32 {
-    // Implementation
-}
-
-let squared := power(5);      // Uses default exponent=2
-let cubed := power(5, 3);     // Explicit exponent=3
-```
-
 ## Variadic Parameters
 
 Accept multiple arguments:

@@ -8,58 +8,72 @@ Structs are custom data types that group related data together.
 ## Struct Definition
 
 ```ferret
-struct Person {
-    name: str,
-    age: i32,
-    email: str,
-}
+type Person struct {
+    .name: str,
+    .age: i32,
+    .email: str,
+};
 ```
 
 ## Creating Instances
 
 ```ferret
 let person := Person{
-    name: "Alice",
-    age: 30,
-    email: "alice@example.com",
+    .name = "Alice",
+    .age = 30,
+    .email = "alice@example.com",
 };
 ```
 
 ## Accessing Fields
 
 ```ferret
-print(person.name);   // Alice
-print(person.age);    // 30
+let name := person.name;   // Alice
+let age := person.age;     // 30
 ```
 
 ## Methods
 
-Define methods on structs:
+Define methods on structs using receiver syntax:
 
 ```ferret
-impl Person {
-    fn greet(self) -> str {
-        return "Hello, I'm " + self.name;
-    }
-    
-    fn is_adult(self) -> bool {
-        return self.age >= 18;
-    }
+type Person struct {
+    .name: str,
+    .age: i32,
+};
+
+fn (p: Person) greet() -> str {
+    return "Hello, I'm " + p.name;
 }
 
+fn (p: Person) is_adult() -> bool {
+    return p.age >= 18;
+}
+
+let person := Person{.name = "Bob", .age = 25};
 let greeting := person.greet();
 ```
 
-## Mutable Fields
+## Nested Structs
 
 ```ferret
-let mut user := Person{
-    name: "Bob",
-    age: 25,
-    email: "bob@example.com",
+type Address struct {
+    .street: str,
+    .city: str,
 };
 
-user.age = 26;  // OK with mut
+type Person struct {
+    .name: str,
+    .address: Address,
+};
+
+let person := Person{
+    .name = "Carol",
+    .address = Address{
+        .street = "123 Main St",
+        .city = "Springfield",
+    },
+};
 ```
 
 ## Next Steps

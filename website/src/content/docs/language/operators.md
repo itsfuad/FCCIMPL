@@ -14,6 +14,7 @@ Ferret provides a comprehensive set of operators for arithmetic, comparison, log
 | `*` | Multiplication | `5 * 3` | `15` |
 | `/` | Division | `15 / 3` | `5` |
 | `%` | Modulo | `17 % 5` | `2` |
+| `**` | Exponentiation | `2 ** 3` | `8` |
 
 ```ferret
 let sum := 10 + 5;       // 15
@@ -21,6 +22,7 @@ let difference := 10 - 5; // 5
 let product := 10 * 5;    // 50
 let quotient := 10 / 5;   // 2
 let remainder := 10 % 3;  // 1
+let power := 2 ** 4;     // 16
 ```
 
 ## Comparison Operators

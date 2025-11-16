@@ -8,3 +8,11 @@ import ProgressBar from './ProgressBar.astro';
 <StarlightHead {...Astro.props}><slot /></StarlightHead>
 <ViewTransitions />
 <ProgressBar />
+
+<script is:inline>
+  // Set dark theme as default
+  if (!localStorage.getItem('starlight-theme')) {
+    localStorage.setItem('starlight-theme', 'dark');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+</script>

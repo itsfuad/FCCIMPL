@@ -57,9 +57,9 @@ let is_complete: bool = false;
 Single Unicode characters:
 
 ```ferret
-let letter: char = 'A';
-let symbol: char = '♠';
-let emoji: char = '🎉';
+let letter: byte = 'A';
+let symbol: byte = '♠';
+let emoji: byte = '🎉';
 ```
 
 ## Compound Types

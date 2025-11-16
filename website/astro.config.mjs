@@ -66,7 +66,7 @@ export default defineConfig({
                   items: [
                       { label: 'If Statements', slug: 'language/if-statements' },
                       { label: 'Loops', slug: 'language/loops' },
-                      { label: 'Match Expressions', slug: 'language/match' },
+                      { label: 'When Expressions', slug: 'language/match' },
                   ],
               },
               {
@@ -90,7 +90,6 @@ export default defineConfig({
                   items: [
                       { label: 'Error Handling', slug: 'language/errors' },
                       { label: 'Generics', slug: 'language/generics' },
-                      { label: 'Modules', slug: 'language/modules' },
                   ],
               },
           ],

@@ -8,12 +8,12 @@ Enums (enumerations) define a type with a fixed set of possible values.
 ## Basic Enum
 
 ```ferret
-enum Status {
+type Status enum {
     Pending,
     Active,
     Completed,
     Cancelled,
-}
+};
 ```
 
 ## Using Enums
@@ -32,34 +32,10 @@ match status {
 ## Enums with Values
 
 ```ferret
-enum HttpStatus {
+type HttpStatus enum {
     Ok = 200,
     NotFound = 404,
     ServerError = 500,
-}
-```
-
-## Tagged Unions
-
-Enums can hold associated data:
-
-```ferret
-enum Result<T, E> {
-    Ok(T),
-    Err(E),
-}
-
-let result := Result::Ok(42);
-```
-
-## Pattern Matching
-
-Extract data from enum variants:
-
-```ferret
-match result {
-    Result::Ok(value) => print("Success: " + value),
-    Result::Err(error) => print("Error: " + error),
 }
 ```
 
