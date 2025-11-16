@@ -3,14 +3,19 @@ title: Interfaces
 description: Interface types and polymorphism in Ferret
 ---
 
-Interfaces define contracts that types can implement.
+Interfaces define contracts that types can implement. In simple terms, an interface specifies a set of methods that a type must provide to "implement" that interface.
 
 ## Interface Definition
 
 ```ferret
 type Drawable interface {
     draw();
-    get_bounds() -> (i32, i32, i32, i32);
+    get_bounds() -> struct {
+        .x_min: i32,
+        .y_min: i32,
+        .x_max: i32,
+        .y_max: i32
+    };
 };
 ```
 
@@ -27,9 +32,18 @@ fn (c: Circle) draw() {
     print("Drawing circle at (" + c.x + ", " + c.y + ")");
 }
 
-fn (c: Circle) get_bounds() -> (i32, i32, i32, i32) {
-    return (c.x - c.radius, c.y - c.radius,
-            c.x + c.radius, c.y + c.radius);
+fn (c: Circle) get_bounds() -> struct {
+    .x_min: i32,
+    .y_min: i32,
+    .x_max: i32,
+    .y_max: i32
+} {
+    return .{
+        .x_min = c.x - c.radius,
+        .y_min = c.y - c.radius,
+        .x_max = c.x + c.radius,
+        .y_max = c.y + c.radius
+    };
 }
 ```
 

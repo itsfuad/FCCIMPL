@@ -3,7 +3,7 @@ title: Parameters
 description: Function parameters in Ferret
 ---
 
-Learn how to define and use function parameters effectively.
+You can use multiple types of parameters in Ferret functions.
 
 ## Basic Parameters
 

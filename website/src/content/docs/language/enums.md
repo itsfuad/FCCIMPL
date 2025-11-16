@@ -21,21 +21,11 @@ type Status enum {
 ```ferret
 let status := Status::Active;
 
-match status {
-    Status::Pending => print("Waiting"),
-    Status::Active => print("Running"),
-    Status::Completed => print("Done"),
-    Status::Cancelled => print("Aborted"),
-}
-```
-
-## Enums with Values
-
-```ferret
-type HttpStatus enum {
-    Ok = 200,
-    NotFound = 404,
-    ServerError = 500,
+when status {
+    Status::Pending => io::print("Waiting"),
+    Status::Active => io::print("Running"),
+    Status::Completed => io::print("Done"),
+    Status::Cancelled => io::print("Aborted"),
 }
 ```
 

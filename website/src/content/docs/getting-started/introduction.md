@@ -3,8 +3,6 @@ title: Introduction to Ferret
 description: Learn about Ferret, a modern type-safe programming language
 ---
 
-# Welcome to Ferret
-
 Ferret is a modern, type-safe programming language designed for clarity, safety, and developer productivity.
 
 ## Why Ferret?

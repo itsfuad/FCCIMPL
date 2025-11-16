@@ -76,6 +76,20 @@ let person := Person{
 };
 ```
 
+## Annonymous Structs
+
+You can just use structs without defining a type:
+
+```ferret
+let point : struct{ .x: i32, .y: i32}; // Define an anonymous struct type
+```
+
+You can use `.{}` to create instances of anonymous structs:
+
+```ferret 
+let point := .{ .x = 10, .y = 20 };
+```
+
 ## Next Steps
 
 - [Learn about Enums](/language/enums)

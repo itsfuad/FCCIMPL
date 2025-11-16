@@ -49,6 +49,7 @@ export default defineConfig({
               // Custom footer with links and info
               Footer: './src/components/Footer.astro',
           },
+
           sidebar: [
               {
                   label: 'Getting Started',
@@ -72,7 +73,7 @@ export default defineConfig({
                   items: [
                       { label: 'If Statements', slug: 'language/if-statements' },
                       { label: 'Loops', slug: 'language/loops' },
-                      { label: 'When Expressions', slug: 'language/match' },
+                      { label: 'When Expressions', slug: 'language/when' },
                   ],
               },
               {

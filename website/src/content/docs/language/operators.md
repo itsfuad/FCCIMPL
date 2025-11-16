@@ -114,18 +114,6 @@ let range := 1..5;       // [1, 2, 3, 4]
 let inclusive := 1..=5;  // [1, 2, 3, 4, 5]
 ```
 
-### Null Coalescing (`??`)
-
-Chain multiple optional values:
-
-```ferret
-let a: i32? = none;
-let b: i32? = none;
-let c: i32? = 42;
-
-let result := a ?? b ?? c ?? 0;  // result is 42
-```
-
 ## Member Access Operators
 
 ### Dot Operator (`.`)
@@ -140,20 +128,6 @@ struct Point {
 
 let p := Point{ .x = 10, .y = 20 };
 let x := p.x;  // 10
-```
-
-### Optional Chaining (`?.`)
-
-Safely access optional values:
-
-```ferret
-struct User {
-    .name: str,
-    .email: str?,
-}
-
-let user := User{ .name = "Alice", .email = none };
-let email_len := user.email?.length;  // none (safe access)
 ```
 
 ## Bitwise Operators

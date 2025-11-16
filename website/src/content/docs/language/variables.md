@@ -11,6 +11,8 @@ Variables are declared using the `let` keyword and can be reassigned after decla
 
 ### With Type Annotation
 
+Use a `:` to specify the type explicitly:
+
 ```ferret
 let name: str = "Ferret";
 let age: i32 = 1;

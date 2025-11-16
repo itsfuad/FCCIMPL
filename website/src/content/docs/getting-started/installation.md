@@ -3,8 +3,6 @@ title: Installation
 description: How to install and set up Ferret
 ---
 
-# Installing Ferret
-
 ## Prerequisites
 
 Before installing Ferret, make sure you have:

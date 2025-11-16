@@ -43,13 +43,6 @@ if grade >= 90 {
 }
 ```
 
-## Inline If Expression
-
-```ferret
-let age := 20;
-let status := if age >= 18 { "adult" } else { "minor" };
-```
-
 ## Type Narrowing with Optionals
 
 Ferret automatically narrows types in conditional branches:

@@ -1,7 +1,10 @@
 ---
 // Custom footer for Ferret documentation
+// Only show on homepage
+const isHomepage = Astro.url.pathname === '/' || Astro.url.pathname === '';
 ---
 
+{isHomepage && (
 <footer class="custom-footer">
   <div class="footer-content">
     <div class="footer-grid">
@@ -62,6 +65,7 @@
     </div>
   </div>
 </footer>
+)}
 
 <style>
   .custom-footer {

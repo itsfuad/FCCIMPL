@@ -66,34 +66,17 @@ let emoji: byte = '🎉';
 
 ### Arrays
 
-Fixed-size collections of the same type:
+Arrays are collections of elements of the same type. The elements can be fixed or dynamic in size.
 
 ```ferret
-let numbers: [i32; 5] = [1, 2, 3, 4, 5];
-let names: [str; 3] = ["Alice", "Bob", "Carol"];
+let numbers: []i32 = [1, 2, 3, 4, 5];
 ```
-
-### Slices
-
-Dynamic views into arrays:
+We created an array of integers. No size specified means dynamic size. But you can also define fixed-size arrays:
 
 ```ferret
-let all_numbers := [1, 2, 3, 4, 5];
-let first_three := all_numbers[0..3];  // [1, 2, 3]
+let numbers: [5]i32 = [1, 2, 3, 4, 5];
 ```
-
-### Tuples
-
-Fixed-size collections of different types:
-
-```ferret
-let point: (i32, i32) = (10, 20);
-let person: (str, i32) = ("Alice", 30);
-
-// Accessing tuple elements
-let x := point.0;  // 10
-let y := point.1;  // 20
-```
+Now the array can only hold 5 integers. You cannot add or remove elements.
 
 ## Optional Types
 

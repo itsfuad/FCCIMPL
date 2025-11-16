@@ -3,8 +3,6 @@ title: Hello World
 description: Your first Ferret program
 ---
 
-# Hello, World!
-
 Let's write your first Ferret program!
 
 ## Create a File
@@ -13,9 +11,11 @@ Create a file named `hello.fer`:
 
 ```ferret
 // Your first Ferret program
+import "std/io";
+
 fn main() {
     let greeting: str = "Hello, World!";
-    print(greeting);
+    io::print(greeting);
 }
 ```
 
