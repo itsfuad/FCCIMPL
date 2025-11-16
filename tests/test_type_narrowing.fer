@@ -7,8 +7,8 @@ if x != none {
     // In then branch, x should be narrowed to i32
     let y: i32 = x;  // Should work - x is i32 here
 } else {
-    // In else branch, x is still i32?
-    let z: i32 = x;  // Would error - x is still optional
+    // In else branch, x is narrowed to none
+    let z: i32 = x;  // ERROR: x is none, can't assign to i32
 }
 
 // Test 2: Narrowing with == none

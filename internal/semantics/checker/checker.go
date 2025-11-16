@@ -354,14 +354,18 @@ func (c *Checker) analyzeTypeNarrowing(cond ast.Expression) (thenNarrowings, els
 
 	// Create narrowings based on the operator
 	if isNotEqualCheck {
-		// x != none: then branch has T, else branch has none (conceptually)
+		// x != none: then branch has T (not none), else branch has none
 		thenNarrowings = []TypeNarrowing{
 			{SymbolName: identExpr.Name, NarrowedType: optType.Base},
 		}
-		// In else branch, we know it's none, so keep it optional
-		// (we don't have a way to express "definitely none" yet)
+		elseNarrowings = []TypeNarrowing{
+			{SymbolName: identExpr.Name, NarrowedType: &semantics.NoneType{}},
+		}
 	} else if isEqualityCheck {
-		// x == none: then branch has none, else branch has T
+		// x == none: then branch has none, else branch has T (not none)
+		thenNarrowings = []TypeNarrowing{
+			{SymbolName: identExpr.Name, NarrowedType: &semantics.NoneType{}},
+		}
 		elseNarrowings = []TypeNarrowing{
 			{SymbolName: identExpr.Name, NarrowedType: optType.Base},
 		}
