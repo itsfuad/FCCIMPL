@@ -1,8 +1,87 @@
 /* Ferret language custom styles */
 
+/* Prevent horizontal scroll from full-width sections */
+body,
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+main, .content-panel {
+  padding: 0 !important;
+}
+
+/* Main content area with subtle pattern */
+.main-frame {
+  background-image: var(--pattern-dots);
+  background-size: 20px 20px;
+}
+
+/* Hero section with gradient and pattern - Full Width */
+.hero {
+  position: relative;
+  /* Break out of container padding to make full width */
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
+  
+  background: 
+    var(--pattern-grid),
+    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+  background-size: 40px 40px, 100% 100%, 100% 100%;
+}
+
+/* Sidebar with subtle pattern */
+.sidebar {
+  background-image: var(--pattern-dots);
+  background-size: 20px 20px;
+}
+
+/* Footer - Full Width with solid background */
+footer {
+  position: relative;
+  /* Break out of container padding to make full width */
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
+  
+  background: #0a0a0a !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Light theme footer */
+:root[data-theme='light'] footer {
+  background: #ffffff !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Decorative element on the side */
+.right-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(59, 130, 246, 0.3) 20%,
+    rgba(124, 58, 237, 0.3) 80%,
+    transparent 100%
+  );
+}
+
 :root {
+  /* SVG Background Patterns */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' opacity='0.05'/%3E%3C/svg%3E");
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/%3E%3C/svg%3E");
+  
   /* Single accent color - stays same in both modes */
-  --accent-color: #3b82f6;
+  --accent-color: #f44597;
   
   /* Brand colors */
   --ferret-purple: #7c3aed;
@@ -36,6 +115,16 @@
   --sl-color-accent: var(--accent-color);
   --sl-color-accent-high: var(--accent-color);
   --sl-color-text-accent: var(--accent-color);
+  
+  /* Dark theme patterns */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' opacity='0.08'/%3E%3C/svg%3E");
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23ffffff' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
+}
+
+:root[data-theme='light'] {
+  /* Light theme patterns */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000000' opacity='0.03'/%3E%3C/svg%3E");
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23000000' stroke-width='0.5' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* Apply accent color to key elements */
