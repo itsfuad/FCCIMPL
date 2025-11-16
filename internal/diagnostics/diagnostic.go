@@ -109,12 +109,50 @@ func (d *Diagnostic) WithLabel(filepath string, loc *source.Location, message st
 }
 
 // WithPrimaryLabel adds a primary labeled location
+// Must be called before any WithSecondaryLabel calls
 func (d *Diagnostic) WithPrimaryLabel(filepath string, loc *source.Location, message string) *Diagnostic {
+	// Ensure primary label is always first
+	if len(d.Labels) > 0 {
+		// Check if we already have a primary
+		for _, label := range d.Labels {
+			if label.Style == Primary {
+				// Already have a primary, don't add another
+				return d
+			}
+		}
+		// We have secondary labels but no primary - insert at beginning
+		d.Labels = append([]Label{{
+			Location: loc,
+			Message:  message,
+			Style:    Primary,
+		}}, d.Labels...)
+		if d.FilePath == "" {
+			d.FilePath = filepath
+		}
+		return d
+	}
 	return d.WithLabel(filepath, loc, message, Primary)
 }
 
 // WithSecondaryLabel adds a secondary labeled location
+// Can be called multiple times to add multiple context labels
+// Primary label must exist before adding secondary labels
 func (d *Diagnostic) WithSecondaryLabel(filepath string, loc *source.Location, message string) *Diagnostic {
+	// Verify we have a primary label
+	hasPrimary := false
+	for _, label := range d.Labels {
+		if label.Style == Primary {
+			hasPrimary = true
+			break
+		}
+	}
+
+	if !hasPrimary {
+		// No primary label exists - cannot add secondary
+		// This is a programming error, so we should make it visible
+		panic("Cannot add secondary label without primary label. Call WithPrimaryLabel first.")
+	}
+
 	return d.WithLabel(filepath, loc, message, Secondary)
 }
 

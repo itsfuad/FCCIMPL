@@ -1,0 +1,56 @@
+// Test file for optional type checking in the semantic phase
+
+// Test 1: Basic optional type declaration and assignment
+let x: i32? = 42;         // OK: T can be assigned to T?
+let y: i32? = none;       // OK: none can be assigned to T?
+
+// Test 2: Optional to non-optional (should error)
+let a: i32 = 42;
+// let b: i32 = x;        // ERROR: T? cannot be assigned to T without unwrapping
+
+// Test 3: Optional type compatibility
+let s1: str? = "hello";   // OK: str can wrap to str?
+let s2: str? = none;      // OK: none can assign to str?
+
+// Test 4: Elvis operator with optional types (NOT YET PARSED)
+// let opt1: i32? = 10;
+// let result1: i32 = opt1 ?: 0;  // OK: unwraps i32? to i32 with default
+
+// let opt2: str? = none;
+// let result2: str = opt2 ?: "default";  // OK: str? with str default
+
+// Test 5: Elvis operator type mismatch (should warn or error)
+// let badElvis: i32 = opt1 ?: "wrong";  // ERROR: default type mismatch
+
+// Test 6: Nested optional types (NOT YET SUPPORTED)
+// let nested: i32?? = 42;   // OK: wrapping multiple levels
+
+// Test 7: Function return with error type and catch (NOT YET IMPLEMENTED)
+// fn divide(a: i32, b: i32) -> i32 ! str {
+//     if b == 0 {
+//         return err("division by zero");
+//     }
+//     return a / b;
+// }
+
+// let safe: i32 = divide(10, 2) catch 0;           // OK: catch with fallback
+// let safe2: i32 = divide(10, 0) catch err { 
+//     print(err);
+//     return -1;
+// } 0;  // OK: catch with handler and fallback
+
+// Test 8: Optional in struct (STRUCT SYNTAX NOT WORKING IN PARSER YET)
+// struct Person {
+//     name: str,
+//     age: i32?,
+// }
+
+// let p: Person = Person{
+//     .name = "Alice",
+//     .age = 30
+// };
+
+// let p2: Person = Person{
+//     .name = "Bob",
+//     .age = none  // OK: none for optional field
+// };

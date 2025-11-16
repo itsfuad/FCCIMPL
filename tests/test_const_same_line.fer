@@ -1,0 +1,4 @@
+// Test: Constant reassignment on same line as declaration (contrived example)
+fn test() {
+    const X: i32 = 10; X = 20;  // Declaration and reassignment on same line
+}

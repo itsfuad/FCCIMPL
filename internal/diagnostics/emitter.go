@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"compiler/colors"
+	"compiler/internal/source"
 )
 
 const (
@@ -93,9 +94,51 @@ func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
 	// Print severity and message
 	e.printHeader(diag)
 
-	// Print each labeled location
-	for _, label := range diag.Labels {
-		e.printLabel(filepath, label, diag.Severity)
+	// Rust-style: If we have labels, print them intelligently
+	if len(diag.Labels) > 0 {
+		// Verify we have exactly one primary label
+		primaryCount := 0
+		var primaryLabel Label
+		secondaryLabels := []Label{}
+
+		for _, label := range diag.Labels {
+			if label.Style == Primary {
+				primaryCount++
+				primaryLabel = label
+			} else {
+				secondaryLabels = append(secondaryLabels, label)
+			}
+		}
+
+		if primaryCount == 0 {
+			// No primary label - this shouldn't happen but handle gracefully
+			for _, label := range diag.Labels {
+				e.printLabel(filepath, label, diag.Severity)
+			}
+		} else if primaryCount > 1 {
+			// Multiple primary labels - print warning
+			colors.BOLD_RED.Println("INTERNAL COMPILER ERROR: Multiple primary labels in diagnostic!")
+			for _, label := range diag.Labels {
+				e.printLabel(filepath, label, diag.Severity)
+			}
+		} else {
+			// Exactly one primary label - use Rust-style rendering
+			if len(secondaryLabels) == 0 {
+				// Only primary label
+				e.printLabel(filepath, primaryLabel, diag.Severity)
+			} else if len(secondaryLabels) == 1 &&
+				primaryLabel.Location != nil &&
+				primaryLabel.Location.Start != nil &&
+				secondaryLabels[0].Location != nil &&
+				secondaryLabels[0].Location.Start != nil &&
+				primaryLabel.Location.Start.Line == secondaryLabels[0].Location.Start.Line {
+				// Primary + one secondary on same line - use compact format
+				e.printCompactDualLabel(filepath, primaryLabel, secondaryLabels[0], diag.Severity)
+			} else {
+				// Primary + multiple secondaries OR different lines - use routed format
+				e.printRoutedLabels(filepath, primaryLabel, secondaryLabels, diag.Severity)
+			}
+		}
 	}
 
 	// Print notes
@@ -134,7 +177,8 @@ func (e *Emitter) printHeader(diag *Diagnostic) {
 	if diag.Code != "" {
 		fmt.Fprintf(os.Stderr, "[%s]", diag.Code)
 	}
-	fmt.Fprintf(os.Stderr, ": %s\n", diag.Message)
+	fmt.Fprint(os.Stderr, ": ")
+	color.Println(diag.Message)
 }
 
 func (e *Emitter) printLabel(filepath string, label Label, severity Severity) {
@@ -347,4 +391,345 @@ func (e *Emitter) printNote(note Note) {
 func (e *Emitter) printHelp(help string) {
 	colors.GREEN.Print("  = help: ")
 	fmt.Fprintln(os.Stderr, help)
+}
+
+// printCompactDualLabel prints two labels on same line (Rust-style)
+// Rightmost label gets inline message, leftmost gets connector line below
+func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondary Label, severity Severity) {
+	if primary.Location == nil || primary.Location.Start == nil {
+		return
+	}
+	if secondary.Location == nil || secondary.Location.Start == nil {
+		return
+	}
+
+	line := primary.Location.Start.Line
+
+	primaryStart := primary.Location.Start
+	primaryEnd := primary.Location.End
+	if primaryEnd == nil {
+		primaryEnd = primaryStart
+	}
+
+	secondaryStart := secondary.Location.Start
+	secondaryEnd := secondary.Location.End
+	if secondaryEnd == nil {
+		secondaryEnd = secondaryStart
+	}
+
+	// Determine which label is leftmost (gets connector) and rightmost (gets inline)
+	var leftLabel, rightLabel Label
+	var leftStart, leftEnd, rightStart, rightEnd *source.Position
+
+	if primaryStart.Column < secondaryStart.Column {
+		// Primary is on the left
+		leftLabel = primary
+		leftStart, leftEnd = primaryStart, primaryEnd
+		rightLabel = secondary
+		rightStart, rightEnd = secondaryStart, secondaryEnd
+	} else {
+		// Secondary is on the left (or same position)
+		leftLabel = secondary
+		leftStart, leftEnd = secondaryStart, secondaryEnd
+		rightLabel = primary
+		rightStart, rightEnd = primaryStart, primaryEnd
+	}
+
+	// Print location header (point to rightmost/inline label)
+	colors.BLUE.Printf("  --> %s:%d:%d\n", filepath, line, rightStart.Column)
+
+	lineNumWidth := len(fmt.Sprintf("%d", line))
+
+	// Print separator
+	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Println(" |")
+
+	// Try to get previous line for context (if not empty)
+	if line > 1 {
+		prevLine, err := e.cache.GetLine(filepath, line-1)
+		if err == nil && strings.TrimSpace(prevLine) != "" {
+			// Print previous line in grey for context
+			colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, line-1)
+			colors.GREY.Println(prevLine)
+		}
+	}
+
+	// Get source line
+	sourceLine, err := e.cache.GetLine(filepath, line)
+	if err != nil {
+		return
+	}
+
+	// Print line number and source
+	colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, line)
+	fmt.Fprintln(os.Stderr, sourceLine)
+
+	// Calculate positions
+	leftPadding := leftStart.Column - 1
+	leftLength := leftEnd.Column - leftStart.Column
+	if leftLength <= 0 {
+		leftLength = 1
+	}
+
+	rightPadding := rightStart.Column - 1
+	rightLength := rightEnd.Column - rightStart.Column
+	if rightLength <= 0 {
+		rightLength = 1
+	}
+
+	// Get colors based on label style
+	leftColor := colors.BLUE
+	rightColor := colors.BLUE
+
+	if leftLabel.Style == Primary {
+		leftColor = e.getSeverityColor(severity)
+	}
+	if rightLabel.Style == Primary {
+		rightColor = e.getSeverityColor(severity)
+	}
+
+	// Determine character style based on label Style field
+	var leftChar, rightChar string
+
+	if leftLabel.Style == Primary {
+		if leftLength == 1 {
+			leftChar = "^"
+		} else {
+			leftChar = "~"
+		}
+	} else {
+		leftChar = "-"
+	}
+
+	if rightLabel.Style == Primary {
+		if rightLength == 1 {
+			rightChar = "^"
+		} else {
+			rightChar = "~"
+		}
+	} else {
+		rightChar = "-"
+	}
+
+	// Line 1: Show both underlines, right (inline) label's message
+	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Print(" | ")
+
+	// Left label first
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	leftColor.Print(strings.Repeat(leftChar, leftLength))
+
+	// Space between labels
+	spaceBetween := rightPadding - leftPadding - leftLength
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", spaceBetween))
+
+	// Right label with inline message
+	rightColor.Print(strings.Repeat(rightChar, rightLength))
+	if rightLabel.Message != "" {
+		rightColor.Printf(" %s", rightLabel.Message)
+	}
+	fmt.Fprintln(os.Stderr)
+
+	// Line 2: Show vertical connector for left label
+	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Print(" | ")
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	leftColor.Println("|")
+
+	// Line 3: Show left label message with -- prefix (always dashes for connector)
+	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Print(" | ")
+	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	leftColor.Print("--") // Always use -- for connector message, regardless of style
+	if leftLabel.Message != "" {
+		leftColor.Printf(" %s", leftLabel.Message)
+	}
+	fmt.Fprintln(os.Stderr)
+
+	// Print separator
+	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Println(" |")
+}
+
+// printRoutedLabels prints primary + multiple secondaries with routing (Rust-style)
+// Handles cases where secondary labels are on different lines or need routing
+func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries []Label, severity Severity) {
+	if primary.Location == nil || primary.Location.Start == nil {
+		return
+	}
+
+	primaryLine := primary.Location.Start.Line
+	primaryCol := primary.Location.Start.Column
+
+	// Print location header
+	colors.BLUE.Printf("  --> %s:%d:%d\n", filepath, primaryLine, primaryCol)
+
+	// Collect all line numbers we need to show
+	lineNumbers := []int{primaryLine}
+	for _, sec := range secondaries {
+		if sec.Location != nil && sec.Location.Start != nil {
+			secLine := sec.Location.Start.Line
+			// Add line if not already included
+			found := false
+			for _, ln := range lineNumbers {
+				if ln == secLine {
+					found = true
+					break
+				}
+			}
+			if !found {
+				lineNumbers = append(lineNumbers, secLine)
+			}
+		}
+	}
+
+	// Sort line numbers
+	for i := 0; i < len(lineNumbers); i++ {
+		for j := i + 1; j < len(lineNumbers); j++ {
+			if lineNumbers[i] > lineNumbers[j] {
+				lineNumbers[i], lineNumbers[j] = lineNumbers[j], lineNumbers[i]
+			}
+		}
+	}
+
+	lineNumWidth := len(fmt.Sprintf("%d", lineNumbers[len(lineNumbers)-1]))
+
+	// Print separator
+	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Println(" |")
+
+	primaryColor := e.getSeverityColor(severity)
+	secondaryColor := colors.BLUE
+
+	// Print each line with appropriate labels
+	for idx, lineNum := range lineNumbers {
+		// Print ellipsis if there's a gap between lines
+		if idx > 0 {
+			prevLine := lineNumbers[idx-1]
+			if lineNum-prevLine > 1 {
+				colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+				colors.GREY.Println("...")
+				colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+				colors.GREY.Println(" |")
+			}
+		}
+
+		// Try to get previous line for context (if not empty)
+		if lineNum > 1 {
+			// Check if previous line is not already shown
+			isPrevShown := false
+			if idx > 0 && lineNumbers[idx-1] == lineNum-1 {
+				isPrevShown = true
+			}
+
+			if !isPrevShown {
+				prevLine, err := e.cache.GetLine(filepath, lineNum-1)
+				if err == nil && strings.TrimSpace(prevLine) != "" {
+					// Print previous line in grey for context
+					colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, lineNum-1)
+					colors.GREY.Println(prevLine)
+				}
+			}
+		}
+
+		sourceLine, err := e.cache.GetLine(filepath, lineNum)
+		if err != nil {
+			continue
+		}
+
+		// Print line number and source
+		colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, lineNum)
+		fmt.Fprintln(os.Stderr, sourceLine)
+
+		// Check for secondaries on this line first
+		hasSecondary := false
+		for _, sec := range secondaries {
+			if sec.Location != nil && sec.Location.Start != nil && sec.Location.Start.Line == lineNum {
+				hasSecondary = true
+				break
+			}
+		}
+
+		// Check if primary is on this line
+		hasPrimary := lineNum == primaryLine
+
+		// Only print underline section if there are labels on this line
+		if hasPrimary || hasSecondary {
+			colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+			colors.GREY.Print(" | ")
+
+			// Print primary label if on this line
+			if hasPrimary {
+				primaryStart := primary.Location.Start
+				primaryEnd := primary.Location.End
+				if primaryEnd == nil {
+					primaryEnd = primaryStart
+				}
+
+				padding := primaryStart.Column - 1
+				length := primaryEnd.Column - primaryStart.Column
+				if length <= 0 {
+					length = 1
+				}
+
+				char := "^"
+				if length > 1 {
+					char = "~"
+				}
+
+				fmt.Fprint(os.Stderr, strings.Repeat(" ", padding))
+				primaryColor.Print(strings.Repeat(char, length))
+				if primary.Message != "" {
+					primaryColor.Printf(" %s", primary.Message)
+				}
+				fmt.Fprintln(os.Stderr)
+			} else if hasSecondary {
+				// Print secondary labels if on this line (and primary is not)
+				for _, sec := range secondaries {
+					if sec.Location != nil && sec.Location.Start != nil && sec.Location.Start.Line == lineNum {
+						secStart := sec.Location.Start
+						secEnd := sec.Location.End
+						if secEnd == nil {
+							secEnd = secStart
+						}
+
+						padding := secStart.Column - 1
+						length := secEnd.Column - secStart.Column
+						if length <= 0 {
+							length = 1
+						}
+
+						fmt.Fprint(os.Stderr, strings.Repeat(" ", padding))
+						secondaryColor.Print(strings.Repeat("-", length))
+						if sec.Message != "" {
+							secondaryColor.Printf(" %s", sec.Message)
+						}
+						fmt.Fprintln(os.Stderr)
+						// Only print first secondary on this line
+						break
+					}
+				}
+			}
+		}
+	}
+
+	// Print separator
+	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Println(" |")
+}
+
+// getSeverityColor returns the color for a given severity
+func (e *Emitter) getSeverityColor(severity Severity) colors.COLOR {
+	switch severity {
+	case Error:
+		return colors.RED
+	case Warning:
+		return colors.YELLOW
+	case Info:
+		return colors.BLUE
+	case Hint:
+		return colors.PURPLE
+	default:
+		return colors.RED
+	}
 }

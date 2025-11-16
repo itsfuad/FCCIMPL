@@ -84,18 +84,10 @@ type Field struct {
 func (f *Field) INode()                {} // Implements Node interface
 func (f *Field) Loc() *source.Location { return &f.Location }
 
-// FieldList represents a list of Fields, enclosed by parentheses or braces
-type FieldList struct {
-	List []*Field
-	source.Location
-}
-
-func (f *FieldList) INode()                {} // Implements Node interface
-func (f *FieldList) Loc() *source.Location { return &f.Location }
 
 // StructType represents a struct type definition
 type StructType struct {
-	Fields *FieldList // struct fields
+	Fields []Field
 	source.Location
 }
 
@@ -105,7 +97,7 @@ func (s *StructType) Loc() *source.Location { return &s.Location }
 
 // InterfaceType represents an interface type definition
 type InterfaceType struct {
-	Methods *FieldList // interface methods (each Field contains a FuncType)
+	Methods []Field // interface methods
 	source.Location
 }
 
@@ -115,7 +107,7 @@ func (i *InterfaceType) Loc() *source.Location { return &i.Location }
 
 // FuncType represents a function type signature
 type FuncType struct {
-	Params *FieldList // function parameters
+	Params []Field    // function parameters
 	Result TypeNode   // return types (can be nil for no return)
 	source.Location
 }
@@ -138,7 +130,7 @@ func (m *MapType) Loc() *source.Location { return &m.Location }
 
 // EnumType represents an enum type definition
 type EnumType struct {
-	Variants *FieldList // enum variants
+	Variants []Field
 	source.Location
 }
 

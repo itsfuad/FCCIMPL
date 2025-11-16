@@ -9,6 +9,7 @@ type SYMBOL_TABLE_SCOPENAME string
 const (
 	SYMBOL_TABLE_GLOBAL   SYMBOL_TABLE_SCOPENAME = "global"
 	SYMBOL_TABLE_FUNCTION SYMBOL_TABLE_SCOPENAME = "function"
+	SYMBOL_TABLE_BLOCK    SYMBOL_TABLE_SCOPENAME = "block"
 )
 
 // SymbolTable manages scoped symbols (variables, constants, etc.)

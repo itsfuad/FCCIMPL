@@ -59,6 +59,14 @@ func (o *OptionalType) String() string {
 	return fmt.Sprintf("%s?", o.Base)
 }
 
+// NoneType represents the 'none' literal type
+// It's compatible with all optional types
+type NoneType struct{}
+
+func (n *NoneType) String() string {
+	return "none"
+}
+
 // StructType represents struct types with named fields
 type StructType struct {
 	Fields map[string]Type

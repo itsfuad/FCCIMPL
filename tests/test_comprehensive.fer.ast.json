@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_comprehensive.fer",
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_comprehensive.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -18,74 +18,72 @@
         }
       },
       "Type": {
-        "Fields": {
-          "List": [
-            {
-              "Name": {
-                "Name": "x",
-                "Start": {
-                  "Line": 6,
-                  "Column": 6,
-                  "Index": 200
-                },
-                "End": {
-                  "Line": 6,
-                  "Column": 7,
-                  "Index": 201
-                }
+        "Fields": [
+          {
+            "Name": {
+              "Name": "x",
+              "Start": {
+                "Line": 6,
+                "Column": 6,
+                "Index": 200
               },
-              "Type": {
-                "Name": "i32",
-                "Start": {
-                  "Line": 6,
-                  "Column": 9,
-                  "Index": 203
-                },
-                "End": {
-                  "Line": 6,
-                  "Column": 12,
-                  "Index": 206
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
+              "End": {
+                "Line": 6,
+                "Column": 7,
+                "Index": 201
+              }
             },
-            {
-              "Name": {
-                "Name": "y",
-                "Start": {
-                  "Line": 7,
-                  "Column": 6,
-                  "Index": 214
-                },
-                "End": {
-                  "Line": 7,
-                  "Column": 7,
-                  "Index": 215
-                }
+            "Type": {
+              "Name": "i32",
+              "Start": {
+                "Line": 6,
+                "Column": 9,
+                "Index": 203
               },
-              "Type": {
-                "Name": "i32",
-                "Start": {
-                  "Line": 7,
-                  "Column": 9,
-                  "Index": 217
-                },
-                "End": {
-                  "Line": 7,
-                  "Column": 12,
-                  "Index": 220
-                }
+              "End": {
+                "Line": 6,
+                "Column": 12,
+                "Index": 206
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "y",
+              "Start": {
+                "Line": 7,
+                "Column": 6,
+                "Index": 214
               },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
-        },
+              "End": {
+                "Line": 7,
+                "Column": 7,
+                "Index": 215
+              }
+            },
+            "Type": {
+              "Name": "i32",
+              "Start": {
+                "Line": 7,
+                "Column": 9,
+                "Index": 217
+              },
+              "End": {
+                "Line": 7,
+                "Column": 12,
+                "Index": 220
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
         "Start": {
           "Line": 5,
           "Column": 12,
@@ -600,74 +598,72 @@
         }
       },
       "Type": {
-        "Fields": {
-          "List": [
-            {
-              "Name": {
-                "Name": "start",
-                "Start": {
-                  "Line": 20,
-                  "Column": 6,
-                  "Index": 484
-                },
-                "End": {
-                  "Line": 20,
-                  "Column": 11,
-                  "Index": 489
-                }
+        "Fields": [
+          {
+            "Name": {
+              "Name": "start",
+              "Start": {
+                "Line": 20,
+                "Column": 6,
+                "Index": 484
               },
-              "Type": {
-                "Name": "Point",
-                "Start": {
-                  "Line": 20,
-                  "Column": 13,
-                  "Index": 491
-                },
-                "End": {
-                  "Line": 20,
-                  "Column": 18,
-                  "Index": 496
-                }
-              },
-              "Value": null,
-              "Start": null,
-              "End": null
+              "End": {
+                "Line": 20,
+                "Column": 11,
+                "Index": 489
+              }
             },
-            {
-              "Name": {
-                "Name": "end",
-                "Start": {
-                  "Line": 21,
-                  "Column": 6,
-                  "Index": 504
-                },
-                "End": {
-                  "Line": 21,
-                  "Column": 9,
-                  "Index": 507
-                }
+            "Type": {
+              "Name": "Point",
+              "Start": {
+                "Line": 20,
+                "Column": 13,
+                "Index": 491
               },
-              "Type": {
-                "Name": "Point",
-                "Start": {
-                  "Line": 21,
-                  "Column": 11,
-                  "Index": 509
-                },
-                "End": {
-                  "Line": 21,
-                  "Column": 16,
-                  "Index": 514
-                }
+              "End": {
+                "Line": 20,
+                "Column": 18,
+                "Index": 496
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "end",
+              "Start": {
+                "Line": 21,
+                "Column": 6,
+                "Index": 504
               },
-              "Value": null,
-              "Start": null,
-              "End": null
-            }
-          ],
-          "Start": null,
-          "End": null
-        },
+              "End": {
+                "Line": 21,
+                "Column": 9,
+                "Index": 507
+              }
+            },
+            "Type": {
+              "Name": "Point",
+              "Start": {
+                "Line": 21,
+                "Column": 11,
+                "Index": 509
+              },
+              "End": {
+                "Line": 21,
+                "Column": 16,
+                "Index": 514
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
         "Start": {
           "Line": 19,
           "Column": 11,
@@ -1411,11 +1407,7 @@
         }
       },
       "Type": {
-        "Fields": {
-          "List": [],
-          "Start": null,
-          "End": null
-        },
+        "Fields": [],
         "Start": {
           "Line": 34,
           "Column": 12,
@@ -1932,7 +1924,7 @@
             "Decls": [
               {
                 "Name": {
-                  "Name": "max",
+                  "Name": "ifa",
                   "Start": {
                     "Line": 52,
                     "Column": 9,
@@ -1946,7 +1938,8 @@
                 },
                 "Type": null,
                 "Value": {
-                  "Name": "b",
+                  "Kind": 0,
+                  "Value": "1",
                   "Start": {
                     "Line": 52,
                     "Column": 16,
@@ -1970,6 +1963,49 @@
               "Column": 18,
               "Index": 1027
             }
+          },
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "max",
+                  "Start": {
+                    "Line": 53,
+                    "Column": 9,
+                    "Index": 1037
+                  },
+                  "End": {
+                    "Line": 53,
+                    "Column": 12,
+                    "Index": 1040
+                  }
+                },
+                "Type": null,
+                "Value": {
+                  "Name": "b",
+                  "Start": {
+                    "Line": 53,
+                    "Column": 16,
+                    "Index": 1044
+                  },
+                  "End": {
+                    "Line": 53,
+                    "Column": 17,
+                    "Index": 1045
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 53,
+              "Column": 5,
+              "Index": 1033
+            },
+            "End": {
+              "Line": 53,
+              "Column": 18,
+              "Index": 1046
+            }
           }
         ],
         "Start": {
@@ -1978,9 +2014,9 @@
           "Index": 1007
         },
         "End": {
-          "Line": 53,
+          "Line": 54,
           "Column": 2,
-          "Index": 1030
+          "Index": 1049
         }
       },
       "Else": {
@@ -1988,41 +2024,41 @@
           "X": {
             "Name": "a",
             "Start": {
-              "Line": 53,
+              "Line": 54,
               "Column": 11,
-              "Index": 1039
+              "Index": 1058
             },
             "End": {
-              "Line": 53,
+              "Line": 54,
               "Column": 12,
-              "Index": 1040
+              "Index": 1059
             }
           },
           "Op": {
             "Kind": "\u003e",
             "Value": "\u003e",
             "Start": {
-              "Line": 53,
+              "Line": 54,
               "Column": 13,
-              "Index": 1041
+              "Index": 1060
             },
             "End": {
-              "Line": 53,
+              "Line": 54,
               "Column": 14,
-              "Index": 1042
+              "Index": 1061
             }
           },
           "Y": {
             "Name": "b",
             "Start": {
-              "Line": 53,
+              "Line": 54,
               "Column": 15,
-              "Index": 1043
+              "Index": 1062
             },
             "End": {
-              "Line": 53,
+              "Line": 54,
               "Column": 16,
-              "Index": 1044
+              "Index": 1063
             }
           },
           "Start": null,
@@ -2034,55 +2070,99 @@
               "Decls": [
                 {
                   "Name": {
-                    "Name": "max",
+                    "Name": "ifb",
                     "Start": {
-                      "Line": 54,
+                      "Line": 55,
                       "Column": 9,
-                      "Index": 1056
+                      "Index": 1075
                     },
                     "End": {
-                      "Line": 54,
+                      "Line": 55,
                       "Column": 12,
-                      "Index": 1059
+                      "Index": 1078
+                    }
+                  },
+                  "Type": null,
+                  "Value": {
+                    "Kind": 0,
+                    "Value": "1",
+                    "Start": {
+                      "Line": 55,
+                      "Column": 16,
+                      "Index": 1082
+                    },
+                    "End": {
+                      "Line": 55,
+                      "Column": 17,
+                      "Index": 1083
+                    }
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 55,
+                "Column": 5,
+                "Index": 1071
+              },
+              "End": {
+                "Line": 55,
+                "Column": 18,
+                "Index": 1084
+              }
+            },
+            {
+              "Decls": [
+                {
+                  "Name": {
+                    "Name": "max",
+                    "Start": {
+                      "Line": 56,
+                      "Column": 9,
+                      "Index": 1094
+                    },
+                    "End": {
+                      "Line": 56,
+                      "Column": 12,
+                      "Index": 1097
                     }
                   },
                   "Type": null,
                   "Value": {
                     "Name": "a",
                     "Start": {
-                      "Line": 54,
+                      "Line": 56,
                       "Column": 16,
-                      "Index": 1063
+                      "Index": 1101
                     },
                     "End": {
-                      "Line": 54,
+                      "Line": 56,
                       "Column": 17,
-                      "Index": 1064
+                      "Index": 1102
                     }
                   }
                 }
               ],
               "Start": {
-                "Line": 54,
+                "Line": 56,
                 "Column": 5,
-                "Index": 1052
+                "Index": 1090
               },
               "End": {
-                "Line": 54,
+                "Line": 56,
                 "Column": 18,
-                "Index": 1065
+                "Index": 1103
               }
             }
           ],
           "Start": {
-            "Line": 53,
+            "Line": 54,
             "Column": 17,
-            "Index": 1045
+            "Index": 1064
           },
           "End": {
-            "Line": 55,
+            "Line": 57,
             "Column": 2,
-            "Index": 1068
+            "Index": 1106
           }
         },
         "Else": {
@@ -2093,14 +2173,14 @@
                   "Name": {
                     "Name": "equal",
                     "Start": {
-                      "Line": 56,
+                      "Line": 58,
                       "Column": 9,
-                      "Index": 1085
+                      "Index": 1123
                     },
                     "End": {
-                      "Line": 56,
+                      "Line": 58,
                       "Column": 14,
-                      "Index": 1090
+                      "Index": 1128
                     }
                   },
                   "Type": null,
@@ -2108,50 +2188,50 @@
                     "Kind": 0,
                     "Value": "1",
                     "Start": {
-                      "Line": 56,
+                      "Line": 58,
                       "Column": 18,
-                      "Index": 1094
+                      "Index": 1132
                     },
                     "End": {
-                      "Line": 56,
+                      "Line": 58,
                       "Column": 19,
-                      "Index": 1095
+                      "Index": 1133
                     }
                   }
                 }
               ],
               "Start": {
-                "Line": 56,
+                "Line": 58,
                 "Column": 5,
-                "Index": 1081
+                "Index": 1119
               },
               "End": {
-                "Line": 56,
+                "Line": 58,
                 "Column": 20,
-                "Index": 1096
+                "Index": 1134
               }
             }
           ],
           "Start": {
-            "Line": 55,
+            "Line": 57,
             "Column": 8,
-            "Index": 1074
+            "Index": 1112
           },
           "End": {
-            "Line": 57,
+            "Line": 59,
             "Column": 2,
-            "Index": 1099
+            "Index": 1137
           }
         },
         "Start": {
-          "Line": 53,
+          "Line": 54,
           "Column": 8,
-          "Index": 1036
+          "Index": 1055
         },
         "End": {
-          "Line": 57,
+          "Line": 59,
           "Column": 2,
-          "Index": 1099
+          "Index": 1137
         }
       },
       "Start": {
@@ -2160,13 +2240,12 @@
         "Index": 998
       },
       "End": {
-        "Line": 57,
+        "Line": 59,
         "Column": 2,
-        "Index": 1099
+        "Index": 1137
       }
     }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }

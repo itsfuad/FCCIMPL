@@ -1,0 +1,12 @@
+// Test file to verify optional type errors are properly caught
+
+// Test 1: Attempting to assign optional to non-optional (should ERROR)
+let x: i32? = 42;
+let y: i32 = x ?: 0;  // ERROR: i32? cannot be assigned to i32
+
+// Test 2: Attempting to assign none to non-optional (should ERROR)
+let z: i32 = none;  // ERROR: none can only be assigned to optional types
+
+// Test 3: Type mismatch in optional base types (should ERROR)
+let a: str? = "hello";
+let b: i32? = a;  // ERROR: str? cannot be assigned to i32?

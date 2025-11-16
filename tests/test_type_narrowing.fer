@@ -1,0 +1,55 @@
+// Test type narrowing in conditionals
+
+// Test 1: Basic narrowing with != none
+let x: i32? = 10;
+
+if x != none {
+    // In then branch, x should be narrowed to i32
+    let y: i32 = x;  // Should work - x is i32 here
+} else {
+    // In else branch, x is still i32?
+    let z: i32 = x;  // Would error - x is still optional
+}
+
+// Test 2: Narrowing with == none
+let opt: str? = "hello";
+
+if opt == none {
+    // In then branch, opt is none
+    let dummy: i32 = 0;  // Need something in the block
+} else {
+    // In else branch, opt should be narrowed to str
+    let s: str = opt;  // Should work - opt is str here
+}
+
+// Test 3: Nested narrowing
+let nested: i32? = 42;
+
+if nested != none {
+    let val: i32 = nested;  // Works - narrowed to i32
+    
+    if val > 10 {
+        let doubled: i32 = val * 2;  // Still works
+    }
+}
+
+// Test 4: Using narrowed value in operations
+let num: i32? = 100;
+
+if num != none {
+    let result: i32 = num + 50;  // Should work - num is i32
+}
+
+// Test 5: Multiple variables
+let a: i32? = 5;
+let b: str? = "test";
+
+if a != none {
+    let valA: i32 = a;  // Works
+    // b is still str? here
+}
+
+if b != none {
+    let valB: str = b;  // Works
+    // a is still i32? here
+}

@@ -1,0 +1,22 @@
+// Comprehensive type checking demonstration
+// This file shows various valid and invalid type operations
+
+// Valid declarations
+let x: i32 = 42;
+let y: i32 = x;
+const MAX: i32 = 100;
+
+// Type inference
+let inferred := 3.14;  // Should infer f64
+
+// Function with typed parameters
+fn add(a: i32, b: i32) {
+    let sum: i32 = a;
+}
+
+fn test_scopes() {
+    let local: i32 = 10;
+    const LOCAL_CONST: i32 = 20;
+    
+    let result: i32 = local;
+}

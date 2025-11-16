@@ -1,0 +1,38 @@
+// Edge case tests for diagnostic formatting
+
+// Test 1: Very long identifier names
+let thisIsAVeryLongIdentifierNameThatShouldBeFullyUnderlined: i32 = "string";
+
+// Test 2: Multiple errors on same line
+let x: i32 = "bad"; let y: i32 = "also_bad";
+
+// Test 3: Error at start of line (column 1)
+x = 10;
+
+// Test 4: Error at end of line with long message
+let z: str = 9999999999;
+
+// Test 5: Redeclaration with very close lines
+let a := 1;
+let a := 2;
+
+// Test 6: Empty lines between errors
+let b := 1;
+
+
+let b := 2;
+
+// Test 7: Very long line with error near end
+let c: i32 = 100; let d: i32 = 200; let e: i32 = 300; let f: i32 = 400; let veryLongName: i32 = "error_here";
+
+// Test 8: Tab characters (if parser handles them)
+	let tabIndented: i32 = "string";
+
+// Test 9: Multiple const reassignments
+const SHARED := 100;
+
+// Test 10: Nested structure errors
+const CONST1 := 10;
+const CONST2 := 20;
+CONST1 = 5;
+CONST2 = 15;

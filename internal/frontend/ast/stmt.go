@@ -49,7 +49,7 @@ func (d *DeclStmt) INode()                {} // Implements Node interface
 func (d *DeclStmt) Stmt()                 {} // Stmt is a marker interface for all statements
 func (d *DeclStmt) Loc() *source.Location { return &d.Location }
 
-type DeclLists struct {
+type DeclItem struct {
 	Name  *IdentifierExpr // variable name
 	Type  TypeNode        // explicit type (can be nil for type inference)
 	Value Expression      // initial value (can be nil)
@@ -57,7 +57,7 @@ type DeclLists struct {
 
 // VarDecl represents a variable declaration (let keyword)
 type VarDecl struct {
-	Decls []DeclLists
+	Decls []DeclItem
 	source.Location
 }
 
@@ -68,7 +68,7 @@ func (v *VarDecl) Loc() *source.Location { return &v.Location }
 
 // ConstDecl represents a constant declaration (const keyword)
 type ConstDecl struct {
-	Decls []DeclLists
+	Decls []DeclItem
 	source.Location
 }
 

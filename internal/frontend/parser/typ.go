@@ -96,7 +96,6 @@ func (p *Parser) parseType() ast.TypeNode {
 			}
 		} else {
 			// No error type provided, use default 'str'
-			// TODO: This default can be changed to Error struct or same type as success type
 			errorType = &ast.IdentifierExpr{
 				Name:     "str",
 				Location: *source.NewLocation(&notToken.End, &notToken.End),
@@ -139,9 +138,7 @@ func (p *Parser) parseStructType() *ast.StructType {
 	tok := p.expect(lexer.STRUCT_TOKEN)
 	p.expect(lexer.OPEN_CURLY)
 
-	fields := &ast.FieldList{
-		List: []*ast.Field{},
-	}
+	fields := []ast.Field{}
 
 	for !(p.match(lexer.CLOSE_CURLY) || p.isAtEnd()) {
 		// Error recovery: Check if we have a dot token
@@ -156,7 +153,7 @@ func (p *Parser) parseStructType() *ast.StructType {
 		p.expect(lexer.COLON_TOKEN)
 		typ := p.parseType()
 
-		fields.List = append(fields.List, &ast.Field{
+		fields = append(fields, ast.Field{
 			Name: name,
 			Type: typ,
 		})
@@ -185,62 +182,18 @@ func (p *Parser) parseFuncType() *ast.FuncType {
 
 	tok := p.expect(lexer.OPEN_PAREN)
 
-	params := &ast.FieldList{
-		List: []*ast.Field{},
+	var params []ast.Field
+
+	if p.match(lexer.CLOSE_PAREN) {
+		p.advance()
+	} else {
+		params = parseParams(p)
 	}
-
-	if !p.match(lexer.CLOSE_PAREN) {
-
-		for !(p.match(lexer.CLOSE_PAREN) || p.isAtEnd()) {
-
-			name := p.parseIdentifier()
-			p.expect(lexer.COLON_TOKEN)
-
-			// Check for variadic parameter (...)
-			isVariadic := false
-			if p.match(lexer.THREE_DOT_TOKEN) {
-				isVariadic = true
-				p.advance() // consume '...'
-			}
-
-			typ := p.parseType()
-
-			// Handle nil type
-			var endPos *source.Position
-			if typ != nil && typ.Loc() != nil {
-				endPos = typ.Loc().End
-			} else {
-				endPos = name.End
-			}
-
-			params.List = append(params.List, &ast.Field{
-				Name:       name,
-				Type:       typ,
-				IsVariadic: isVariadic,
-				Location:   *source.NewLocation(name.Start, endPos),
-			})
-
-			if p.match(lexer.CLOSE_PAREN) {
-				break
-			}
-
-			if p.checkTrailing(lexer.COMMA_TOKEN, lexer.CLOSE_PAREN, "function parameters") {
-				p.advance() // skip the token
-				break
-			}
-
-			p.expect(lexer.COMMA_TOKEN)
-		}
-	}
-
-	p.expect(lexer.CLOSE_PAREN)
 
 	var result ast.TypeNode
 	if p.match(lexer.ARROW_TOKEN) {
 		p.advance()
-		resultType := p.parseType()
-		// Wrap single return type in a FieldList
-		result = resultType
+		result = p.parseType()
 	}
 
 	return &ast.FuncType{
@@ -250,15 +203,63 @@ func (p *Parser) parseFuncType() *ast.FuncType {
 	}
 }
 
+func parseParams(p *Parser) []ast.Field {
+
+	params := []ast.Field{}
+
+	for !(p.match(lexer.CLOSE_PAREN) || p.isAtEnd()) {
+
+		name := p.parseIdentifier()
+		p.expect(lexer.COLON_TOKEN)
+
+		// Check for variadic parameter (...)
+		isVariadic := false
+		if p.match(lexer.THREE_DOT_TOKEN) {
+			isVariadic = true
+			p.advance() // consume '...'
+		}
+
+		typ := p.parseType()
+
+		// Handle nil type
+		var endPos *source.Position
+		if typ != nil && typ.Loc() != nil {
+			endPos = typ.Loc().End
+		} else {
+			endPos = name.End
+		}
+
+		params = append(params, ast.Field{
+			Name:       name,
+			Type:       typ,
+			IsVariadic: isVariadic,
+			Location:   *source.NewLocation(name.Start, endPos),
+		})
+
+		if p.match(lexer.CLOSE_PAREN) {
+			break
+		}
+
+		if p.checkTrailing(lexer.COMMA_TOKEN, lexer.CLOSE_PAREN, "function parameters") {
+			p.advance() // skip the token
+			break
+		}
+
+		p.expect(lexer.COMMA_TOKEN)
+	}
+
+	p.expect(lexer.CLOSE_PAREN)
+
+	return params
+}
+
 func (p *Parser) parseInterfaceType() *ast.InterfaceType {
 
 	tok := p.advance()
 
 	p.expect(lexer.OPEN_CURLY)
 
-	methods := &ast.FieldList{
-		List: []*ast.Field{},
-	}
+	methods := []ast.Field{}
 
 	for !(p.match(lexer.CLOSE_CURLY) || p.isAtEnd()) {
 
@@ -266,7 +267,7 @@ func (p *Parser) parseInterfaceType() *ast.InterfaceType {
 
 		functype := p.parseFuncType()
 
-		methods.List = append(methods.List, &ast.Field{
+		methods = append(methods, ast.Field{
 			Name:     name,
 			Type:     functype,
 			Location: *source.NewLocation(name.Start, functype.End),
@@ -298,9 +299,7 @@ func (p *Parser) parseEnumType() *ast.EnumType {
 
 	p.expect(lexer.OPEN_CURLY)
 
-	fields := &ast.FieldList{
-		List: []*ast.Field{},
-	}
+	fields := []ast.Field{}
 
 	for !(p.match(lexer.CLOSE_CURLY) || p.isAtEnd()) {
 		// Error recovery: Check if we have an identifier
@@ -311,7 +310,7 @@ func (p *Parser) parseEnumType() *ast.EnumType {
 		}
 
 		name := p.parseIdentifier()
-		fields.List = append(fields.List, &ast.Field{
+		fields = append(fields, ast.Field{
 			Name: name,
 		})
 

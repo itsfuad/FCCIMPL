@@ -1,0 +1,29 @@
+// Comprehensive optional types + elvis operator test
+
+// Test 1: Basic optional with elvis
+let name: str? = "Alice";
+let displayName: str = name ?: "Anonymous";
+
+// Test 2: Optional from none with elvis
+let age: i32? = none;
+let displayAge: i32 = age ?: 0;
+
+// Test 3: Nested elvis (right-associative)
+let primary: i32? = none;
+let secondary: i32? = none;
+let tertiary: i32? = 100;
+let final: i32 = primary ?: secondary ?: tertiary ?: 999;
+
+// Test 4: Optional in expressions
+let score: i32? = 85;
+let bonus: i32? = none;
+let total: i32 = (score ?: 0) + (bonus ?: 0);
+
+// Test 5: Multiple variables with optionals
+let a: i32? = 10;
+let b: i32? = 20;
+let c: i32? = none;
+
+let x: i32 = a ?: 1;
+let y: i32 = b ?: 2;
+let z: i32 = c ?: 3;

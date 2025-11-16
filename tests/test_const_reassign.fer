@@ -1,0 +1,6 @@
+// Test file for type checking: constant reassignment
+const PI: f64 = 3.14159;
+
+fn test() {
+    PI = 2.71828;  // ERROR: cannot assign to constant
+}

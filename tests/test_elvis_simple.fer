@@ -1,0 +1,4 @@
+// Simple elvis test
+
+let opt: i32? = 10;
+let result: i32 = opt ?: 0;

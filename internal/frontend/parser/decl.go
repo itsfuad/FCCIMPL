@@ -32,59 +32,15 @@ func (p *Parser) parseConstDecl() *ast.ConstDecl {
 
 // parseVariableDeclaration: unified parser for let/const declarations
 // Returns the declarations and location
-func (p *Parser) parseVariableDeclaration(start source.Position, isConst bool) ([]ast.DeclLists, source.Location) {
-	var decls []ast.DeclLists
+func (p *Parser) parseVariableDeclaration(start source.Position, isConst bool) ([]ast.DeclItem, source.Location) {
+	var decls []ast.DeclItem
 
 	// can be let a : <type> = <expr>; or let a := <expr>; or let a: <type>;
 	// or list of variables, let a : i32, b := 10, c: str;
 	// for const, initializer is mandatory
 
-	for !p.isAtEnd() {
-
-		var decl ast.DeclLists
-
-		decl.Name = p.parseIdentifier()
-
-		if p.match(lexer.COLON_TOKEN) {
-			p.advance()
-			decl.Type = p.parseType()
-
-			// Check for initializer
-			if p.match(lexer.EQUALS_TOKEN) {
-				p.advance()
-				decl.Value = p.parseExpr()
-			} else if isConst {
-				// Constants MUST have an initializer
-				peek := p.peek()
-				p.diagnostics.Add(
-					diagnostics.NewError("expected = after constant type").
-						WithCode(diagnostics.ErrUnexpectedToken).
-						WithHelp("Constants must have an initializer").
-						WithPrimaryLabel(p.filepath, source.NewLocation(&peek.Start, &peek.End), "missing initializer for constant"),
-				)
-				// Continue parsing to gather more errors
-			}
-			// For variables, no initializer is OK (decl.Value remains nil)
-		} else if p.match(lexer.WALRUS_TOKEN) {
-			p.advance()
-			decl.Value = p.parseExpr()
-		} else if p.match(lexer.EQUALS_TOKEN) {
-			// Allow the parsing but report an error
-			loc := p.makeLocation(p.advance().Start)
-			decl.Value = p.parseExpr()
-			p.diagnostics.Add(
-				diagnostics.NewError("expected ':=' for inferred symbols with values").
-					WithCode(diagnostics.ErrUnexpectedToken).
-					WithPrimaryLabel(p.filepath, &loc, "add a `:` before `=`"),
-			)
-		} else {
-			if isConst {
-				p.error("expected ':' or ':=' in constant declaration")
-			} else {
-				p.error("expected ':' or ':=' in variable declaration")
-			}
-		}
-
+	for !p.isAtEnd() && !p.match(lexer.SEMICOLON_TOKEN) {
+		decl := p.parseDeclItem(isConst)
 		decls = append(decls, decl)
 
 		if !p.match(lexer.COMMA_TOKEN) {
@@ -96,6 +52,63 @@ func (p *Parser) parseVariableDeclaration(start source.Position, isConst bool) (
 	p.expect(lexer.SEMICOLON_TOKEN)
 
 	return decls, p.makeLocation(start)
+}
+
+// parseDeclItem parses a single declaration item (name, optional type, initializer)
+// extracted to reduce cognitive complexity in parseVariableDeclaration.
+func (p *Parser) parseDeclItem(isConst bool) ast.DeclItem {
+	var decl ast.DeclItem
+
+	decl.Name = p.parseIdentifier()
+
+	if p.match(lexer.COLON_TOKEN) {
+		p.advance()
+		decl.Type = p.parseType()
+
+		// Check for initializer
+		if p.match(lexer.EQUALS_TOKEN) {
+			p.advance()
+			decl.Value = p.parseExpr()
+		} else if isConst {
+			// Constants MUST have an initializer
+			peek := p.peek()
+			p.diagnostics.Add(
+				diagnostics.NewError("expected = after constant type").
+					WithCode(diagnostics.ErrUnexpectedToken).
+					WithHelp("Constants must have an initializer").
+					WithPrimaryLabel(p.filepath, source.NewLocation(&peek.Start, &peek.End), "missing initializer for constant"),
+			)
+			// Continue parsing to gather more errors
+		}
+		// For variables, no initializer is OK (decl.Value remains nil)
+		return decl
+	}
+
+	if p.match(lexer.WALRUS_TOKEN) {
+		p.advance()
+		decl.Value = p.parseExpr()
+		return decl
+	}
+
+	if p.match(lexer.EQUALS_TOKEN) {
+		// Allow the parsing but report an error
+		loc := p.makeLocation(p.advance().Start)
+		decl.Value = p.parseExpr()
+		p.diagnostics.Add(
+			diagnostics.NewError("expected ':=' for inferred symbols with values").
+				WithCode(diagnostics.ErrUnexpectedToken).
+				WithPrimaryLabel(p.filepath, &loc, "add a `:` before `=`"),
+		)
+		return decl
+	}
+
+	if isConst {
+		p.error("expected ':' or ':=' in constant declaration")
+	} else {
+		p.error("expected ':' or ':=' in variable declaration")
+	}
+
+	return decl
 }
 
 // parseTypeDecl: type Point struct { .x: i32 };
@@ -240,10 +253,7 @@ func (p *Parser) parseNamedFuncDecl(start source.Position) *ast.FuncDecl {
 // parseFuncLit parses an anonymous function: fn (params) -> return { body }
 func (p *Parser) parseFuncLit(start source.Position, params []*ast.Field) *ast.FuncLit {
 	// Create FieldList from params
-	paramList := &ast.FieldList{
-		List:     params,
-		Location: p.makeLocation(start),
-	}
+	paramList := []ast.Field{}
 
 	// Parse return type if present
 	var result ast.TypeNode

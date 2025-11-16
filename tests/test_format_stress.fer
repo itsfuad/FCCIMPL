@@ -1,0 +1,43 @@
+// Comprehensive formatting stress test with only implemented features
+
+// Line 1 error - no previous line
+let err1: i32 = "string";
+
+// Close errors
+let x := 1;
+let x := 2;
+
+// Far apart errors
+let y := 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+let y := 2;
+
+// Long identifier
+let thisIsAVeryLongIdentifierNameForTestingPurposes: i32 = "error";
+
+// Multiple on same line  
+let a: i32 = "bad"; let b: i32 = "also";
+
+// End of long line
+let p1: i32 = 1; let p2: i32 = 2; let p3: i32 = 3; let p4: i32 = 4; let longName: i32 = "end";
+
+// Const redeclaration (multi-line)
+const C1 := 10;
+const C2 := 20;
+const C3 := 30;
+
+
+
+const C1 := 99;
