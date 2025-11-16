@@ -244,7 +244,7 @@ func (c *Checker) checkBlock(block *ast.Block) semantics.Type {
 	return lastType
 }
 
-// checkIfStmt checks an if statement
+// checkIfStmt checks an if statement with type narrowing
 func (c *Checker) checkIfStmt(stmt *ast.IfStmt) semantics.Type {
 	// Check condition
 	condType := c.checkExpr(stmt.Cond)
@@ -252,22 +252,178 @@ func (c *Checker) checkIfStmt(stmt *ast.IfStmt) semantics.Type {
 	// Condition should be boolean (we can add this check later)
 	_ = condType
 
-	// Check then branch
+	// Analyze condition for type narrowing
+	thenNarrowings, elseNarrowings := c.analyzeTypeNarrowing(stmt.Cond)
+
+	// Check then branch with narrowed types
 	if stmt.Body != nil {
-		c.checkBlock(stmt.Body)
+		// Get the block's scope to apply narrowings there
+		blockScope := c.ctx.GetBlockScope(stmt.Body)
+		if blockScope != nil {
+			c.applyNarrowingsInScope(blockScope, thenNarrowings, func() {
+				c.checkBlock(stmt.Body)
+			})
+		} else {
+			c.checkBlock(stmt.Body)
+		}
 	}
 
-	// Check else branch
+	// Check else branch with narrowed types
 	if stmt.Else != nil {
 		switch e := stmt.Else.(type) {
 		case *ast.Block:
-			c.checkBlock(e)
+			// Get the block's scope to apply narrowings there
+			blockScope := c.ctx.GetBlockScope(e)
+			if blockScope != nil {
+				c.applyNarrowingsInScope(blockScope, elseNarrowings, func() {
+					c.checkBlock(e)
+				})
+			} else {
+				c.checkBlock(e)
+			}
 		case *ast.IfStmt:
-			c.checkIfStmt(e)
+			// For else-if, apply narrowings in current scope
+			c.applyNarrowings(elseNarrowings, func() {
+				c.checkIfStmt(e)
+			})
 		}
 	}
 
 	return nil
+}
+
+// TypeNarrowing represents a type refinement for a variable
+type TypeNarrowing struct {
+	SymbolName   string
+	NarrowedType semantics.Type
+}
+
+// analyzeTypeNarrowing analyzes a condition and returns type narrowings for then/else branches
+// For example: if (x != none) narrows x to T in then branch, and to none in else branch
+func (c *Checker) analyzeTypeNarrowing(cond ast.Expression) (thenNarrowings, elseNarrowings []TypeNarrowing) {
+	// Check if condition is a binary expression
+	binExpr, ok := cond.(*ast.BinaryExpr)
+	if !ok {
+		return nil, nil
+	}
+
+	// Check if one side is an identifier and the other is 'none'
+	var identExpr *ast.IdentifierExpr
+	var isNoneCheck bool
+	var isEqualityCheck bool
+	var isNotEqualCheck bool
+
+	// Determine operator type
+	switch binExpr.Op.Kind {
+	case "==":
+		isEqualityCheck = true
+	case "!=":
+		isNotEqualCheck = true
+	default:
+		return nil, nil // Not a comparison we handle
+	}
+
+	// Check if comparing with 'none'
+	if ident, ok := binExpr.X.(*ast.IdentifierExpr); ok {
+		if noneIdent, ok := binExpr.Y.(*ast.IdentifierExpr); ok && noneIdent.Name == "none" {
+			identExpr = ident
+			isNoneCheck = true
+		}
+	} else if ident, ok := binExpr.Y.(*ast.IdentifierExpr); ok {
+		if noneIdent, ok := binExpr.X.(*ast.IdentifierExpr); ok && noneIdent.Name == "none" {
+			identExpr = ident
+			isNoneCheck = true
+		}
+	}
+
+	if !isNoneCheck || identExpr == nil {
+		return nil, nil
+	}
+
+	// Look up the symbol
+	sym, ok := c.currentScope.Lookup(identExpr.Name)
+	if !ok || sym.Type == nil {
+		return nil, nil
+	}
+
+	// Check if symbol has optional type
+	optType, isOptional := sym.Type.(*semantics.OptionalType)
+	if !isOptional {
+		return nil, nil
+	}
+
+	// Create narrowings based on the operator
+	if isNotEqualCheck {
+		// x != none: then branch has T, else branch has none (conceptually)
+		thenNarrowings = []TypeNarrowing{
+			{SymbolName: identExpr.Name, NarrowedType: optType.Base},
+		}
+		// In else branch, we know it's none, so keep it optional
+		// (we don't have a way to express "definitely none" yet)
+	} else if isEqualityCheck {
+		// x == none: then branch has none, else branch has T
+		elseNarrowings = []TypeNarrowing{
+			{SymbolName: identExpr.Name, NarrowedType: optType.Base},
+		}
+	}
+
+	return thenNarrowings, elseNarrowings
+}
+
+// applyNarrowings temporarily narrows types in the current scope and executes the function
+func (c *Checker) applyNarrowings(narrowings []TypeNarrowing, fn func()) {
+	if len(narrowings) == 0 {
+		fn()
+		return
+	}
+
+	// Save original types
+	originalTypes := make(map[string]semantics.Type)
+	for _, narrowing := range narrowings {
+		if sym, ok := c.currentScope.Lookup(narrowing.SymbolName); ok {
+			originalTypes[narrowing.SymbolName] = sym.Type
+			// Temporarily narrow the type
+			sym.Type = narrowing.NarrowedType
+		}
+	}
+
+	// Execute the function with narrowed types
+	fn()
+
+	// Restore original types
+	for name, originalType := range originalTypes {
+		if sym, ok := c.currentScope.Lookup(name); ok {
+			sym.Type = originalType
+		}
+	}
+}
+
+// applyNarrowingsInScope temporarily narrows types in a specific scope and executes the function
+func (c *Checker) applyNarrowingsInScope(scope *semantics.SymbolTable, narrowings []TypeNarrowing, fn func()) {
+	if len(narrowings) == 0 {
+		fn()
+		return
+	}
+
+	// Save original types
+	originalTypes := make(map[string]semantics.Type)
+	for _, narrowing := range narrowings {
+		if sym, ok := scope.Lookup(narrowing.SymbolName); ok {
+			originalTypes[narrowing.SymbolName] = sym.Type
+			// Temporarily narrow the type
+			sym.Type = narrowing.NarrowedType
+		}
+	}
+
+	// Execute the function with narrowed types
+	fn()
+
+	// Restore original types
+	for name, originalType := range originalTypes {
+		if sym, ok := scope.Lookup(name); ok {
+			sym.Type = originalType
+		}
+	}
 }
 
 // checkReturnStmt checks a return statement

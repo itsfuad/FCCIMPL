@@ -1,0 +1,381 @@
+{
+  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\test_narrowing_errors.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "x",
+            "Start": {
+              "Line": 4,
+              "Column": 5,
+              "Index": 85
+            },
+            "End": {
+              "Line": 4,
+              "Column": 6,
+              "Index": 86
+            }
+          },
+          "Type": {
+            "Base": {
+              "Name": "i32",
+              "Start": {
+                "Line": 4,
+                "Column": 8,
+                "Index": 88
+              },
+              "End": {
+                "Line": 4,
+                "Column": 11,
+                "Index": 91
+              }
+            },
+            "Start": {
+              "Line": 4,
+              "Column": 8,
+              "Index": 88
+            },
+            "End": {
+              "Line": 4,
+              "Column": 11,
+              "Index": 91
+            }
+          },
+          "Value": {
+            "Kind": 0,
+            "Value": "10",
+            "Start": {
+              "Line": 4,
+              "Column": 15,
+              "Index": 95
+            },
+            "End": {
+              "Line": 4,
+              "Column": 17,
+              "Index": 97
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 4,
+        "Column": 1,
+        "Index": 81
+      },
+      "End": {
+        "Line": 4,
+        "Column": 18,
+        "Index": 98
+      }
+    },
+    {
+      "Cond": {
+        "X": {
+          "Name": "x",
+          "Start": {
+            "Line": 6,
+            "Column": 4,
+            "Index": 105
+          },
+          "End": {
+            "Line": 6,
+            "Column": 5,
+            "Index": 106
+          }
+        },
+        "Op": {
+          "Kind": "!=",
+          "Value": "!=",
+          "Start": {
+            "Line": 6,
+            "Column": 6,
+            "Index": 107
+          },
+          "End": {
+            "Line": 6,
+            "Column": 8,
+            "Index": 109
+          }
+        },
+        "Y": {
+          "Name": "none",
+          "Start": {
+            "Line": 6,
+            "Column": 9,
+            "Index": 110
+          },
+          "End": {
+            "Line": 6,
+            "Column": 13,
+            "Index": 114
+          }
+        },
+        "Start": null,
+        "End": null
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "y",
+                  "Start": {
+                    "Line": 7,
+                    "Column": 9,
+                    "Index": 126
+                  },
+                  "End": {
+                    "Line": 7,
+                    "Column": 10,
+                    "Index": 127
+                  }
+                },
+                "Type": {
+                  "Name": "str",
+                  "Start": {
+                    "Line": 7,
+                    "Column": 12,
+                    "Index": 129
+                  },
+                  "End": {
+                    "Line": 7,
+                    "Column": 15,
+                    "Index": 132
+                  }
+                },
+                "Value": {
+                  "Name": "x",
+                  "Start": {
+                    "Line": 7,
+                    "Column": 18,
+                    "Index": 135
+                  },
+                  "End": {
+                    "Line": 7,
+                    "Column": 19,
+                    "Index": 136
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 7,
+              "Column": 5,
+              "Index": 122
+            },
+            "End": {
+              "Line": 7,
+              "Column": 20,
+              "Index": 137
+            }
+          }
+        ],
+        "Start": {
+          "Line": 6,
+          "Column": 14,
+          "Index": 115
+        },
+        "End": {
+          "Line": 8,
+          "Column": 2,
+          "Index": 181
+        }
+      },
+      "Else": null,
+      "Start": {
+        "Line": 6,
+        "Column": 1,
+        "Index": 102
+      },
+      "End": {
+        "Line": 8,
+        "Column": 2,
+        "Index": 181
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "z",
+            "Start": {
+              "Line": 11,
+              "Column": 5,
+              "Index": 221
+            },
+            "End": {
+              "Line": 11,
+              "Column": 6,
+              "Index": 222
+            }
+          },
+          "Type": {
+            "Name": "i32",
+            "Start": {
+              "Line": 11,
+              "Column": 8,
+              "Index": 224
+            },
+            "End": {
+              "Line": 11,
+              "Column": 11,
+              "Index": 227
+            }
+          },
+          "Value": {
+            "Name": "x",
+            "Start": {
+              "Line": 11,
+              "Column": 14,
+              "Index": 230
+            },
+            "End": {
+              "Line": 11,
+              "Column": 15,
+              "Index": 231
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 11,
+        "Column": 1,
+        "Index": 217
+      },
+      "End": {
+        "Line": 11,
+        "Column": 16,
+        "Index": 232
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "opt",
+            "Start": {
+              "Line": 14,
+              "Column": 5,
+              "Index": 321
+            },
+            "End": {
+              "Line": 14,
+              "Column": 8,
+              "Index": 324
+            }
+          },
+          "Type": {
+            "Base": {
+              "Name": "str",
+              "Start": {
+                "Line": 14,
+                "Column": 10,
+                "Index": 326
+              },
+              "End": {
+                "Line": 14,
+                "Column": 13,
+                "Index": 329
+              }
+            },
+            "Start": {
+              "Line": 14,
+              "Column": 10,
+              "Index": 326
+            },
+            "End": {
+              "Line": 14,
+              "Column": 13,
+              "Index": 329
+            }
+          },
+          "Value": {
+            "Kind": 2,
+            "Value": "hello",
+            "Start": {
+              "Line": 14,
+              "Column": 17,
+              "Index": 333
+            },
+            "End": {
+              "Line": 14,
+              "Column": 24,
+              "Index": 340
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 14,
+        "Column": 1,
+        "Index": 317
+      },
+      "End": {
+        "Line": 14,
+        "Column": 25,
+        "Index": 341
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "s",
+            "Start": {
+              "Line": 17,
+              "Column": 5,
+              "Index": 375
+            },
+            "End": {
+              "Line": 17,
+              "Column": 6,
+              "Index": 376
+            }
+          },
+          "Type": {
+            "Name": "str",
+            "Start": {
+              "Line": 17,
+              "Column": 8,
+              "Index": 378
+            },
+            "End": {
+              "Line": 17,
+              "Column": 11,
+              "Index": 381
+            }
+          },
+          "Value": {
+            "Name": "opt",
+            "Start": {
+              "Line": 17,
+              "Column": 14,
+              "Index": 384
+            },
+            "End": {
+              "Line": 17,
+              "Column": 17,
+              "Index": 387
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 17,
+        "Column": 1,
+        "Index": 371
+      },
+      "End": {
+        "Line": 17,
+        "Column": 18,
+        "Index": 388
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

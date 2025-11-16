@@ -42,9 +42,22 @@ func (r *Resolver) ResolveFile(file *context.SourceFile) {
 		return // No symbols to resolve
 	}
 
-	// Walk all symbols and resolve their types
+	// Walk all symbols in file scope and resolve their types
 	for _, sym := range file.Scope.AllSymbols() {
 		r.resolveSymbolType(sym)
+	}
+
+	// Also resolve symbols in all block scopes
+	r.resolveBlockScopes()
+}
+
+// resolveBlockScopes resolves types for all block-level symbols
+func (r *Resolver) resolveBlockScopes() {
+	for _, scope := range r.ctx.GetAllBlockScopes() {
+		r.currentScope = scope
+		for _, sym := range scope.AllSymbols() {
+			r.resolveSymbolType(sym)
+		}
 	}
 }
 

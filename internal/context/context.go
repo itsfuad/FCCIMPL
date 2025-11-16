@@ -803,3 +803,14 @@ func (ctx *CompilerContext) GetBlockScope(block interface{}) *semantics.SymbolTa
 	defer ctx.mu.RUnlock()
 	return ctx.BlockScopes[block]
 }
+
+// GetAllBlockScopes returns all block scopes
+func (ctx *CompilerContext) GetAllBlockScopes() []*semantics.SymbolTable {
+	ctx.mu.RLock()
+	defer ctx.mu.RUnlock()
+	scopes := make([]*semantics.SymbolTable, 0, len(ctx.BlockScopes))
+	for _, scope := range ctx.BlockScopes {
+		scopes = append(scopes, scope)
+	}
+	return scopes
+}

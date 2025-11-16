@@ -1,0 +1,17 @@
+// Test type narrowing errors
+
+// Test 1: Type mismatch inside narrowed block
+let x: i32? = 10;
+
+if x != none {
+    let y: str = x;  // ERROR: x is narrowed to i32, not str
+}
+
+// Outside if, x is still i32?
+let z: i32 = x;  // ERROR: can't assign i32? to i32
+
+// Test 2: Using optional without narrowing
+let opt: str? = "hello";
+
+// Not checking for none
+let s: str = opt;  // ERROR: can't assign str? to str
