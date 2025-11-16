@@ -1,0 +1,54 @@
+---
+title: Introduction to Ferret
+description: Learn about Ferret, a modern type-safe programming language
+---
+
+# Welcome to Ferret
+
+Ferret is a modern, type-safe programming language designed for clarity, safety, and developer productivity.
+
+## Why Ferret?
+
+### 🎯 Type Safety
+Ferret's powerful type system catches errors at compile-time, not runtime. With optional types, error types, and flow-sensitive type narrowing, you can write code with confidence.
+
+### 🚀 Modern Syntax
+Clean, expressive syntax that's easy to learn and pleasant to write. Inspired by the best features of modern languages.
+
+### 🛡️ Error Handling
+First-class error handling with error types (`T ! E`) that make dealing with failures explicit and safe.
+
+### ⚡ Optional Types
+No more null pointer exceptions! Optional types (`T?`) and the elvis operator (`?:`) make handling missing values a breeze.
+
+## Quick Example
+
+```ferret
+// Variables with type inference
+let name: str = "Ferret";
+let version: i32 = 1;
+
+// Optional types
+let maybeValue: i32? = 42;
+
+if maybeValue != none {
+    // Type narrowing - maybeValue is i32 here
+    let doubled: i32 = maybeValue * 2;
+}
+
+// Elvis operator for default values
+let value: i32 = maybeValue ?: 0;
+
+// Functions
+fn greet(name: str) -> str {
+    return "Hello, " + name + "!";
+}
+```
+
+## Next Steps
+
+- [Install Ferret](/getting-started/installation)
+- [Write your first program](/getting-started/hello-world)
+- [Learn about the type system](/language/types)
+
+
