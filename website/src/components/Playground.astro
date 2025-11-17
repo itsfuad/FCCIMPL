@@ -688,9 +688,9 @@ require(['vs/editor/editor.main'], function() {
     position: relative;
   }
 
-  /* Editor panel */
+  /* Editor panel - 60% width by default */
   .editor-panel {
-    flex: 1;
+    flex: 0 0 60%;
     min-width: 400px;
     position: relative;
     background: #ffffff;
@@ -790,9 +790,9 @@ require(['vs/editor/editor.main'], function() {
     font-weight: 500;
   }
 
-  /* Output panel - horizontal on desktop */
+  /* Output panel - 40% width by default */
   .output-panel {
-    width: 400px;
+    flex: 0 0 40%;
     height: 100%;
     min-width: 300px;
     display: flex;
