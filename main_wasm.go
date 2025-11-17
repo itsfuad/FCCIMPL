@@ -39,7 +39,7 @@ func compileCode(code string, debug bool) (string, error) {
 
 	// WASM WORKAROUND: Directly add the code as a "virtual file"
 	// instead of using the file system
-	virtualFilePath := "playground.fer"
+	virtualFilePath := "main.fer"
 	file := ctx.AddFile(virtualFilePath, code)
 
 	// Manually run the compilation phases without file system I/O
