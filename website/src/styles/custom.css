@@ -1,4 +1,61 @@
-/* Ferret language custom styles */
+:root {
+  /* SVG Background Patterns */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' opacity='0.06'/%3E%3C/svg%3E");
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23ffffff' stroke-width='0.5' opacity='0.06'/%3E%3C/svg%3E");
+  
+  /* Single accent color - stays same in both modes */
+  --accent-color: #f44597;
+  
+  /* Brand colors */
+  --ferret-purple: #7c3aed;
+  --ferret-blue: #3b82f6;
+  --ferret-pink: #ec4899;
+  --ferret-cyan: #d4ca06;
+  
+  /* Modern minimal palette */
+  --border: hsl(214.3 31.8% 91.4%);
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222.2 84% 4.9%);
+  --muted: hsl(210 40% 96.1%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --accent: hsl(222.2 47.4% 11.2%);
+
+  --neutral: rgba(126, 126, 126, 0.164);
+  --neutral-hover: rgba(42, 42, 42, 0.256);
+  
+  /* Override Starlight colors */
+  --sl-color-accent: var(--accent-color);
+  --sl-color-accent-high: var(--accent-color);
+  --sl-color-text-accent: var(--accent-color);
+}
+
+:root[data-theme='dark'] {
+  --border: hsl(217.2 32.6% 17.5%);
+  --background: hsl(222.2 84% 4.9%);
+  --foreground: hsl(210 40% 98%);
+  --muted: hsl(217.2 32.6% 17.5%);
+  --muted-foreground: hsl(215 20.2% 65.1%);
+  --accent: hsl(210 40% 98%);
+
+  
+  /* Keep accent color same - no desaturation */
+  --sl-color-accent: var(--accent-color);
+  --sl-color-accent-high: var(--accent-color);
+  --sl-color-text-accent: var(--accent-color);
+
+  --neutral: rgba(126, 126, 126, 0.164);
+  --neutral-hover: rgba(148, 148, 148, 0.344);
+  
+  /* Dark theme patterns */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' opacity='0.08'/%3E%3C/svg%3E");
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23ffffff' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
+}
+
+:root[data-theme='light'] {
+  /* Light theme patterns - increased opacity for better visibility */
+  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000000' opacity='0.08'/%3E%3C/svg%3E");
+  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23000000' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
+}
 
 /* Prevent horizontal scroll from full-width sections */
 body,
@@ -76,27 +133,11 @@ footer:not(.custom-footer) .pagination-links {
 /* Pagination link cards - solid backgrounds */
 .pagination-links a {
   background: var(--sl-color-bg-sidebar) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid var(--neutral) !important;
 }
 
 .pagination-links a:hover {
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Light theme footer */
-:root[data-theme='light'] footer:not(.custom-footer) {
-  background: #ffffff !important;
-  border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Light theme pagination cards */
-:root[data-theme='light'] .pagination-links a {
-
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-:root[data-theme='light'] .pagination-links a:hover {
-  border-color: rgba(0, 0, 0, 0.15) !important;
+  border-color: var(--neutral-hover) !important;
 }
 
 /* Decorative element on the side */
@@ -114,58 +155,6 @@ footer:not(.custom-footer) .pagination-links {
     rgba(124, 58, 237, 0.3) 80%,
     transparent 100%
   );
-}
-
-:root {
-  /* SVG Background Patterns */
-  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' opacity='0.05'/%3E%3C/svg%3E");
-  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/%3E%3C/svg%3E");
-  
-  /* Single accent color - stays same in both modes */
-  --accent-color: #f44597;
-  
-  /* Brand colors */
-  --ferret-purple: #7c3aed;
-  --ferret-blue: #3b82f6;
-  --ferret-pink: #ec4899;
-  --ferret-cyan: #d4ca06;
-  
-  /* Modern minimal palette */
-  --border: hsl(214.3 31.8% 91.4%);
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(222.2 84% 4.9%);
-  --muted: hsl(210 40% 96.1%);
-  --muted-foreground: hsl(215.4 16.3% 46.9%);
-  --accent: hsl(222.2 47.4% 11.2%);
-  
-  /* Override Starlight colors */
-  --sl-color-accent: var(--accent-color);
-  --sl-color-accent-high: var(--accent-color);
-  --sl-color-text-accent: var(--accent-color);
-}
-
-:root[data-theme='dark'] {
-  --border: hsl(217.2 32.6% 17.5%);
-  --background: hsl(222.2 84% 4.9%);
-  --foreground: hsl(210 40% 98%);
-  --muted: hsl(217.2 32.6% 17.5%);
-  --muted-foreground: hsl(215 20.2% 65.1%);
-  --accent: hsl(210 40% 98%);
-  
-  /* Keep accent color same - no desaturation */
-  --sl-color-accent: var(--accent-color);
-  --sl-color-accent-high: var(--accent-color);
-  --sl-color-text-accent: var(--accent-color);
-  
-  /* Dark theme patterns */
-  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23ffffff' opacity='0.08'/%3E%3C/svg%3E");
-  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23ffffff' stroke-width='0.5' opacity='0.08'/%3E%3C/svg%3E");
-}
-
-:root[data-theme='light'] {
-  /* Light theme patterns */
-  --pattern-dots: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000000' opacity='0.03'/%3E%3C/svg%3E");
-  --pattern-grid: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M20 40L40 20M0 20L20 0' stroke='%23000000' stroke-width='0.5' opacity='0.03'/%3E%3C/svg%3E");
 }
 
 /* Apply accent color to key elements */
