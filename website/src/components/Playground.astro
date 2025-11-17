@@ -466,6 +466,7 @@ fn main() {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border-radius: 24px !important;
     gap: 0.375rem;
     padding: 0.5rem 0.875rem;
     font-size: 0.8125rem;
@@ -808,6 +809,7 @@ fn main() {
     .icon-button {
       padding: 0.375rem 0.625rem;
       font-size: 0.75rem;
+      aspect-ratio: 1 / 1;
     }
 
     .icon-button svg {
@@ -838,7 +840,6 @@ fn main() {
     }
 
     .output-panel {
-      height: 200px;
       width: 100% !important;
       min-width: unset !important;
       flex: none !important;
@@ -868,10 +869,6 @@ fn main() {
 
     .editor-panel {
       height: 350px;
-    }
-
-    .output-panel {
-      height: 180px;
     }
   }
 </style>
