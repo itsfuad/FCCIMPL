@@ -46,8 +46,6 @@ export default defineConfig({
               ThemeSelect: './src/components/ThemeSelect.astro',
               // Use ferret image instead of text
               SiteTitle: './src/components/SiteTitle.astro',
-              // Custom footer with links and info
-              Footer: './src/components/Footer.astro',
           },
 
           sidebar: [

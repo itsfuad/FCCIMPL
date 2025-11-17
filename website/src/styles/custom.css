@@ -13,6 +13,12 @@ main:has(.hero), main:has(.hero) .content-panel {
   padding-bottom: 0 !important;
 }
 
+.ferret-logo {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
 /* Main content area with subtle pattern */
 .main-frame {
   background-image: var(--pattern-dots);
@@ -44,23 +50,53 @@ main:has(.hero), main:has(.hero) .content-panel {
   background-size: 20px 20px;
 }
 
-/* Footer - Full Width with solid background */
-footer {
+/* Starlight default footer styling - Remove top spacing */
+footer:not(.custom-footer) {
   position: relative;
-  /* Break out of container padding to make full width */
-  margin-left: calc(-50vw + 50%);
-  margin-right: calc(-50vw + 50%);
-  padding-left: calc(50vw - 50%);
-  padding-right: calc(50vw - 50%);
-  
-  background: #0a0a0a !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin-top: 0 !important;
+  padding: 2rem 0 !important;
+}
+
+/* Hide default footer on homepage (splash template) */
+.sl-markdown-content:has(.hero) ~ * footer:not(.custom-footer),
+body:has(.custom-footer) footer:not(.custom-footer) {
+  display: none !important;
+}
+
+/* Remove extra spacing from footer internal elements */
+footer:not(.custom-footer) .meta {
+  display: none !important;
+}
+
+footer:not(.custom-footer) .pagination-links {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Pagination link cards - solid backgrounds */
+.pagination-links a {
+  background: var(--sl-color-bg-sidebar) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.pagination-links a:hover {
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Light theme footer */
-:root[data-theme='light'] footer {
+:root[data-theme='light'] footer:not(.custom-footer) {
   background: #ffffff !important;
   border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Light theme pagination cards */
+:root[data-theme='light'] .pagination-links a {
+
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+:root[data-theme='light'] .pagination-links a:hover {
+  border-color: rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Decorative element on the side */
