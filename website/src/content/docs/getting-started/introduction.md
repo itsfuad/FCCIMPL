@@ -3,9 +3,8 @@ title: Introduction to Ferret
 description: Learn about Ferret, a modern type-safe programming language
 ---
 
-Ferret is a modern, type-safe programming language designed for clarity, safety, and developer productivity.
 
-## Why Ferret?
+Ferret is a modern, type-safe programming language designed for clarity, safety, and developer productivity.
 
 ### 🎯 Type Safety
 Ferret's powerful type system catches errors at compile-time, not runtime. With optional types, error types, and flow-sensitive type narrowing, you can write code with confidence.
@@ -42,11 +41,3 @@ fn greet(name: str) -> str {
     return "Hello, " + name + "!";
 }
 ```
-
-## Next Steps
-
-- [Install Ferret](/getting-started/installation)
-- [Write your first program](/getting-started/hello-world)
-- [Learn about the type system](/language/types)
-
-

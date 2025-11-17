@@ -68,6 +68,7 @@ export default defineConfig({
               {
                   label: 'Basics',
                   items: [
+                      { label: 'Syntax', slug: 'language/syntax' },
                       { label: 'Variables & Constants', slug: 'language/variables' },
                       { label: 'Data Types', slug: 'language/types' },
                       { label: 'Operators', slug: 'language/operators' },

@@ -43,10 +43,3 @@ To compile and run a Ferret program:
 ```bash
 .\bin\ferret.exe yourfile.fer
 ```
-
-## Next Steps
-
-- [Write your first Ferret program](/getting-started/hello-world)
-- [Learn about the syntax](/language/syntax)
-
-

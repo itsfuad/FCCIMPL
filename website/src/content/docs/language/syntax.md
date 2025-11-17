@@ -3,8 +3,6 @@ title: Syntax Basics
 description: Learn the fundamental syntax of Ferret
 ---
 
-# Ferret Syntax
-
 This page covers the basic syntax and structure of Ferret programs.
 
 ## Comments
@@ -145,9 +143,9 @@ fn readFile(path: str) -> str ! Error {
 - `>=` Greater or equal
 
 ### Logical
-- `and` Logical AND
-- `or` Logical OR
-- `not` Logical NOT
+- `&&` Logical AND
+- `||` Logical OR
+- `!` Logical NOT
 
 ### Special
 - `?:` Elvis operator (optional unwrap with default)

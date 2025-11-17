@@ -56,5 +56,3 @@ fn main() {
 - [Learn about Ferret's syntax](/language/syntax)
 - [Explore the type system](/language/types)
 - [See more examples](/examples)
-
-
