@@ -4,59 +4,155 @@
   "Alias": "",
   "Nodes": [
     {
-      "Decls": [
-        {
-          "Name": {
-            "Name": "a",
-            "Start": {
-              "Line": 1,
-              "Column": 5,
-              "Index": 4
-            },
-            "End": {
-              "Line": 1,
-              "Column": 6,
-              "Index": 5
-            }
-          },
-          "Type": {
-            "Name": "i32",
-            "Start": {
-              "Line": 1,
-              "Column": 9,
-              "Index": 8
-            },
-            "End": {
-              "Line": 1,
-              "Column": 12,
-              "Index": 11
-            }
-          },
-          "Value": {
-            "Kind": 2,
-            "Value": "hello",
-            "Start": {
-              "Line": 1,
-              "Column": 15,
-              "Index": 14
-            },
-            "End": {
-              "Line": 1,
-              "Column": 22,
-              "Index": 21
-            }
-          }
+      "Path": {
+        "Kind": 2,
+        "Value": "std/io",
+        "Start": {
+          "Line": 3,
+          "Column": 8,
+          "Index": 79
+        },
+        "End": {
+          "Line": 3,
+          "Column": 16,
+          "Index": 87
         }
-      ],
+      },
+      "Alias": null,
+      "LocationOnDisk": "",
       "Start": {
-        "Line": 1,
+        "Line": 3,
         "Column": 1,
-        "Index": 0
+        "Index": 72
       },
       "End": {
-        "Line": 1,
-        "Column": 23,
-        "Index": 22
+        "Line": 3,
+        "Column": 17,
+        "Index": 88
+      }
+    },
+    {
+      "Name": {
+        "Name": "main",
+        "Start": {
+          "Line": 5,
+          "Column": 4,
+          "Index": 95
+        },
+        "End": {
+          "Line": 5,
+          "Column": 8,
+          "Index": 99
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 5,
+          "Column": 8,
+          "Index": 99
+        },
+        "End": {
+          "Line": 5,
+          "Column": 10,
+          "Index": 101
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "X": {
+              "Fun": {
+                "X": {
+                  "Name": "io",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 5,
+                    "Index": 109
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 7,
+                    "Index": 111
+                  }
+                },
+                "Selector": {
+                  "Name": "println",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 9,
+                    "Index": 113
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 16,
+                    "Index": 120
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Args": [
+                {
+                  "Kind": 2,
+                  "Value": "Hello, Ferret!",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 17,
+                    "Index": 121
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 33,
+                    "Index": 137
+                  }
+                }
+              ],
+              "Catch": null,
+              "Start": {
+                "Line": 6,
+                "Column": 9,
+                "Index": 113
+              },
+              "End": {
+                "Line": 6,
+                "Column": 34,
+                "Index": 138
+              }
+            },
+            "Start": {
+              "Line": 6,
+              "Column": 5,
+              "Index": 109
+            },
+            "End": {
+              "Line": 6,
+              "Column": 35,
+              "Index": 139
+            }
+          }
+        ],
+        "Start": {
+          "Line": 5,
+          "Column": 11,
+          "Index": 102
+        },
+        "End": {
+          "Line": 7,
+          "Column": 2,
+          "Index": 142
+        }
+      },
+      "Start": {
+        "Line": 5,
+        "Column": 1,
+        "Index": 92
+      },
+      "End": {
+        "Line": 7,
+        "Column": 2,
+        "Index": 142
       }
     }
   ],

@@ -814,3 +814,13 @@ func (ctx *CompilerContext) GetAllBlockScopes() []*semantics.SymbolTable {
 	}
 	return scopes
 }
+
+// LexFile - public wrapper for lexFile (for WASM usage)
+func (ctx *CompilerContext) LexFile(file *SourceFile) error {
+	return ctx.lexFile(file)
+}
+
+// ParseFile - public wrapper for parseFile (for WASM usage)
+func (ctx *CompilerContext) ParseFile(file *SourceFile) error {
+	return ctx.parseFile(file)
+}

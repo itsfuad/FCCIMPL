@@ -3,8 +3,6 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import fs from 'node:fs';
 
-//import tailwindcss from '@tailwindcss/vite';
-
 // Load Ferret TextMate grammar
 const ferretGrammar = JSON.parse(fs.readFileSync('./src/syntax/fer.tmLanguage.json', 'utf-8'));
 // Override the name to match what we use in code blocks
@@ -12,7 +10,7 @@ ferretGrammar.name = 'ferret';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server', // Enable server-side rendering for API routes
+  output: 'static',
   experimental: {
     clientPrerender: true,
   },

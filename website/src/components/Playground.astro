@@ -81,7 +81,68 @@
 <!-- Monaco Editor CDN -->
 <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 
+<!-- Go WASM Support -->
+<script is:inline src="/wasm_exec.js"></script>
+
 <script is:inline>
+// Initialize Go WASM
+let wasmReady = false;
+let wasmGo = null;
+
+async function initWasm() {
+  try {
+    console.log('🔄 Loading Ferret WASM compiler...');
+    
+    const go = new Go();
+    wasmGo = go;
+    
+    // Clear any service worker cache
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    }
+    
+    console.log('📥 Fetching ferret.wasm...');
+    const wasmVersion = '8.39.00'; // Update this each build
+    const response = await fetch('/ferret.wasm?v=' + wasmVersion, {
+      cache: 'no-store' // Force no cache
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch WASM: ${response.status} ${response.statusText}`);
+    }
+    
+    console.log('📦 Instantiating WASM module...');
+    const buffer = await response.arrayBuffer();
+    const result = await WebAssembly.instantiate(buffer, go.importObject);
+    
+    console.log('▶️ Running Go program...');
+    // Run the Go program in background (don't await it, it runs forever)
+    go.run(result.instance);
+    
+    // Wait a bit for Go to initialize
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Check if ferretCompile function is available
+    if (typeof window.ferretCompile === 'function') {
+      wasmReady = true;
+      const version = window.ferretWasmVersion || 'unknown';
+      console.log('✅ Ferret WASM compiler loaded successfully!');
+      console.log('📌 WASM Version:', version);
+    } else {
+      throw new Error('ferretCompile function not found after WASM initialization');
+    }
+  } catch (error) {
+    console.error('❌ Failed to load WASM:', error);
+    console.error('Error details:', error.stack);
+    wasmReady = false;
+  }
+}
+
+// Initialize WASM on page load
+initWasm();
+
 // Monaco Editor initialization
 require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
 
@@ -292,6 +353,27 @@ fn main() {
     const statusText = status.querySelector('.status-text');
     const runBtn = this;
     
+    console.log('WASM Ready:', wasmReady);
+    
+    // Check if WASM is ready
+    if (!wasmReady) {
+      console.warn('⚠️ WASM not ready yet');
+      status.setAttribute('data-status', 'error');
+      statusText.textContent = 'Loading...';
+      output.innerHTML = '<p style="color: #f59e0b;">⏳ Loading compiler... Please wait a few seconds and try again.</p>';
+      return;
+    }
+    
+    // Check if ferretCompile function is available
+    if (typeof window.ferretCompile !== 'function') {
+      console.error('❌ ferretCompile function not available');
+      console.log('window.ferretCompile:', window.ferretCompile);
+      status.setAttribute('data-status', 'error');
+      statusText.textContent = 'Error';
+      output.innerHTML = '<p style="color: #ef4444;">❌ Compiler function not available. Please check console and refresh the page.</p>';
+      return;
+    }
+    
     // Disable button and show running state
     runBtn.disabled = true;
     status.setAttribute('data-status', 'running');
@@ -299,63 +381,34 @@ fn main() {
     output.innerHTML = '<p class="output-info">⏳ Compiling and running your code...</p>';
     
     try {
-      const response = await fetch('/api/compile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const text = await response.text();
+      //console.log('📝 Calling ferretCompile with code:', code.substring(0, 100) + '...');
       
-      // Check if response is empty
-      if (!text || text.trim() === '') {
-        throw new Error('Empty response from server');
-      }
-
-      let result;
-      try {
-        result = JSON.parse(text);
-      } catch (e) {
-        throw new Error(`Invalid JSON response: ${text.substring(0, 100)}`);
-      }
-
+      // Call the WASM compiler
+      const result = window.ferretCompile(code, false);
+      
+      //console.log('📊 Compilation result:', result);
+      
       if (result.success) {
+        //console.log('✅ Compilation successful');
         status.setAttribute('data-status', 'success');
         statusText.textContent = 'Success';
-        // Use HTML output if available, otherwise escape plain text
-        if (result.html) {
-          output.innerHTML = `<pre style="margin: 0;">${result.html}</pre>`;
-        } else {
-          output.innerHTML = `<pre style="margin: 0; color: #10b981;">${escapeHtml(result.output)}</pre>`;
-        }
+        // Output is already HTML-formatted from the compiler
+        output.innerHTML = `<pre style="margin: 0; color: #10b981;">${result.output || 'Program executed successfully'}</pre>`;
       } else {
+        //console.error('❌ Compilation failed:', result.error);
         status.setAttribute('data-status', 'error');
         statusText.textContent = 'Error';
-        // Use HTML error if available, otherwise escape plain text
-        if (result.errorHtml) {
-          output.innerHTML = `<pre style="margin: 0;">${result.errorHtml}</pre>`;
-        } else {
-          output.innerHTML = `<pre style="margin: 0; color: #ef4444;">${escapeHtml(result.error || 'Unknown error')}</pre>`;
-        }
-        // Add additional output if present
-        if (result.output) {
-          if (result.outputHtml) {
-            output.innerHTML += `<pre style="margin-top: 1rem;">${result.outputHtml}</pre>`;
-          } else {
-            output.innerHTML += `<pre style="margin-top: 1rem; color: #6b7280;">${escapeHtml(result.output)}</pre>`;
-          }
-        }
+        // Error is already HTML-formatted from the compiler
+        output.innerHTML = `<pre style="margin: 0; white-space: pre-wrap;">${result.error}</pre>`;
       }
+      
     } catch (error) {
+      //console.error('💥 Exception during compilation:', error);
+      //console.error('Error stack:', error.stack);
       status.setAttribute('data-status', 'error');
       statusText.textContent = 'Error';
-      output.innerHTML = `<p style="color: #ef4444;">❌ ${escapeHtml(error.message)}</p>`;
+      // Escape HTML for exception messages since these are not formatted by the compiler
+      output.innerHTML = `<p style="color: #ef4444;">❌ ${escapeHtml(error.message || error.toString())}</p>`;
     } finally {
       runBtn.disabled = false;
       setTimeout(() => {

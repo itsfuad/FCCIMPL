@@ -2,7 +2,9 @@ package diagnostics
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -62,7 +64,8 @@ func (sc *SourceCache) GetLine(filepath string, line int) (string, error) {
 
 // Emitter handles the rendering and output of diagnostics
 type Emitter struct {
-	cache *SourceCache
+	cache  *SourceCache
+	writer io.Writer // Where to write output (os.Stdout, string builder, etc.)
 }
 
 // labelContext groups parameters for printing labels to reduce parameter count
@@ -80,8 +83,22 @@ type labelContext struct {
 
 func NewEmitter() *Emitter {
 	return &Emitter{
-		cache: NewSourceCache(),
+		cache:  NewSourceCache(),
+		writer: os.Stdout,
 	}
+}
+
+// NewEmitterWithWriter creates an emitter that writes to a specific writer
+func NewEmitterWithWriter(w io.Writer) *Emitter {
+	return &Emitter{
+		cache:  NewSourceCache(),
+		writer: w,
+	}
+}
+
+// SetSourceLines pre-populates the cache with source code lines (for WASM/in-memory sources)
+func (e *Emitter) SetSourceLines(filepath string, lines []string) {
+	e.cache.files[filepath] = lines
 }
 
 func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
@@ -116,7 +133,7 @@ func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
 			}
 		} else if primaryCount > 1 {
 			// Multiple primary labels - print warning
-			colors.BOLD_RED.Println("INTERNAL COMPILER ERROR: Multiple primary labels in diagnostic!")
+			colors.BOLD_RED.Fprintln(e.writer, "INTERNAL COMPILER ERROR: Multiple primary labels in diagnostic!")
 			for _, label := range diag.Labels {
 				e.printLabel(filepath, label, diag.Severity)
 			}
@@ -150,7 +167,7 @@ func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
 		e.printHelp(diag.Help)
 	}
 
-	fmt.Println()
+	fmt.Fprintln(e.writer)
 }
 
 func (e *Emitter) printHeader(diag *Diagnostic) {
@@ -172,12 +189,12 @@ func (e *Emitter) printHeader(diag *Diagnostic) {
 		severityStr = "hint"
 	}
 
-	color.Print(severityStr)
+	color.Fprint(e.writer, severityStr)
 	if diag.Code != "" {
-		fmt.Fprintf(os.Stdout, "[%s]", diag.Code)
+		fmt.Fprintf(e.writer, "[%s]", diag.Code)
 	}
-	fmt.Fprint(os.Stdout, ": ")
-	color.Println(diag.Message)
+	fmt.Fprint(e.writer, ": ")
+	color.Fprintln(e.writer, diag.Message)
 }
 
 func (e *Emitter) printLabel(filepath string, label Label, severity Severity) {
@@ -192,7 +209,7 @@ func (e *Emitter) printLabel(filepath string, label Label, severity Severity) {
 	}
 
 	// Print location header
-	colors.BLUE.Printf("  --> %s:%d:%d\n", filepath, start.Line, start.Column)
+	colors.BLUE.Fprintf(e.writer, "  --> %s:%d:%d\n", filepath, start.Line, start.Column)
 
 	// Print line number gutter width
 	lineNumWidth := len(fmt.Sprintf("%d", start.Line))
@@ -204,8 +221,8 @@ func (e *Emitter) printLabel(filepath string, label Label, severity Severity) {
 	}
 
 	// Print separator
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Println(" |")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprintln(e.writer, " |")
 
 	// Create context for label printing
 	ctx := labelContext{
@@ -235,8 +252,8 @@ func (e *Emitter) printSingleLineLabel(ctx labelContext) {
 		prevLine, err := e.cache.GetLine(ctx.filepath, ctx.line-1)
 		if err == nil && strings.TrimSpace(prevLine) != "" {
 			// Print previous line in grey for context
-			colors.GREY.Printf(STR_MULTIPLIER, ctx.lineNumWidth, ctx.line-1)
-			colors.GREY.Println(prevLine)
+			colors.GREY.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.line-1)
+			colors.GREY.Fprintln(e.writer, prevLine)
 		}
 	}
 
@@ -247,12 +264,12 @@ func (e *Emitter) printSingleLineLabel(ctx labelContext) {
 	}
 
 	// Print line number and source (line number in grey)
-	colors.GREY.Printf(STR_MULTIPLIER, ctx.lineNumWidth, ctx.line)
-	fmt.Println(sourceLine)
+	colors.GREY.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.line)
+	fmt.Fprintln(e.writer, sourceLine)
 
 	// Print underline
-	colors.GREY.Print(strings.Repeat(" ", ctx.lineNumWidth))
-	colors.GREY.Print(" | ")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+	colors.GREY.Fprint(e.writer, " | ")
 
 	// Calculate underline position and length
 	padding := ctx.startCol - 1
@@ -291,18 +308,18 @@ func (e *Emitter) printSingleLineLabel(ctx labelContext) {
 	}
 
 	// Print padding and underline
-	fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
-	underlineColor.Print(strings.Repeat(underlineChar, length))
+	fmt.Fprint(e.writer, strings.Repeat(" ", padding))
+	underlineColor.Fprint(e.writer, strings.Repeat(underlineChar, length))
 
 	// Print label message (only if not empty)
 	if ctx.label.Message != "" {
-		underlineColor.Printf(" %s", ctx.label.Message)
+		underlineColor.Fprintf(e.writer, " %s", ctx.label.Message)
 	}
-	fmt.Println()
+	fmt.Fprintln(e.writer)
 
 	// Print separator
-	colors.GREY.Print(strings.Repeat(" ", ctx.lineNumWidth))
-	colors.GREY.Println(" |")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+	colors.GREY.Fprintln(e.writer, " |")
 }
 
 func (e *Emitter) printMultiLineLabel(ctx labelContext) {
@@ -312,12 +329,12 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 		return
 	}
 
-	colors.BLUE.Printf(STR_MULTIPLIER, ctx.lineNumWidth, ctx.startLine)
-	fmt.Println(sourceLine)
+	colors.BLUE.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.startLine)
+	fmt.Fprintln(e.writer, sourceLine)
 
 	// Print underline for start
-	colors.BLUE.Print(strings.Repeat(" ", ctx.lineNumWidth))
-	colors.BLUE.Print(" | ")
+	colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+	colors.BLUE.Fprint(e.writer, " | ")
 
 	var underlineColor colors.COLOR
 	if ctx.label.Style == Primary {
@@ -339,13 +356,13 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 	}
 
 	padding := ctx.startCol - 1
-	fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
-	underlineColor.Println("^--- error starts here")
+	fmt.Fprint(e.writer, strings.Repeat(" ", padding))
+	underlineColor.Fprintln(e.writer, "^--- error starts here")
 
 	// Print ellipsis for middle lines if there are many
 	if ctx.endLine-ctx.startLine > 5 {
-		colors.BLUE.Print(strings.Repeat(" ", ctx.lineNumWidth))
-		colors.BLUE.Println(" | ...")
+		colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+		colors.BLUE.Fprintln(e.writer, " | ...")
 	} else {
 		// Print middle lines
 		for i := ctx.startLine + 1; i < ctx.endLine; i++ {
@@ -353,43 +370,43 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 			if err != nil {
 				continue
 			}
-			colors.BLUE.Printf(STR_MULTIPLIER, ctx.lineNumWidth, i)
-			fmt.Println(line)
+			colors.BLUE.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, i)
+			fmt.Fprintln(e.writer, line)
 		}
 	}
 
 	// Print end line
 	endSourceLine, err := e.cache.GetLine(ctx.filepath, ctx.endLine)
 	if err == nil {
-		colors.BLUE.Printf(STR_MULTIPLIER, ctx.lineNumWidth, ctx.endLine)
-		fmt.Println(endSourceLine)
+		colors.BLUE.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.endLine)
+		fmt.Fprintln(e.writer, endSourceLine)
 
 		// Print underline for end
-		colors.BLUE.Print(strings.Repeat(" ", ctx.lineNumWidth))
-		colors.BLUE.Print(" | ")
+		colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+		colors.BLUE.Fprint(e.writer, " | ")
 		endPadding := ctx.endCol - 1
-		fmt.Fprint(os.Stdout, strings.Repeat(" ", endPadding))
-		underlineColor.Print("^")
+		fmt.Fprint(e.writer, strings.Repeat(" ", endPadding))
+		underlineColor.Fprint(e.writer, "^")
 
 		if ctx.label.Message != "" {
-			underlineColor.Printf(" %s", ctx.label.Message)
+			underlineColor.Fprintf(e.writer, " %s", ctx.label.Message)
 		}
-		fmt.Println()
+		fmt.Fprintln(e.writer)
 	}
 
 	// Print separator
-	colors.BLUE.Print(strings.Repeat(" ", ctx.lineNumWidth))
-	colors.BLUE.Println(" |")
+	colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+	colors.BLUE.Fprintln(e.writer, " |")
 }
 
 func (e *Emitter) printNote(note Note) {
-	colors.CYAN.Print("  = note: ")
-	fmt.Println(note.Message)
+	colors.CYAN.Fprint(e.writer, "  = note: ")
+	fmt.Fprintln(e.writer, note.Message)
 }
 
 func (e *Emitter) printHelp(help string) {
-	colors.GREEN.Print("  = help: ")
-	fmt.Println(help)
+	colors.GREEN.Fprint(e.writer, "  = help: ")
+	fmt.Fprintln(e.writer, help)
 }
 
 // printCompactDualLabel prints two labels on same line (Rust-style)
@@ -435,21 +452,21 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 	}
 
 	// Print location header (point to rightmost/inline label)
-	colors.BLUE.Printf("  --> %s:%d:%d\n", filepath, line, rightStart.Column)
+	colors.BLUE.Fprintf(e.writer, "  --> %s:%d:%d\n", filepath, line, rightStart.Column)
 
 	lineNumWidth := len(fmt.Sprintf("%d", line))
 
 	// Print separator
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Println(" |")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprintln(e.writer, " |")
 
 	// Try to get previous line for context (if not empty)
 	if line > 1 {
 		prevLine, err := e.cache.GetLine(filepath, line-1)
 		if err == nil && strings.TrimSpace(prevLine) != "" {
 			// Print previous line in grey for context
-			colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, line-1)
-			colors.GREY.Println(prevLine)
+			colors.GREY.Fprintf(e.writer, STR_MULTIPLIER, lineNumWidth, line-1)
+			colors.GREY.Fprintln(e.writer, prevLine)
 		}
 	}
 
@@ -460,8 +477,8 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 	}
 
 	// Print line number and source
-	colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, line)
-	fmt.Println(sourceLine)
+	colors.GREY.Fprintf(e.writer, STR_MULTIPLIER, lineNumWidth, line)
+	fmt.Fprintln(e.writer, sourceLine)
 
 	// Calculate positions
 	leftPadding := leftStart.Column - 1
@@ -511,43 +528,43 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 	}
 
 	// Line 1: Show both underlines, right (inline) label's message
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Print(" | ")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprint(e.writer, " | ")
 
 	// Left label first
-	fmt.Fprint(os.Stdout, strings.Repeat(" ", leftPadding))
-	leftColor.Print(strings.Repeat(leftChar, leftLength))
+	fmt.Fprint(e.writer, strings.Repeat(" ", leftPadding))
+	leftColor.Fprint(e.writer, strings.Repeat(leftChar, leftLength))
 
 	// Space between labels
 	spaceBetween := rightPadding - leftPadding - leftLength
-	fmt.Fprint(os.Stdout, strings.Repeat(" ", spaceBetween))
+	fmt.Fprint(e.writer, strings.Repeat(" ", spaceBetween))
 
 	// Right label with inline message
-	rightColor.Print(strings.Repeat(rightChar, rightLength))
+	rightColor.Fprint(e.writer, strings.Repeat(rightChar, rightLength))
 	if rightLabel.Message != "" {
-		rightColor.Printf(" %s", rightLabel.Message)
+		rightColor.Fprintf(e.writer, " %s", rightLabel.Message)
 	}
-	fmt.Println()
+	fmt.Fprintln(e.writer)
 
 	// Line 2: Show vertical connector for left label
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Print(" | ")
-	fmt.Fprint(os.Stdout, strings.Repeat(" ", leftPadding))
-	leftColor.Println("|")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprint(e.writer, " | ")
+	fmt.Fprint(e.writer, strings.Repeat(" ", leftPadding))
+	leftColor.Fprintln(e.writer, "|")
 
 	// Line 3: Show left label message with -- prefix (always dashes for connector)
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Print(" | ")
-	fmt.Fprint(os.Stdout, strings.Repeat(" ", leftPadding))
-	leftColor.Print("--") // Always use -- for connector message, regardless of style
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprint(e.writer, " | ")
+	fmt.Fprint(e.writer, strings.Repeat(" ", leftPadding))
+	leftColor.Fprint(e.writer, "--") // Always use -- for connector message, regardless of style
 	if leftLabel.Message != "" {
-		leftColor.Printf(" %s", leftLabel.Message)
+		leftColor.Fprintf(e.writer, " %s", leftLabel.Message)
 	}
-	fmt.Println()
+	fmt.Fprintln(e.writer)
 
 	// Print separator
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Println(" |")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprintln(e.writer, " |")
 }
 
 // printRoutedLabels prints primary + multiple secondaries with routing (Rust-style)
@@ -561,7 +578,7 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 	primaryCol := primary.Location.Start.Column
 
 	// Print location header
-	colors.BLUE.Printf("  --> %s:%d:%d\n", filepath, primaryLine, primaryCol)
+	colors.BLUE.Fprintf(e.writer, "  --> %s:%d:%d\n", filepath, primaryLine, primaryCol)
 
 	// Collect all line numbers we need to show
 	lineNumbers := []int{primaryLine}
@@ -594,8 +611,8 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 	lineNumWidth := len(fmt.Sprintf("%d", lineNumbers[len(lineNumbers)-1]))
 
 	// Print separator
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Println(" |")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprintln(e.writer, " |")
 
 	primaryColor := e.getSeverityColor(severity)
 	secondaryColor := colors.BLUE
@@ -606,10 +623,10 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 		if idx > 0 {
 			prevLine := lineNumbers[idx-1]
 			if lineNum-prevLine > 1 {
-				colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-				colors.GREY.Println("...")
-				colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-				colors.GREY.Println(" |")
+				colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+				colors.GREY.Fprintln(e.writer, "...")
+				colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+				colors.GREY.Fprintln(e.writer, " |")
 			}
 		}
 
@@ -625,8 +642,8 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 				prevLine, err := e.cache.GetLine(filepath, lineNum-1)
 				if err == nil && strings.TrimSpace(prevLine) != "" {
 					// Print previous line in grey for context
-					colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, lineNum-1)
-					colors.GREY.Println(prevLine)
+					colors.GREY.Fprintf(e.writer, STR_MULTIPLIER, lineNumWidth, lineNum-1)
+					colors.GREY.Fprintln(e.writer, prevLine)
 				}
 			}
 		}
@@ -637,8 +654,8 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 		}
 
 		// Print line number and source
-		colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, lineNum)
-		fmt.Println(sourceLine)
+		colors.GREY.Fprintf(e.writer, STR_MULTIPLIER, lineNumWidth, lineNum)
+		fmt.Fprintln(e.writer, sourceLine)
 
 		// Check for secondaries on this line first
 		hasSecondary := false
@@ -654,8 +671,8 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 
 		// Only print underline section if there are labels on this line
 		if hasPrimary || hasSecondary {
-			colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-			colors.GREY.Print(" | ")
+			colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+			colors.GREY.Fprint(e.writer, " | ")
 
 			// Print primary label if on this line
 			if hasPrimary {
@@ -676,12 +693,12 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 					char = "~"
 				}
 
-				fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
-				primaryColor.Print(strings.Repeat(char, length))
+				fmt.Fprint(e.writer, strings.Repeat(" ", padding))
+				primaryColor.Fprint(e.writer, strings.Repeat(char, length))
 				if primary.Message != "" {
-					primaryColor.Printf(" %s", primary.Message)
+					primaryColor.Fprintf(e.writer, " %s", primary.Message)
 				}
-				fmt.Println()
+				fmt.Fprintln(e.writer)
 			} else if hasSecondary {
 				// Print secondary labels if on this line (and primary is not)
 				for _, sec := range secondaries {
@@ -698,12 +715,12 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 							length = 1
 						}
 
-						fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
-						secondaryColor.Print(strings.Repeat("-", length))
+						fmt.Fprint(e.writer, strings.Repeat(" ", padding))
+						secondaryColor.Fprint(e.writer, strings.Repeat("-", length))
 						if sec.Message != "" {
-							secondaryColor.Printf(" %s", sec.Message)
+							secondaryColor.Fprintf(e.writer, " %s", sec.Message)
 						}
-						fmt.Println()
+						fmt.Fprintln(e.writer)
 						// Only print first secondary on this line
 						break
 					}
@@ -713,8 +730,8 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 	}
 
 	// Print separator
-	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
-	colors.GREY.Println(" |")
+	colors.GREY.Fprint(e.writer, strings.Repeat(" ", lineNumWidth))
+	colors.GREY.Fprintln(e.writer, " |")
 }
 
 // getSeverityColor returns the color for a given severity
@@ -731,4 +748,115 @@ func (e *Emitter) getSeverityColor(severity Severity) colors.COLOR {
 	default:
 		return colors.RED
 	}
+}
+
+// EmitToString captures the output of a diagnostic to a string with ANSI codes
+func (e *Emitter) EmitToString(filepath string, diag *Diagnostic) string {
+	var buf bytes.Buffer
+	oldWriter := e.writer
+	e.writer = &buf
+	e.Emit(filepath, diag)
+	e.writer = oldWriter
+	return buf.String()
+}
+
+// EmitToHTML captures the output of a diagnostic to an HTML string
+func (e *Emitter) EmitToHTML(filepath string, diag *Diagnostic) string {
+	ansiOutput := e.EmitToString(filepath, diag)
+	return colors.ConvertANSIToHTML(ansiOutput)
+}
+
+// FormatDiagnostic formats a single diagnostic with ANSI codes (for WASM fallback)
+func FormatDiagnostic(filepath string, diag *Diagnostic, sourceLines []string) string {
+	var output strings.Builder
+
+	// Get severity color codes
+	var colorCode string
+	switch diag.Severity {
+	case Error:
+		colorCode = "\x1b[31m" // Red
+	case Warning:
+		colorCode = "\x1b[33m" // Yellow
+	case Info:
+		colorCode = "\x1b[36m" // Cyan
+	case Hint:
+		colorCode = "\x1b[35m" // Magenta
+	default:
+		colorCode = "\x1b[31m" // Red
+	}
+	resetCode := "\x1b[0m"
+	greyCode := "\x1b[90m"
+
+	// Print header: error[CODE]: message
+	severityStr := diag.Severity.String()
+	if diag.Code != "" {
+		output.WriteString(fmt.Sprintf("%s%s[%s]%s: %s\n", colorCode, severityStr, diag.Code, resetCode, diag.Message))
+	} else {
+		output.WriteString(fmt.Sprintf("%s%s%s: %s\n", colorCode, severityStr, resetCode, diag.Message))
+	}
+
+	// Print location if we have labels
+	if len(diag.Labels) > 0 && diag.Labels[0].Location != nil && diag.Labels[0].Location.Start != nil {
+		loc := diag.Labels[0].Location.Start
+		output.WriteString(fmt.Sprintf("  %s-->%s %s:%d:%d\n", greyCode, resetCode, filepath, loc.Line, loc.Column))
+
+		// Show source code snippet if available
+		if loc.Line > 0 && loc.Line <= len(sourceLines) {
+			lineNum := loc.Line
+			sourceLine := sourceLines[lineNum-1]
+
+			// Calculate line number width
+			lineNumWidth := len(fmt.Sprintf("%d", lineNum))
+
+			// Print separator
+			output.WriteString(fmt.Sprintf("%s%*s |%s\n", greyCode, lineNumWidth, "", resetCode))
+
+			// Print source line
+			output.WriteString(fmt.Sprintf("%s%*d |%s %s\n", greyCode, lineNumWidth, lineNum, resetCode, sourceLine))
+
+			// Print error indicator
+			output.WriteString(fmt.Sprintf("%s%*s |%s ", greyCode, lineNumWidth, "", resetCode))
+
+			// Add padding and underline
+			label := diag.Labels[0]
+			startCol := label.Location.Start.Column
+			endCol := startCol + 1
+			if label.Location.End != nil {
+				endCol = label.Location.End.Column
+			}
+			if endCol <= startCol {
+				endCol = startCol + 1
+			}
+
+			padding := startCol - 1
+			length := endCol - startCol
+			if length <= 0 {
+				length = 1
+			}
+
+			output.WriteString(strings.Repeat(" ", padding))
+			output.WriteString(fmt.Sprintf("%s%s%s", colorCode, strings.Repeat("^", length), resetCode))
+
+			if diag.Labels[0].Message != "" {
+				output.WriteString(fmt.Sprintf(" %s", diag.Labels[0].Message))
+			}
+			output.WriteString("\n")
+
+			// Print closing separator
+			output.WriteString(fmt.Sprintf("%s%*s |%s\n", greyCode, lineNumWidth, "", resetCode))
+		}
+	}
+
+	// Print notes
+	for _, note := range diag.Notes {
+		output.WriteString(fmt.Sprintf("  %snote%s: %s\n", greyCode, resetCode, note.Message))
+	}
+
+	// Print help
+	if diag.Help != "" {
+		output.WriteString(fmt.Sprintf("  %shelp%s: %s\n", greyCode, resetCode, diag.Help))
+	}
+
+	output.WriteString("\n")
+	return output.String()
 }
