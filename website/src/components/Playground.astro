@@ -302,14 +302,18 @@ require(['vs/editor/editor.main'], function() {
   editorContainer.offsetHeight;
   
   // Create Monaco Editor instance with ABSOLUTE MINIMAL configuration
+  const defaultCode = [
+    '// Welcome to Ferret Playground!',
+    '// Try writing some Ferret code here',
+    'import "std/io";',
+    '',
+    'fn main() {',
+    '    io::println("Hello, Ferret!");',
+    '}'
+  ].join('\n');
+  
   const editor = monaco.editor.create(editorContainer, {
-    value: `// Welcome to Ferret Playground!
-// Try writing some Ferret code here
-import "std/io";
-
-fn main() {
-    io::println("Hello, Ferret!");
-}`,
+    value: defaultCode,
     language: 'ferret',
     theme: isDark ? 'ferret-dark' : 'ferret-light',
     automaticLayout: true,

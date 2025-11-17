@@ -14,11 +14,17 @@ export default defineConfig({
   experimental: {
     clientPrerender: true,
   },
+  // Disable Starlight's built-in 404 to use custom one
+  trailingSlash: 'ignore',
+  build: {
+    format: 'file', // This ensures /404 is built as 404.html
+  },
   integrations: [
       starlight({
           title: 'Ferret',
           description: 'A modern, type-safe programming language',
           favicon: '/favicon.png',  // Change to '/favicon.png' or '/favicon.ico' if using different format
+          disable404Route: true, // Use custom 404 page instead of Starlight's
           social: [
               { icon: 'github', label: 'GitHub', href: 'https://github.com/itsfuad/FCCIMPL' }
           ],
