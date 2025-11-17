@@ -59,7 +59,7 @@ const pageTitle = 'Ferret Playground';
 </head>
 <body>
     <div class="page-container">
-        <Navbar showSearch={true} showDocsLink={true} />
+        <Navbar {...Astro.props} showSearch={false} />
         
         <div class="playground-wrapper">
             <Playground />
