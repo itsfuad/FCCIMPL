@@ -16,9 +16,6 @@ export default defineConfig({
   },
   // Disable Starlight's built-in 404 to use custom one
   trailingSlash: 'ignore',
-  build: {
-    format: 'file', // This ensures /404 is built as 404.html
-  },
   integrations: [
       starlight({
           title: 'Ferret',
