@@ -1,0 +1,8 @@
+---
+// Header component override for Starlight
+// This replaces Starlight's default header with our custom Navbar
+import type { Props } from '@astrojs/starlight/props';
+import Navbar from './Navbar.astro';
+---
+
+<Navbar showSearch={true} {...Astro.props} />

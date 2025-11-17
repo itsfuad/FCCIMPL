@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import fs from 'node:fs';
 
-import tailwindcss from '@tailwindcss/vite';
+//import tailwindcss from '@tailwindcss/vite';
 
 // Load Ferret TextMate grammar
 const ferretGrammar = JSON.parse(fs.readFileSync('./src/syntax/fer.tmLanguage.json', 'utf-8'));
@@ -46,6 +46,8 @@ export default defineConfig({
               ThemeSelect: './src/components/ThemeSelect.astro',
               // Use ferret image instead of text
               SiteTitle: './src/components/SiteTitle.astro',
+              // Use custom navbar for all pages
+              Header: './src/components/Header.astro',
           },
 
           sidebar: [
@@ -106,6 +108,6 @@ export default defineConfig({
 	],
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [],
   },
 });

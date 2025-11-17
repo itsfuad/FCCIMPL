@@ -164,6 +164,17 @@ header a[href="/"] {
   color: var(--accent-color) !important;
 }
 
+.header {
+  z-index: var(--sl-z-index-navbar);
+  position: fixed;
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid var(--sl-color-hairline-shade);
+  background-color: var(--sl-color-bg-nav);
+  padding: 0;
+  padding-inline-end: 0;
+}
+
 /* Sidebar current route - keep consistent text color */
 .sidebar a[aria-current="page"] {
   color: white !important;

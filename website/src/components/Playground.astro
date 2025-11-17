@@ -45,10 +45,20 @@
     </div>
   </div>
   
-  <!-- Main content area -->
+  <!-- Main content area with resizable panels -->
   <div class="playground-content">
     <div class="editor-panel">
       <div id="editor" class="editor"></div>
+      <div class="editor-footer">
+        <span id="output-info">Ln 1, Col 1</span>
+        <span>UTF-8</span>
+        <span>Ferret</span>
+      </div>
+    </div>
+    
+    <!-- Resize handle (desktop only) -->
+    <div class="resize-handle" id="resize-handle">
+      <div class="resize-handle-bar"></div>
     </div>
     
     <!-- Output panel -->
@@ -62,11 +72,6 @@
       </div>
       <div id="output" class="output-content">
         <p class="output-placeholder">✓ Ready to run your code...</p>
-      </div>
-      <div class="output-footer">
-        <span id="output-info">Ln 1, Col 1</span>
-        <span>UTF-8</span>
-        <span>Ferret</span>
       </div>
     </div>
   </div>
@@ -228,8 +233,14 @@ require(['vs/editor/editor.main'], function() {
   // Detect theme
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   
-  // Create Monaco Editor instance
-  const editor = monaco.editor.create(document.getElementById('editor'), {
+  // Wait for container to be fully rendered and sized
+  const editorContainer = document.getElementById('editor');
+  
+  // Force a reflow to ensure container has dimensions
+  editorContainer.offsetHeight;
+  
+  // Create Monaco Editor instance with ABSOLUTE MINIMAL configuration
+  const editor = monaco.editor.create(editorContainer, {
     value: `// Welcome to Ferret Playground!
 // Try writing some Ferret code here
 
@@ -248,26 +259,12 @@ fn main() {
 }`,
     language: 'ferret',
     theme: isDark ? 'ferret-dark' : 'ferret-light',
-    fontSize: 14,
-    lineNumbers: 'on',
-    minimap: { enabled: false },
     automaticLayout: true,
-    scrollBeyondLastLine: false,
-    roundedSelection: false,
-    padding: { top: 16, bottom: 16 },
-    tabSize: 4,
-    insertSpaces: true,
-    fontFamily: "'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace",
-    fontLigatures: true,
-    lineHeight: 22,
-    renderLineHighlight: 'all',
-    scrollbar: {
-      vertical: 'auto',
-      horizontal: 'auto',
-      useShadows: false,
-      verticalScrollbarSize: 10,
-      horizontalScrollbarSize: 10,
-    },
+  });
+
+  // Force immediate layout update after creation
+  requestAnimationFrame(() => {
+    editor.layout();
   });
 
   // Update cursor position
@@ -338,6 +335,53 @@ fn main() {
 
   // Make editor globally accessible for future API integration
   window.ferretEditor = editor;
+
+  // Resize functionality
+  const resizeHandle = document.getElementById('resize-handle');
+  const editorPanel = document.querySelector('.editor-panel');
+  const outputPanel = document.querySelector('.output-panel');
+  const playgroundContent = document.querySelector('.playground-content');
+  
+  let isResizing = false;
+  let startX = 0;
+  let startEditorWidth = 0;
+
+  resizeHandle.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    startX = e.clientX;
+    startEditorWidth = editorPanel.offsetWidth;
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+    
+    const deltaX = e.clientX - startX;
+    const containerWidth = playgroundContent.offsetWidth;
+    const newEditorWidth = startEditorWidth + deltaX;
+    
+    // Set min/max constraints (30% - 70% of container)
+    const minWidth = containerWidth * 0.3;
+    const maxWidth = containerWidth * 0.7;
+    
+    if (newEditorWidth >= minWidth && newEditorWidth <= maxWidth) {
+      const editorPercent = (newEditorWidth / containerWidth) * 100;
+      editorPanel.style.flex = `0 0 ${editorPercent}%`;
+      outputPanel.style.flex = `0 0 ${100 - editorPercent}%`;
+      
+      // Force Monaco to recalculate layout
+      editor.layout();
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isResizing) {
+      isResizing = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    }
+  });
 });
 </script>
 
@@ -497,10 +541,10 @@ fn main() {
     cursor: not-allowed;
   }
 
-  /* Content area */
+  /* Content area - responsive layout */
   .playground-content {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Horizontal on desktop */
     height: 650px;
     position: relative;
   }
@@ -508,32 +552,118 @@ fn main() {
   /* Editor panel */
   .editor-panel {
     flex: 1;
-    min-height: 400px;
+    min-width: 400px;
     position: relative;
     background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   :global([data-theme='dark']) .editor-panel {
     background: #1e1e1e;
   }
 
-  .editor {
-    width: 100%;
-    height: 100%;
+  /* Resize handle (desktop only) */
+  .resize-handle {
+    width: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    cursor: col-resize;
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Output panel */
+  :global([data-theme='dark']) .resize-handle {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .resize-handle:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  :global([data-theme='dark']) .resize-handle:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .resize-handle-bar {
+    width: 2px;
+    height: 48px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 1px;
+  }
+
+  :global([data-theme='dark']) .resize-handle-bar {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .editor {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0; /* Critical for flex children */
+  }
+  
+  /* Ensure Monaco container has explicit dimensions */
+  .editor > div {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* CRITICAL: Override Starlight's global styles that break Monaco */
+  /* Target Monaco's specific internal classes */
+  .editor :global(.view-lines),
+  .editor :global(.view-line),
+  .editor :global(.view-line) > span,
+  .editor :global(.mtk1),
+  .editor :global(.mtk2),
+  .editor :global(.mtk3),
+  .editor :global(.mtk4),
+  .editor :global(.mtk5),
+  .editor :global(.mtk6) {
+    font-family: Consolas, 'Courier New', monospace !important;
+    font-size: 14px !important;
+    line-height: 19px !important;
+    letter-spacing: 0 !important;
+  }
+
+  /* Editor footer */
+  .editor-footer {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.6875rem;
+    color: #9ca3af;
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  :global([data-theme='dark']) .editor-footer {
+    color: #6b7280;
+    background: rgba(255, 255, 255, 0.02);
+    border-top-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .editor-footer #output-info {
+    font-weight: 500;
+  }
+
+  /* Output panel - horizontal on desktop */
   .output-panel {
-    height: 250px;
+    width: 400px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     background: #fafafa;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
   }
 
   :global([data-theme='dark']) .output-panel {
     background: #181818;
-    border-top-color: rgba(255, 255, 255, 0.05);
+    border-left-color: rgba(255, 255, 255, 0.05);
   }
 
   .output-header {
@@ -624,27 +754,6 @@ fn main() {
     white-space: pre-wrap;
   }
 
-  /* Output footer */
-  .output-footer {
-    display: flex;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.6875rem;
-    color: #9ca3af;
-    background: rgba(0, 0, 0, 0.02);
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-  }
-
-  :global([data-theme='dark']) .output-footer {
-    color: #6b7280;
-    background: rgba(255, 255, 255, 0.02);
-    border-top-color: rgba(255, 255, 255, 0.06);
-  }
-
-  #output-info {
-    font-weight: 500;
-  }
-
   /* Custom scrollbar */
   .output-content::-webkit-scrollbar {
     width: 8px;
@@ -672,7 +781,7 @@ fn main() {
     background: rgba(255, 255, 255, 0.15);
   }
 
-  /* Responsive */
+  /* Responsive - Mobile: Stack vertically, no resize */
   @media (max-width: 768px) {
     .playground-container {
       margin: 1rem 0;
@@ -718,17 +827,36 @@ fn main() {
       display: none;
     }
 
+    /* Stack vertically on mobile */
     .playground-content {
+      flex-direction: column !important;
       height: auto;
     }
 
     .editor-panel {
       min-height: 300px;
       height: 400px;
+      min-width: unset !important;
+      flex: none !important;
+    }
+
+    /* Hide resize handle on mobile */
+    .resize-handle {
+      display: none !important;
     }
 
     .output-panel {
       height: 200px;
+      width: 100% !important;
+      min-width: unset !important;
+      flex: none !important;
+      border-left: none;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    :global([data-theme='dark']) .output-panel {
+      border-left: none;
+      border-top-color: rgba(255, 255, 255, 0.05);
     }
 
     .output-content {
