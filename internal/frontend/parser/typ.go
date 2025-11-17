@@ -52,14 +52,13 @@ func (p *Parser) parseType() ast.TypeNode {
 		p.diagnostics.Add(
 			diagnostics.NewError(fmt.Sprintf("expected type, got %s", tok.Value)).
 				WithCode(diagnostics.ErrMissingType).
-				WithPrimaryLabel(p.filepath, source.NewLocation(&tok.Start, &tok.End), fmt.Sprintf("remove `%s` from here", tok.Value)),
+				WithPrimaryLabel(p.filepath, source.NewLocation(&tok.Start, &tok.End), fmt.Sprintf("expected type here, got `%s`", tok.Value)),
 		)
-		// skip the token
-		p.advance()
-		// return &ast.Invalid{
-		// 	Location: p.makeLocation(tok.Start),
-		// }
-		return p.parseType()
+		// Return a placeholder identifier type instead of recursing
+		// This prevents stack overflow on invalid syntax
+		return &ast.Invalid{
+			Location: p.makeLocation(tok.Start),
+		}
 	}
 
 	// Check for optional type T?

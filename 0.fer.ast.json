@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\0.fer",
+  "FullPath": "E:\\Dev\\FCCIMPL\\0.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -46,7 +46,75 @@
         }
       },
       "Type": {
-        "Params": null,
+        "Params": [
+          {
+            "Name": {
+              "Name": "io",
+              "Start": {
+                "Line": 6,
+                "Column": 5,
+                "Index": 106
+              },
+              "End": {
+                "Line": 6,
+                "Column": 7,
+                "Index": 108
+              }
+            },
+            "Type": {
+              "Name": "println",
+              "Start": {
+                "Line": 6,
+                "Column": 9,
+                "Index": 110
+              },
+              "End": {
+                "Line": 6,
+                "Column": 16,
+                "Index": 117
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 6,
+              "Column": 5,
+              "Index": 106
+            },
+            "End": {
+              "Line": 6,
+              "Column": 16,
+              "Index": 117
+            }
+          },
+          {
+            "Name": {
+              "Name": "\u003cerror\u003e",
+              "Start": null,
+              "End": null
+            },
+            "Type": {
+              "Start": {
+                "Line": 6,
+                "Column": 33,
+                "Index": 134
+              },
+              "End": {
+                "Line": 6,
+                "Column": 33,
+                "Index": 134
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": {
+              "Line": 6,
+              "Column": 33,
+              "Index": 134
+            }
+          }
+        ],
         "Result": null,
         "Start": {
           "Line": 5,
@@ -54,105 +122,21 @@
           "Index": 99
         },
         "End": {
-          "Line": 5,
-          "Column": 10,
-          "Index": 101
+          "Line": 6,
+          "Column": 34,
+          "Index": 135
         }
       },
-      "Body": {
-        "Nodes": [
-          {
-            "X": {
-              "Fun": {
-                "X": {
-                  "Name": "io",
-                  "Start": {
-                    "Line": 6,
-                    "Column": 5,
-                    "Index": 109
-                  },
-                  "End": {
-                    "Line": 6,
-                    "Column": 7,
-                    "Index": 111
-                  }
-                },
-                "Selector": {
-                  "Name": "println",
-                  "Start": {
-                    "Line": 6,
-                    "Column": 9,
-                    "Index": 113
-                  },
-                  "End": {
-                    "Line": 6,
-                    "Column": 16,
-                    "Index": 120
-                  }
-                },
-                "Start": null,
-                "End": null
-              },
-              "Args": [
-                {
-                  "Kind": 2,
-                  "Value": "Hello, Ferret!",
-                  "Start": {
-                    "Line": 6,
-                    "Column": 17,
-                    "Index": 121
-                  },
-                  "End": {
-                    "Line": 6,
-                    "Column": 33,
-                    "Index": 137
-                  }
-                }
-              ],
-              "Catch": null,
-              "Start": {
-                "Line": 6,
-                "Column": 9,
-                "Index": 113
-              },
-              "End": {
-                "Line": 6,
-                "Column": 34,
-                "Index": 138
-              }
-            },
-            "Start": {
-              "Line": 6,
-              "Column": 5,
-              "Index": 109
-            },
-            "End": {
-              "Line": 6,
-              "Column": 35,
-              "Index": 139
-            }
-          }
-        ],
-        "Start": {
-          "Line": 5,
-          "Column": 11,
-          "Index": 102
-        },
-        "End": {
-          "Line": 7,
-          "Column": 2,
-          "Index": 142
-        }
-      },
+      "Body": null,
       "Start": {
         "Line": 5,
         "Column": 1,
         "Index": 92
       },
       "End": {
-        "Line": 7,
-        "Column": 2,
-        "Index": 142
+        "Line": 6,
+        "Column": 34,
+        "Index": 135
       }
     }
   ],
