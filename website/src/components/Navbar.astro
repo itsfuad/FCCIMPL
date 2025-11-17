@@ -2,9 +2,9 @@
 // Shared Navbar Component
 import ferretLogo from '../assets/ferret.webp';
 import Search from '@astrojs/starlight/components/Search.astro';
-import type { Props } from '@astrojs/starlight/props';
+import type { StarlightRouteData } from '@astrojs/starlight/route-data';
 
-interface NavbarProps extends Props {
+interface NavbarProps extends StarlightRouteData {
     showSearch?: boolean;
 }
 

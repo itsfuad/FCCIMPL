@@ -243,19 +243,10 @@ require(['vs/editor/editor.main'], function() {
   const editor = monaco.editor.create(editorContainer, {
     value: `// Welcome to Ferret Playground!
 // Try writing some Ferret code here
+import "std/io";
 
 fn main() {
-    let message := "Hello, Ferret!";
-    // println(message); // Will work once compiler is integrated
-    
-    let x := 42;
-    let y := x * 2;
-    
-    // Ferret features:
-    // - Type inference with :=
-    // - Optional types with ?
-    // - Result types with !
-    // - Pattern matching with when
+    io::println("Hello, Ferret!");
 }`,
     language: 'ferret',
     theme: isDark ? 'ferret-dark' : 'ferret-light',
@@ -654,6 +645,7 @@ fn main() {
   /* Output panel - horizontal on desktop */
   .output-panel {
     width: 400px;
+    height: 100%;
     min-width: 300px;
     display: flex;
     flex-direction: column;

@@ -49,10 +49,6 @@ const pageTitle = 'Ferret Playground';
             margin: 0;
         }
 
-        .playground-wrapper :global(.playground-content) {
-            height: calc(100% - 62px);
-        }
-
         /* Mobile responsive */
         @media (max-width: 768px) {
             .playground-wrapper {
@@ -63,7 +59,7 @@ const pageTitle = 'Ferret Playground';
 </head>
 <body>
     <div class="page-container">
-        <Navbar showSearch={true} />
+        <Navbar showSearch={true} showDocsLink={true} />
         
         <div class="playground-wrapper">
             <Playground />
