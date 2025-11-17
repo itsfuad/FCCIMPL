@@ -58,6 +58,10 @@ export default defineConfig({
                   ],
               },
               {
+                  label: 'Playground',
+                  link: '/playground/',
+              },
+              {
                   label: 'Basics',
                   items: [
                       { label: 'Variables & Constants', slug: 'language/variables' },
