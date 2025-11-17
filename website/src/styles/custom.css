@@ -80,6 +80,19 @@ main:has(.hero), main:has(.hero) .content-panel {
 .main-frame {
   background-image: var(--pattern-dots);
   background-size: 20px 20px;
+  padding-top: 64px !important; /* Account for fixed header */
+}
+
+/* Adjust content padding to remove extra top space */
+.content-panel {
+  padding-top: 1rem !important;
+  margin-top: 1rem;
+}
+
+/* Mobile "On this page" breadcrumb - add bottom margin */
+mobile-starlight-toc {
+  display: block;
+  margin-bottom: 4rem !important;
 }
 
 /* Hero section with gradient and pattern - Full Width */
@@ -94,10 +107,7 @@ main:has(.hero), main:has(.hero) .content-panel {
   /* Remove gap at top by compensating for parent padding */
   margin-top: calc(var(--sl-content-pad-y, 1rem) * -1);
   
-  background: 
-    var(--pattern-grid),
-    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 50%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+  background: var(--pattern-grid), radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgb(244 69 192 / 27%) 0%, transparent 50%);
   background-size: 40px 40px, 100% 100%, 100% 100%;
 }
 
@@ -107,11 +117,21 @@ main:has(.hero), main:has(.hero) .content-panel {
   background-size: 20px 20px;
 }
 
+/* Mobile sidebar - hide theme toggle and social links (already in navbar) */
+@media (max-width: 50rem) {
+  /* Hide Starlight's default theme and social buttons in mobile sidebar */
+  .sidebar starlight-theme-select,
+  .sidebar .social-icons,
+  .mobile-preferences {
+    display: none !important;
+  }
+}
+
 /* Starlight default footer styling - Remove top spacing */
 footer:not(.custom-footer) {
   position: relative;
   margin-top: 0 !important;
-  padding: 2rem 0 !important;
+  padding: 2rem 0 0 !important;
 }
 
 /* Hide default footer on homepage (splash template) */
@@ -167,12 +187,21 @@ header a[href="/"] {
 .header {
   z-index: var(--sl-z-index-navbar);
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  height: auto;
   border-bottom: 1px solid var(--sl-color-hairline-shade);
   background-color: var(--sl-color-bg-nav);
   padding: 0;
   padding-inline-end: 0;
+}
+
+/* Starlight mobile menu button - hide it, use custom navbar only */
+@media (max-width: 50rem) {
+  starlight-menu-button {
+    display: none !important;
+  }
 }
 
 /* Sidebar current route - keep consistent text color */
@@ -253,7 +282,7 @@ header a[href="/"] {
 
 /* Features Section - Vertical List */
 .features-modern {
-  margin: 6rem 0;
+  margin: 4rem 0;
 }
 
 .feature-item {
@@ -307,12 +336,12 @@ header a[href="/"] {
 
 /* Example Section */
 .example-modern {
-  margin: 6rem 0;
+  margin: 4rem 0;
 }
 
 /* Learning Paths - List Style */
 .paths-modern {
-  margin: 6rem 0;
+  margin: 4rem 0;
 }
 
 .path-link {
