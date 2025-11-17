@@ -279,18 +279,73 @@ fn main() {
   });
 
   // Button handlers
-  document.getElementById('run-btn').addEventListener('click', function() {
+  document.getElementById('run-btn').addEventListener('click', async function() {
     const code = editor.getValue();
     const output = document.getElementById('output');
     const status = document.getElementById('output-status');
+    const runBtn = this;
     
+    // Disable button and show running state
+    runBtn.disabled = true;
     status.innerHTML = '<span class="status-dot status-running"></span>Running...';
-    output.innerHTML = '<p class="output-info">⚠️ Code execution coming soon! Compiler integration in progress...</p>';
+    output.innerHTML = '<p class="output-info">⏳ Compiling and running your code...</p>';
     
-    setTimeout(() => {
-      status.innerHTML = '<span class="status-dot status-ready"></span>Ready';
-    }, 1000);
+    try {
+      const response = await fetch('/api/compile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const text = await response.text();
+      
+      // Check if response is empty
+      if (!text || text.trim() === '') {
+        throw new Error('Empty response from server');
+      }
+
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Invalid JSON response: ${text.substring(0, 100)}`);
+      }
+
+      if (result.success) {
+        status.innerHTML = '<span class="status-dot status-ready"></span>Success';
+        output.innerHTML = `<pre style="margin: 0; color: #10b981;">${escapeHtml(result.output)}</pre>`;
+      } else {
+        status.innerHTML = '<span class="status-dot" style="background: #ef4444;"></span>Error';
+        output.innerHTML = `<pre style="margin: 0; color: #ef4444;">${escapeHtml(result.error || 'Unknown error')}</pre>`;
+        if (result.output) {
+          output.innerHTML += `<pre style="margin-top: 1rem; color: #6b7280;">${escapeHtml(result.output)}</pre>`;
+        }
+      }
+    } catch (error) {
+      status.innerHTML = '<span class="status-dot" style="background: #ef4444;"></span>Error';
+      output.innerHTML = `<p style="color: #ef4444;">❌ ${escapeHtml(error.message)}</p>`;
+    } finally {
+      runBtn.disabled = false;
+      setTimeout(() => {
+        if (status.innerHTML.includes('Success') || status.innerHTML.includes('Error')) {
+          status.innerHTML = '<span class="status-dot status-ready"></span>Ready';
+        }
+      }, 3000);
+    }
   });
+
+  // Helper function to escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
 
   document.getElementById('copy-btn').addEventListener('click', function() {
     const code = editor.getValue();

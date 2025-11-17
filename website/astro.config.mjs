@@ -12,6 +12,7 @@ ferretGrammar.name = 'ferret';
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'server', // Enable server-side rendering for API routes
   experimental: {
     clientPrerender: true,
   },
