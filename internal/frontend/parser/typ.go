@@ -16,9 +16,16 @@ func (p *Parser) parseType() ast.TypeNode {
 	if p.match(lexer.BIT_AND_TOKEN) {
 		ampersand := p.advance()
 		baseType := p.parseType()
+		// Handle case where baseType might be Invalid with potential nil location issues
+		var endPos *source.Position
+		if baseType != nil && baseType.Loc() != nil && baseType.Loc().End != nil {
+			endPos = baseType.Loc().End
+		} else {
+			endPos = &ampersand.End
+		}
 		return &ast.ReferenceType{
 			Base:     baseType,
-			Location: *source.NewLocation(&ampersand.Start, baseType.Loc().End),
+			Location: *source.NewLocation(&ampersand.Start, endPos),
 		}
 	}
 

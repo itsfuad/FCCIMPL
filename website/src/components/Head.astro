@@ -10,6 +10,7 @@ import StarlightHead from '@astrojs/starlight/components/Head.astro';
 <!-- <ProgressBar /> -->
 
 <script is:inline>
+  console.log('Head component loaded');
   // Set dark theme as default
   if (!localStorage.getItem('starlight-theme')) {
     localStorage.setItem('starlight-theme', 'dark');

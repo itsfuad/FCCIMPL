@@ -71,6 +71,8 @@ func (p *Parser) parseTopLevel() ast.Node {
 		return p.parseIfStmt()
 	case lexer.FUNCTION_TOKEN:
 		return p.parseFuncDecl()
+	case lexer.IDENTIFIER_TOKEN:
+		return p.parseExprOrAssign()
 	// Allow anonymous type declarations at top-level, e.g.:
 	// struct { .name: str, .age: i32, };
 	// We'll parse the type and return a TypeDecl with a nil Name.
@@ -340,9 +342,26 @@ func (p *Parser) parseMultiplicative() ast.Expression {
 }
 
 func (p *Parser) parseUnary() ast.Expression {
+	return p.parseUnaryDepth(0)
+}
+
+// parseUnaryDepth parses unary expressions with depth tracking to prevent stack overflow
+func (p *Parser) parseUnaryDepth(depth int) ast.Expression {
+	// Limit recursion depth to prevent stack overflow on pathological inputs like "------...x"
+	const maxUnaryDepth = 100
+	if depth >= maxUnaryDepth {
+		tok := p.peek()
+		p.diagnostics.Add(
+			diagnostics.NewError("too many nested unary operators (maximum 100)").
+				WithCode("P0002").
+				WithPrimaryLabel(p.filepath, source.NewLocation(&tok.Start, &tok.End), "excessive nesting"),
+		)
+		return p.parsePostfix()
+	}
+
 	if p.match(lexer.NOT_TOKEN, lexer.MINUS_TOKEN) {
 		op := p.advance()
-		expr := p.parseUnary()
+		expr := p.parseUnaryDepth(depth + 1)
 		return &ast.UnaryExpr{
 			Op: op,
 			X:  expr,
@@ -354,6 +373,11 @@ func (p *Parser) parseUnary() ast.Expression {
 
 func (p *Parser) parsePostfix() ast.Expression {
 	expr := p.parsePrimary()
+
+	// If parsePrimary returned nil due to error, return nil to prevent nil pointer issues
+	if expr == nil {
+		return nil
+	}
 
 	for !p.isAtEnd() {
 		if p.match(lexer.OPEN_PAREN) {

@@ -4,139 +4,86 @@
   "Alias": "",
   "Nodes": [
     {
-      "Path": {
-        "Kind": 2,
-        "Value": "std/io",
-        "Start": {
-          "Line": 3,
-          "Column": 8,
-          "Index": 79
-        },
-        "End": {
-          "Line": 3,
-          "Column": 16,
-          "Index": 87
+      "Decls": [
+        {
+          "Name": {
+            "Name": "name",
+            "Start": {
+              "Line": 1,
+              "Column": 7,
+              "Index": 6
+            },
+            "End": {
+              "Line": 1,
+              "Column": 11,
+              "Index": 10
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Kind": 2,
+            "Value": "ferret",
+            "Start": {
+              "Line": 1,
+              "Column": 15,
+              "Index": 14
+            },
+            "End": {
+              "Line": 1,
+              "Column": 23,
+              "Index": 22
+            }
+          }
         }
-      },
-      "Alias": null,
-      "LocationOnDisk": "",
+      ],
       "Start": {
-        "Line": 3,
+        "Line": 1,
         "Column": 1,
-        "Index": 72
+        "Index": 0
       },
       "End": {
-        "Line": 3,
-        "Column": 17,
-        "Index": 88
+        "Line": 1,
+        "Column": 24,
+        "Index": 23
       }
     },
     {
-      "Name": {
-        "Name": "main",
+      "Lhs": {
+        "Name": "name",
         "Start": {
-          "Line": 5,
-          "Column": 4,
-          "Index": 95
+          "Line": 3,
+          "Column": 1,
+          "Index": 27
         },
         "End": {
-          "Line": 5,
-          "Column": 8,
-          "Index": 99
+          "Line": 3,
+          "Column": 5,
+          "Index": 31
         }
       },
-      "Type": {
-        "Params": [
-          {
-            "Name": {
-              "Name": "io",
-              "Start": {
-                "Line": 6,
-                "Column": 5,
-                "Index": 106
-              },
-              "End": {
-                "Line": 6,
-                "Column": 7,
-                "Index": 108
-              }
-            },
-            "Type": {
-              "Name": "println",
-              "Start": {
-                "Line": 6,
-                "Column": 9,
-                "Index": 110
-              },
-              "End": {
-                "Line": 6,
-                "Column": 16,
-                "Index": 117
-              }
-            },
-            "Value": null,
-            "IsVariadic": false,
-            "Start": {
-              "Line": 6,
-              "Column": 5,
-              "Index": 106
-            },
-            "End": {
-              "Line": 6,
-              "Column": 16,
-              "Index": 117
-            }
-          },
-          {
-            "Name": {
-              "Name": "\u003cerror\u003e",
-              "Start": null,
-              "End": null
-            },
-            "Type": {
-              "Start": {
-                "Line": 6,
-                "Column": 33,
-                "Index": 134
-              },
-              "End": {
-                "Line": 6,
-                "Column": 33,
-                "Index": 134
-              }
-            },
-            "Value": null,
-            "IsVariadic": false,
-            "Start": null,
-            "End": {
-              "Line": 6,
-              "Column": 33,
-              "Index": 134
-            }
-          }
-        ],
-        "Result": null,
+      "Rhs": {
+        "Kind": 0,
+        "Value": "12",
         "Start": {
-          "Line": 5,
+          "Line": 3,
           "Column": 8,
-          "Index": 99
+          "Index": 34
         },
         "End": {
-          "Line": 6,
-          "Column": 34,
-          "Index": 135
+          "Line": 3,
+          "Column": 10,
+          "Index": 36
         }
       },
-      "Body": null,
       "Start": {
-        "Line": 5,
+        "Line": 3,
         "Column": 1,
-        "Index": 92
+        "Index": 27
       },
       "End": {
-        "Line": 6,
-        "Column": 34,
-        "Index": 135
+        "Line": 3,
+        "Column": 11,
+        "Index": 37
       }
     }
   ],

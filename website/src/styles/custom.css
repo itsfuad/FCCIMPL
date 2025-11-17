@@ -147,19 +147,36 @@ footer:not(.custom-footer) .meta {
 
 footer:not(.custom-footer) .pagination-links {
   margin-top: 0 !important;
-  padding-top: 0 !important;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: row;
+  border-top: 2px solid #24292e;
 }
 
 /* Pagination link cards - solid backgrounds */
 .pagination-links a {
-  background: var(--sl-color-bg-sidebar) !important;
-  border: 1px solid var(--neutral) !important;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  width: max-content;
 }
 
-.pagination-links a:hover {
-  border-color: var(--neutral-hover) !important;
+.pagination-links a svg {
+  display: none;
 }
 
+.pagination-links span:first-of-type {
+  color: grey;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.pagination-links .link-title {
+  font-size: 0.8rem !important;
+  color: var(--accent-color) !important;
+  text-decoration: underline;
+  text-transform: capitalize !important;
+}
 /* Decorative element on the side */
 .right-sidebar::before {
   content: '';
@@ -252,6 +269,49 @@ header a[href="/"] {
   border-radius: 0.5rem;
   padding: 1rem;
   overflow-x: auto;
+}
+
+/* Fix alignment of copy buttons in expressive-code blocks */
+.expressive-code {
+    position: relative; /* Ensure positioning context for the copy button */
+}
+
+.expressive-code .copy {
+    position: absolute; /* Position the copy container within the expressive-code block */
+    top: 0.5rem; /* Adjust vertical alignment */
+    right: 0.5rem; /* Adjust horizontal alignment */
+}
+
+.expressive-code .copy button {
+    padding: 2px 2px; /* Reduce padding for smaller size */
+    font-size: 0.2rem; /* Adjust font size */
+    border-radius: 5px;
+    width: 25px;
+    height: 25px;
+    border: none !important;
+    background: var(--background); /* Match theme */
+    color: var(--foreground); /* Match text color */
+}
+
+.expressive-code .copy .feedback {
+  position: absolute;
+  top: 0px;
+  right: 2rem;
+  font-size: 0.75rem;
+  color: var(--foreground);
+  background: var(--accent-color);
+}
+
+.expressive-code .copy .feedback::after {
+  border-color: transparent transparent transparent var(--accent-color);
+}
+
+.expressive-code .copy button * {
+  font-size: 0.2rem !important;
+}
+
+.expressive-code .copy button:hover {
+    background: var(--muted); /* Highlight on hover */
 }
 
 /* View Transitions */

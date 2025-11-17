@@ -1,8 +1,3 @@
----
-// Ferret Language Playground Component
-// Uses Monaco Editor (VS Code's editor) via CDN
----
-
 <div class="playground-container">
   <!-- Header with macOS-style dots and actions -->
   <div class="playground-header">
@@ -16,11 +11,13 @@
     </div>
     <div class="playground-actions">
       <button id="copy-btn" class="icon-button" title="Copy Code">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-        <span>Copy</span>
+        <span class="copyicon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </span>
+        <span class="copytext">Copy</span>
       </button>
       <button id="export-btn" class="icon-button" title="Export Code">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -49,7 +46,9 @@
   <!-- Main content area with resizable panels -->
   <div class="playground-content">
     <div class="editor-panel">
-      <div id="editor" class="editor"></div>
+      <div id="editor" class="editor">
+
+      </div>
       <div class="editor-footer">
         <span id="output-info">Ln 1, Col 1</span>
         <span>UTF-8</span>
@@ -78,13 +77,20 @@
   </div>
 </div>
 
-<!-- Monaco Editor CDN -->
-<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
-
 <!-- Go WASM Support -->
-<script is:inline src="/wasm_exec.js"></script>
+<script defer is:inline src="/wasm_exec.js"></script>
 
-<script is:inline>
+<script>
+import * as monaco from 'monaco-editor';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+
+// Setup Monaco environment
+self.MonacoEnvironment = {
+  getWorker() {
+    return new editorWorker();
+  }
+};
+
 // Initialize Go WASM
 let wasmReady = false;
 let wasmGo = null;
@@ -143,12 +149,8 @@ async function initWasm() {
 // Initialize WASM on page load
 initWasm();
 
-// Monaco Editor initialization
-require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
-
-require(['vs/editor/editor.main'], function() {
-  // Register Ferret language
-  monaco.languages.register({ id: 'ferret' });
+// Register Ferret language
+monaco.languages.register({ id: 'ferret' });
 
   // Define Ferret syntax highlighting
   monaco.languages.setMonarchTokensProvider('ferret', {
@@ -303,13 +305,8 @@ require(['vs/editor/editor.main'], function() {
   
   // Create Monaco Editor instance with ABSOLUTE MINIMAL configuration
   const defaultCode = [
-    '// Welcome to Ferret Playground!',
-    '// Try writing some Ferret code here',
-    'import "std/io";',
-    '',
-    'fn main() {',
-    '    io::println("Hello, Ferret!");',
-    '}'
+    'let name := "Ferret";',
+    'name = 10;'
   ].join('\n');
   
   const editor = monaco.editor.create(editorContainer, {
@@ -435,14 +432,26 @@ require(['vs/editor/editor.main'], function() {
   document.getElementById('copy-btn').addEventListener('click', function() {
     const code = editor.getValue();
     navigator.clipboard.writeText(code).then(() => {
-      const btn = this;
-      const originalHTML = btn.innerHTML;
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Copied!</span>';
-      btn.style.color = '#10b981';
+      const btnIcon = this.querySelector('.copyicon');
+      const btnText = this.querySelector('.copytext');
+      console.log(btnIcon, btnText);
+      const originalBtnHTML = btnIcon.innerHTML;
+      const originalText = btnText.textContent;
+      // Show checkmark icon in green
+      btnIcon.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      `;
+      btnText.textContent = 'Copied';
+      this.style.color = '#10b981';
+      this.disabled = true;
       setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.style.color = '';
-      }, 2000);
+        btnIcon.innerHTML = originalBtnHTML;
+        btnText.textContent = originalText;
+        this.style.color = '';
+        this.disabled = false;
+      }, 1200);
     });
   });
 
@@ -487,24 +496,24 @@ require(['vs/editor/editor.main'], function() {
 
   document.addEventListener('mousemove', (e) => {
     if (!isResizing) return;
-    
+
     const deltaX = e.clientX - startX;
     const containerWidth = playgroundContent.offsetWidth;
-    const newEditorWidth = startEditorWidth + deltaX;
-    
-    // Set min/max constraints (30% - 70% of container)
-    const minWidth = containerWidth * 0.3;
-    const maxWidth = containerWidth * 0.7;
-    
-    if (newEditorWidth >= minWidth && newEditorWidth <= maxWidth) {
-      const editorPercent = (newEditorWidth / containerWidth) * 100;
-      editorPanel.style.flex = `0 0 ${editorPercent}%`;
-      outputPanel.style.flex = `0 0 ${100 - editorPercent}%`;
-      
-      // Force Monaco to recalculate layout
-      editor.layout();
-    }
+    let newEditorWidth = startEditorWidth + deltaX;
+
+    // Clamp between 40% and 60% of container width
+    const minWidth = containerWidth * 0.4;
+    const maxWidth = containerWidth * 0.6;
+    newEditorWidth = Math.max(minWidth, Math.min(maxWidth, newEditorWidth));
+
+    const editorPercent = (newEditorWidth / containerWidth) * 100;
+    editorPanel.style.flex = `0 0 ${editorPercent}%`;
+    outputPanel.style.flex = `0 0 ${100 - editorPercent}%`;
+
+    // Force Monaco to recalculate layout
+    editor.layout();
   });
+
 
   document.addEventListener('mouseup', () => {
     if (isResizing) {
@@ -513,7 +522,6 @@ require(['vs/editor/editor.main'], function() {
       document.body.style.userSelect = '';
     }
   });
-});
 </script>
 
 <style>
@@ -632,7 +640,21 @@ require(['vs/editor/editor.main'], function() {
     display: block;
   }
 
-  .icon-button span {
+  .icon-button .copyicon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+  }
+
+  .icon-button .copyicon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .icon-button .copytext,
+  .icon-button > span {
     display: block;
     line-height: 1;
   }
@@ -684,7 +706,7 @@ require(['vs/editor/editor.main'], function() {
   .playground-content {
     display: flex;
     flex-direction: row; /* Horizontal on desktop */
-    height: 650px;
+    height: 100%;
     position: relative;
   }
 
@@ -997,7 +1019,8 @@ require(['vs/editor/editor.main'], function() {
       height: 14px;
     }
 
-    .icon-button span {
+    .icon-button .copytext,
+    .icon-button span:not(.copyicon) {
       display: none;
     }
 
@@ -1009,13 +1032,15 @@ require(['vs/editor/editor.main'], function() {
     .playground-content {
       flex-direction: column !important;
       height: auto;
+      flex: 1;
+      min-height: 0;
     }
 
     .editor-panel {
-      min-height: 300px;
-      height: 400px;
+      height: 50%;
       min-width: unset !important;
-      flex: none !important;
+      flex: 0 0 auto !important;
+      min-height: 0;
     }
 
     /* Hide resize handle on mobile */
@@ -1026,9 +1051,11 @@ require(['vs/editor/editor.main'], function() {
     .output-panel {
       width: 100% !important;
       min-width: unset !important;
-      flex: none !important;
+      flex: 1 !important;
+      min-height: 0;
       border-left: none;
       border-top: 1px solid rgba(0, 0, 0, 0.08);
+      overflow: hidden;
     }
 
     :global([data-theme='dark']) .output-panel {
@@ -1038,6 +1065,8 @@ require(['vs/editor/editor.main'], function() {
 
     .output-content {
       font-size: 0.75rem;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
   }
 

@@ -99,7 +99,7 @@ func (c *Checker) checkVarDecl(decl *ast.VarDecl) semantics.Type {
 			// If type was explicitly specified, check compatibility
 			if sym.Type != nil {
 				if !c.isAssignable(sym.Type, valueType) {
-					c.reportAssignmentError(sym.Type, valueType, item.Value.Loc(), item.Name.Loc(), "variable")
+					c.reportAssignmentError(sym.Type, valueType, item.Value.Loc(), item.Name.Loc())
 				}
 			} else {
 				// Type inference: set symbol type from initializer
@@ -159,7 +159,7 @@ func (c *Checker) checkAssignStmt(stmt *ast.AssignStmt) semantics.Type {
 	// Check if assignment is valid
 	if lhsType != nil && rhsType != nil {
 		if !c.isAssignable(lhsType, rhsType) {
-			c.reportAssignmentError(lhsType, rhsType, stmt.Rhs.Loc(), stmt.Lhs.Loc(), "target")
+			c.reportAssignmentError(lhsType, rhsType, stmt.Rhs.Loc(), stmt.Lhs.Loc())
 		}
 	}
 
@@ -762,10 +762,9 @@ func (c *Checker) typeString(t semantics.Type) string {
 }
 
 // reportAssignmentError reports a type mismatch error with helpful context
-func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type, valueLoc, declLoc *source.Location, context string) {
-	mainMessage := fmt.Sprintf("cannot assign value of type %s to %s of type %s",
+func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type, valueLoc, declLoc *source.Location) {
+	mainMessage := fmt.Sprintf("cannot assign value of type %s to symbol of type %s",
 		c.typeString(actualType),
-		context,
 		c.typeString(expectedType))
 
 	// Check if it's an optional type mismatch and provide helpful note
@@ -783,7 +782,7 @@ func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type,
 	} else if _, actualIsNone := actualType.(*semantics.NoneType); actualIsNone {
 		// Trying to assign none to non-optional
 		note = "'none' can only be assigned to optional types"
-		help = fmt.Sprintf("change %s type to %s?", context, c.typeString(expectedType))
+		help = fmt.Sprintf("change symbol type to %s?", c.typeString(expectedType))
 	}
 
 	diag := diagnostics.NewError(mainMessage).
@@ -791,7 +790,7 @@ func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type,
 		WithPrimaryLabel(c.currentFile, valueLoc,
 			fmt.Sprintf("expression has type %s", c.typeString(actualType))).
 		WithSecondaryLabel(c.currentFile, declLoc,
-			fmt.Sprintf("%s has type %s", context, c.typeString(expectedType)))
+			fmt.Sprintf("symbol has type %s", c.typeString(expectedType)))
 
 	if note != "" {
 		diag = diag.WithNote(note)

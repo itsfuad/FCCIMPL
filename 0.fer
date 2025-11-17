@@ -1,7 +1,3 @@
-// Welcome to Ferret Playground!
-// Try writing some Ferret code here
-import "std/io";
+const name := "ferret";
 
-fn main(
-    io::println("Hello, Ferret!");
-}
+name = 12;

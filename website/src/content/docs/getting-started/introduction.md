@@ -1,6 +1,8 @@
 ---
 title: Introduction to Ferret
 description: Learn about Ferret, a modern type-safe programming language
+editUrl: false
+lastUpdated: false
 ---
 
 

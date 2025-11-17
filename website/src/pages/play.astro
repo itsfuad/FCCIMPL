@@ -1,11 +1,23 @@
 ---
 // Dedicated Playground page - completely standalone
-import Playground from '../components/Playground.astro';
-import Navbar from '../components/Navbar.astro';
 import '../styles/custom.css';
+import Navbar from '../components/Navbar.astro';
+import Playground from '../components/Playground.astro';
 
 const pageTitle = 'Ferret Playground';
 ---
+
+<script is:inline>
+    const parseTheme = (theme) => theme === 'light' ? 'light' : 'dark';
+
+    function setTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+    }
+
+    // Initialize theme from localStorage
+    const savedTheme = parseTheme(localStorage.getItem('starlight-theme'));
+    setTheme(savedTheme);
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,6 +65,15 @@ const pageTitle = 'Ferret Playground';
         @media (max-width: 768px) {
             .playground-wrapper {
                 padding: 1rem;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .playground-wrapper :global(.playground-container) {
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
             }
         }
     </style>
@@ -60,7 +81,6 @@ const pageTitle = 'Ferret Playground';
 <body>
     <div class="page-container">
         <Navbar {...Astro.props} showSearch={false} />
-        
         <div class="playground-wrapper">
             <Playground />
         </div>
