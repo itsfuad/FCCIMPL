@@ -66,7 +66,6 @@ func (db *DiagnosticBag) Diagnostics() []*Diagnostic {
 	return db.diagnostics
 }
 
-// EmitAll emits all diagnostics to stderr
 func (db *DiagnosticBag) EmitAll() {
 	emitter := NewEmitter()
 
@@ -91,13 +90,13 @@ func (db *DiagnosticBag) printSummary() {
 	defer db.mu.Unlock()
 
 	if db.errorCount > 0 {
-		fmt.Fprintf(os.Stderr, "\nCompilation failed with %d error(s)", db.errorCount)
+		fmt.Fprintf(os.Stdout, "\nCompilation failed with %d error(s)", db.errorCount)
 		if db.warnCount > 0 {
-			fmt.Fprintf(os.Stderr, " and %d warning(s)", db.warnCount)
+			fmt.Fprintf(os.Stdout, " and %d warning(s)", db.warnCount)
 		}
-		fmt.Fprintln(os.Stderr)
+		fmt.Println()
 	} else if db.warnCount > 0 {
-		fmt.Fprintf(os.Stderr, "\nCompilation succeeded with %d warning(s)\n", db.warnCount)
+		fmt.Fprintf(os.Stdout, "\nCompilation succeeded with %d warning(s)\n", db.warnCount)
 	}
 }
 

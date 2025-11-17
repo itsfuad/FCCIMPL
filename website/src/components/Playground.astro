@@ -36,11 +36,12 @@
         </svg>
         <span>Clear</span>
       </button>
-      <button id="run-btn" class="icon-button run-button" title="Run Code">
+      <button id="run-btn" class="icon-button run-button" title="Run Code (Ctrl+Enter)">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M8 5v14l11-7z"/>
         </svg>
         <span>Run</span>
+        <span class="shortcut-hint">Ctrl+↵</span>
       </button>
     </div>
   </div>
@@ -65,13 +66,13 @@
     <div class="output-panel">
       <div class="output-header">
         <span>Output</span>
-        <span id="output-status" class="output-status">
+        <span id="output-status" class="output-status" data-status="ready">
           <span class="status-dot"></span>
-          Ready
+          <span class="status-text">Ready</span>
         </span>
       </div>
       <div id="output" class="output-content">
-        <p class="output-placeholder">✓ Ready to run your code...</p>
+        <p class="output-placeholder">✓ Ready to run your code...<br><span class="keyboard-tip">💡 Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run</span></p>
       </div>
     </div>
   </div>
@@ -263,6 +264,11 @@ fn main() {
     document.getElementById('output-info').textContent = `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
   });
 
+  // Add keyboard shortcut: Ctrl+Enter to run code
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+    document.getElementById('run-btn').click();
+  });
+
   // Theme change listener
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -283,11 +289,13 @@ fn main() {
     const code = editor.getValue();
     const output = document.getElementById('output');
     const status = document.getElementById('output-status');
+    const statusText = status.querySelector('.status-text');
     const runBtn = this;
     
     // Disable button and show running state
     runBtn.disabled = true;
-    status.innerHTML = '<span class="status-dot status-running"></span>Running...';
+    status.setAttribute('data-status', 'running');
+    statusText.textContent = 'Running...';
     output.innerHTML = '<p class="output-info">⏳ Compiling and running your code...</p>';
     
     try {
@@ -318,23 +326,43 @@ fn main() {
       }
 
       if (result.success) {
-        status.innerHTML = '<span class="status-dot status-ready"></span>Success';
-        output.innerHTML = `<pre style="margin: 0; color: #10b981;">${escapeHtml(result.output)}</pre>`;
+        status.setAttribute('data-status', 'success');
+        statusText.textContent = 'Success';
+        // Use HTML output if available, otherwise escape plain text
+        if (result.html) {
+          output.innerHTML = `<pre style="margin: 0;">${result.html}</pre>`;
+        } else {
+          output.innerHTML = `<pre style="margin: 0; color: #10b981;">${escapeHtml(result.output)}</pre>`;
+        }
       } else {
-        status.innerHTML = '<span class="status-dot" style="background: #ef4444;"></span>Error';
-        output.innerHTML = `<pre style="margin: 0; color: #ef4444;">${escapeHtml(result.error || 'Unknown error')}</pre>`;
+        status.setAttribute('data-status', 'error');
+        statusText.textContent = 'Error';
+        // Use HTML error if available, otherwise escape plain text
+        if (result.errorHtml) {
+          output.innerHTML = `<pre style="margin: 0;">${result.errorHtml}</pre>`;
+        } else {
+          output.innerHTML = `<pre style="margin: 0; color: #ef4444;">${escapeHtml(result.error || 'Unknown error')}</pre>`;
+        }
+        // Add additional output if present
         if (result.output) {
-          output.innerHTML += `<pre style="margin-top: 1rem; color: #6b7280;">${escapeHtml(result.output)}</pre>`;
+          if (result.outputHtml) {
+            output.innerHTML += `<pre style="margin-top: 1rem;">${result.outputHtml}</pre>`;
+          } else {
+            output.innerHTML += `<pre style="margin-top: 1rem; color: #6b7280;">${escapeHtml(result.output)}</pre>`;
+          }
         }
       }
     } catch (error) {
-      status.innerHTML = '<span class="status-dot" style="background: #ef4444;"></span>Error';
+      status.setAttribute('data-status', 'error');
+      statusText.textContent = 'Error';
       output.innerHTML = `<p style="color: #ef4444;">❌ ${escapeHtml(error.message)}</p>`;
     } finally {
       runBtn.disabled = false;
       setTimeout(() => {
-        if (status.innerHTML.includes('Success') || status.innerHTML.includes('Error')) {
-          status.innerHTML = '<span class="status-dot status-ready"></span>Ready';
+        const currentStatus = status.getAttribute('data-status');
+        if (currentStatus === 'success' || currentStatus === 'error') {
+          status.setAttribute('data-status', 'ready');
+          statusText.textContent = 'Ready';
         }
       }, 3000);
     }
@@ -552,6 +580,13 @@ fn main() {
     line-height: 1;
   }
 
+  .shortcut-hint {
+    font-size: 0.6875rem;
+    opacity: 0.7;
+    font-weight: 400;
+    margin-left: 0.25rem;
+  }
+
   /* 
   - Run button background: black, color: white in light mode; background: white, color: black in dark mode 
   - Other button has no outline or border color. Just have hover color for background. Color: white on in dark mode, black in light mode
@@ -747,16 +782,25 @@ fn main() {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #10b981;
+    background: #10b981; /* Default green for ready */
   }
 
-  .status-running {
-    background: #f59e0b;
+  /* Status colors based on data attribute */
+  .output-status[data-status="ready"] .status-dot {
+    background: #10b981; /* Green */
+  }
+
+  .output-status[data-status="running"] .status-dot {
+    background: #f59e0b; /* Orange */
     animation: pulse 1.5s ease-in-out infinite;
   }
 
-  .status-ready {
-    background: #10b981;
+  .output-status[data-status="success"] .status-dot {
+    background: #06b6d4; /* Cyan */
+  }
+
+  .output-status[data-status="error"] .status-dot {
+    background: #ef4444; /* Red */
   }
 
   @keyframes pulse {
@@ -784,12 +828,36 @@ fn main() {
 
   .output-placeholder {
     color: #9ca3af;
-    font-style: italic;
     margin: 0;
   }
 
   :global([data-theme='dark']) .output-placeholder {
     color: #6b7280;
+  }
+
+  .keyboard-tip {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    opacity: 0.8;
+  }
+
+  .keyboard-tip kbd {
+    display: inline-block;
+    padding: 0.125rem 0.375rem;
+    font-size: 0.6875rem;
+    font-family: 'Consolas', 'Monaco', monospace;
+    background: rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    margin: 0 0.125rem;
+  }
+
+  :global([data-theme='dark']) .keyboard-tip kbd {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
   }
 
   .output-info {
@@ -873,6 +941,10 @@ fn main() {
     }
 
     .icon-button span {
+      display: none;
+    }
+
+    .shortcut-hint {
       display: none;
     }
 

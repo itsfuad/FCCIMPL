@@ -84,7 +84,6 @@ func NewEmitter() *Emitter {
 	}
 }
 
-// Emit renders and prints a diagnostic to stderr
 func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
 	// Use filepath from diagnostic if available, otherwise use parameter
 	if diag.FilePath != "" {
@@ -151,7 +150,7 @@ func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
 		e.printHelp(diag.Help)
 	}
 
-	fmt.Fprintln(os.Stderr)
+	fmt.Println()
 }
 
 func (e *Emitter) printHeader(diag *Diagnostic) {
@@ -175,9 +174,9 @@ func (e *Emitter) printHeader(diag *Diagnostic) {
 
 	color.Print(severityStr)
 	if diag.Code != "" {
-		fmt.Fprintf(os.Stderr, "[%s]", diag.Code)
+		fmt.Fprintf(os.Stdout, "[%s]", diag.Code)
 	}
-	fmt.Fprint(os.Stderr, ": ")
+	fmt.Fprint(os.Stdout, ": ")
 	color.Println(diag.Message)
 }
 
@@ -249,7 +248,7 @@ func (e *Emitter) printSingleLineLabel(ctx labelContext) {
 
 	// Print line number and source (line number in grey)
 	colors.GREY.Printf(STR_MULTIPLIER, ctx.lineNumWidth, ctx.line)
-	fmt.Fprintln(os.Stderr, sourceLine)
+	fmt.Println(sourceLine)
 
 	// Print underline
 	colors.GREY.Print(strings.Repeat(" ", ctx.lineNumWidth))
@@ -292,14 +291,14 @@ func (e *Emitter) printSingleLineLabel(ctx labelContext) {
 	}
 
 	// Print padding and underline
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", padding))
+	fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
 	underlineColor.Print(strings.Repeat(underlineChar, length))
 
 	// Print label message (only if not empty)
 	if ctx.label.Message != "" {
 		underlineColor.Printf(" %s", ctx.label.Message)
 	}
-	fmt.Fprintln(os.Stderr)
+	fmt.Println()
 
 	// Print separator
 	colors.GREY.Print(strings.Repeat(" ", ctx.lineNumWidth))
@@ -314,7 +313,7 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 	}
 
 	colors.BLUE.Printf(STR_MULTIPLIER, ctx.lineNumWidth, ctx.startLine)
-	fmt.Fprintln(os.Stderr, sourceLine)
+	fmt.Println(sourceLine)
 
 	// Print underline for start
 	colors.BLUE.Print(strings.Repeat(" ", ctx.lineNumWidth))
@@ -340,7 +339,7 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 	}
 
 	padding := ctx.startCol - 1
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", padding))
+	fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
 	underlineColor.Println("^--- error starts here")
 
 	// Print ellipsis for middle lines if there are many
@@ -355,7 +354,7 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 				continue
 			}
 			colors.BLUE.Printf(STR_MULTIPLIER, ctx.lineNumWidth, i)
-			fmt.Fprintln(os.Stderr, line)
+			fmt.Println(line)
 		}
 	}
 
@@ -363,19 +362,19 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 	endSourceLine, err := e.cache.GetLine(ctx.filepath, ctx.endLine)
 	if err == nil {
 		colors.BLUE.Printf(STR_MULTIPLIER, ctx.lineNumWidth, ctx.endLine)
-		fmt.Fprintln(os.Stderr, endSourceLine)
+		fmt.Println(endSourceLine)
 
 		// Print underline for end
 		colors.BLUE.Print(strings.Repeat(" ", ctx.lineNumWidth))
 		colors.BLUE.Print(" | ")
 		endPadding := ctx.endCol - 1
-		fmt.Fprint(os.Stderr, strings.Repeat(" ", endPadding))
+		fmt.Fprint(os.Stdout, strings.Repeat(" ", endPadding))
 		underlineColor.Print("^")
 
 		if ctx.label.Message != "" {
 			underlineColor.Printf(" %s", ctx.label.Message)
 		}
-		fmt.Fprintln(os.Stderr)
+		fmt.Println()
 	}
 
 	// Print separator
@@ -385,12 +384,12 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 
 func (e *Emitter) printNote(note Note) {
 	colors.CYAN.Print("  = note: ")
-	fmt.Fprintln(os.Stderr, note.Message)
+	fmt.Println(note.Message)
 }
 
 func (e *Emitter) printHelp(help string) {
 	colors.GREEN.Print("  = help: ")
-	fmt.Fprintln(os.Stderr, help)
+	fmt.Println(help)
 }
 
 // printCompactDualLabel prints two labels on same line (Rust-style)
@@ -462,7 +461,7 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 
 	// Print line number and source
 	colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, line)
-	fmt.Fprintln(os.Stderr, sourceLine)
+	fmt.Println(sourceLine)
 
 	// Calculate positions
 	leftPadding := leftStart.Column - 1
@@ -516,35 +515,35 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 	colors.GREY.Print(" | ")
 
 	// Left label first
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	fmt.Fprint(os.Stdout, strings.Repeat(" ", leftPadding))
 	leftColor.Print(strings.Repeat(leftChar, leftLength))
 
 	// Space between labels
 	spaceBetween := rightPadding - leftPadding - leftLength
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", spaceBetween))
+	fmt.Fprint(os.Stdout, strings.Repeat(" ", spaceBetween))
 
 	// Right label with inline message
 	rightColor.Print(strings.Repeat(rightChar, rightLength))
 	if rightLabel.Message != "" {
 		rightColor.Printf(" %s", rightLabel.Message)
 	}
-	fmt.Fprintln(os.Stderr)
+	fmt.Println()
 
 	// Line 2: Show vertical connector for left label
 	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
 	colors.GREY.Print(" | ")
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	fmt.Fprint(os.Stdout, strings.Repeat(" ", leftPadding))
 	leftColor.Println("|")
 
 	// Line 3: Show left label message with -- prefix (always dashes for connector)
 	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
 	colors.GREY.Print(" | ")
-	fmt.Fprint(os.Stderr, strings.Repeat(" ", leftPadding))
+	fmt.Fprint(os.Stdout, strings.Repeat(" ", leftPadding))
 	leftColor.Print("--") // Always use -- for connector message, regardless of style
 	if leftLabel.Message != "" {
 		leftColor.Printf(" %s", leftLabel.Message)
 	}
-	fmt.Fprintln(os.Stderr)
+	fmt.Println()
 
 	// Print separator
 	colors.GREY.Print(strings.Repeat(" ", lineNumWidth))
@@ -639,7 +638,7 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 
 		// Print line number and source
 		colors.GREY.Printf(STR_MULTIPLIER, lineNumWidth, lineNum)
-		fmt.Fprintln(os.Stderr, sourceLine)
+		fmt.Println(sourceLine)
 
 		// Check for secondaries on this line first
 		hasSecondary := false
@@ -677,12 +676,12 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 					char = "~"
 				}
 
-				fmt.Fprint(os.Stderr, strings.Repeat(" ", padding))
+				fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
 				primaryColor.Print(strings.Repeat(char, length))
 				if primary.Message != "" {
 					primaryColor.Printf(" %s", primary.Message)
 				}
-				fmt.Fprintln(os.Stderr)
+				fmt.Println()
 			} else if hasSecondary {
 				// Print secondary labels if on this line (and primary is not)
 				for _, sec := range secondaries {
@@ -699,12 +698,12 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 							length = 1
 						}
 
-						fmt.Fprint(os.Stderr, strings.Repeat(" ", padding))
+						fmt.Fprint(os.Stdout, strings.Repeat(" ", padding))
 						secondaryColor.Print(strings.Repeat("-", length))
 						if sec.Message != "" {
 							secondaryColor.Printf(" %s", sec.Message)
 						}
-						fmt.Fprintln(os.Stderr)
+						fmt.Println()
 						// Only print first secondary on this line
 						break
 					}

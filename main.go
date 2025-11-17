@@ -23,7 +23,7 @@ func main() {
 
 	// Validate arguments
 	if flag.NArg() < 1 {
-		fmt.Fprintf(os.Stderr, "Usage: %s [--debug] <file.fer>\n", filepath.Base(os.Args[0]))
+		fmt.Fprintf(os.Stdout, "Usage: %s [--debug] <file.fer>\n", filepath.Base(os.Args[0]))
 		os.Exit(1)
 	}
 
@@ -40,7 +40,7 @@ func main() {
 	// Run compilation pipeline
 	if err := ctx.Compile(filename); err != nil {
 		ctx.EmitDiagnostics()
-		fmt.Fprintf(os.Stderr, "\nCompilation failed: %v\n", err)
+		fmt.Fprintf(os.Stdout, "\nCompilation failed: %v\n", err)
 		os.Exit(1)
 	}
 
