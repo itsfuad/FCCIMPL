@@ -81,26 +81,20 @@
 <script defer is:inline src="/wasm_exec.js"></script>
 
 <script>
-// Load Monaco Editor from CDN
-const script = document.createElement('script');
-script.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js';
-script.onload = function() {
-  // Configure RequireJS for Monaco
-  require.config({
-    paths: {
-      'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs'
-    }
-  });
 
-  // Load Monaco and initialize
-  require(['vs/editor/editor.main'], function() {
-    initMonaco();
-  });
+import * as monaco from 'monaco-editor';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+
+// Setup Monaco environment
+self.MonacoEnvironment = {
+  getWorker() {
+    return new editorWorker();
+  }
 };
-document.head.appendChild(script);
 
-// Monaco initialization function
-function initMonaco() {
+// Initialize Go WASM
+let wasmReady = false;
+let wasmGo = null;
 
 async function initWasm() {
   try {
@@ -591,14 +585,7 @@ monaco.languages.register({ id: 'ferret' });
       document.body.style.userSelect = '';
     }
   });
-} // End of initMonaco function
 
-// Initialize Go WASM
-let wasmReady = false;
-let wasmGo = null;
-
-// Initialize WASM on page load
-initWasm();
 </script>
 
 <style>

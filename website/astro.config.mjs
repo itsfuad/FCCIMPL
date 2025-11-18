@@ -14,7 +14,7 @@ export default defineConfig({
     experimental: {
         clientPrerender: true,
     },
-    // Disable Starlight's built-in 404 to use custom one
+
     trailingSlash: 'ignore',
     integrations: [
         starlight({
