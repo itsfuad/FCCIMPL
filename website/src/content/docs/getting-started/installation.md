@@ -3,11 +3,6 @@ title: Installation
 description: How to install and set up Ferret
 ---
 
-## Prerequisites
-
-Before installing Ferret, make sure you have:
-- Go 1.21 or later (for building from source)
-
 ## Building from Source
 
 Currently, Ferret is best installed by building from source:
@@ -23,6 +18,11 @@ git checkout tc
 # Build the compiler
 go build -o bin/ferret.exe .
 ```
+
+:::note
+Before installing Ferret, make sure you have:
+- Go 1.21 or later (for building from source)
+:::
 
 ## Verify Installation
 
