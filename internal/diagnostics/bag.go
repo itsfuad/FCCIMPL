@@ -205,3 +205,37 @@ func (db *DiagnosticBag) Clear() {
 	db.errorCount = 0
 	db.warnCount = 0
 }
+
+// Size returns the current number of diagnostics
+// This is used by the parser fork system to track diagnostic state
+func (db *DiagnosticBag) Size() int {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	return len(db.diagnostics)
+}
+
+// Truncate removes diagnostics after the given size
+// This is used by the parser fork system to rollback diagnostics
+// when restoring to a previous state
+func (db *DiagnosticBag) Truncate(size int) {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	
+	if size < 0 || size > len(db.diagnostics) {
+		return
+	}
+	
+	// Recalculate error and warning counts
+	db.errorCount = 0
+	db.warnCount = 0
+	for i := 0; i < size; i++ {
+		switch db.diagnostics[i].Severity {
+		case Error:
+			db.errorCount++
+		case Warning:
+			db.warnCount++
+		}
+	}
+	
+	db.diagnostics = db.diagnostics[:size]
+}
