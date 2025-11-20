@@ -1,0 +1,60 @@
+// Simple test cases from the problem statement
+
+type T struct {
+    .field: i32
+};
+
+type S struct {
+    .a: i32,
+    .b: i32
+};
+
+// Test: Empty composite literal
+fn test1() {
+    let x := T{};
+}
+
+// Test: Composite literal with qualified name
+fn test2() {
+    let y := pkg::Type{};
+}
+
+// Test: Composite literal with fields
+fn test3() {
+    let z := S{.a = 1, .b = 2};
+}
+
+// Test: Simple block
+fn test4() {
+    if 1 {
+        let dummy := 0;
+    }
+}
+
+// Test: For loop (if implemented)
+// fn test5() {
+//     for 1 {
+//         let dummy := 0;
+//     }
+// }
+
+// Test: Ambiguous - composite literal then block
+fn test6() {
+    if T{} {
+        let dummy := 1;
+    }
+}
+
+// Test: Nested composite in if
+fn test7() {
+    if T{ .field = 5 } {
+        let result := T{};
+    }
+}
+
+// Test: Unknown type (undefined)
+fn test8() {
+    if MaybeType{} {
+        let result := 2;
+    }
+}

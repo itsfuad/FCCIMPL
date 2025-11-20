@@ -1,0 +1,1491 @@
+{
+  "FullPath": "/home/runner/work/FCCIMPL/FCCIMPL/tests/test_fork_edge_cases.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "T",
+        "Start": {
+          "Line": 3,
+          "Column": 6,
+          "Index": 28
+        },
+        "End": {
+          "Line": 3,
+          "Column": 7,
+          "Index": 29
+        }
+      },
+      "Type": {
+        "Fields": [
+          {
+            "Name": {
+              "Name": "x",
+              "Start": {
+                "Line": 4,
+                "Column": 6,
+                "Index": 44
+              },
+              "End": {
+                "Line": 4,
+                "Column": 7,
+                "Index": 45
+              }
+            },
+            "Type": {
+              "Name": "i32",
+              "Start": {
+                "Line": 4,
+                "Column": 9,
+                "Index": 47
+              },
+              "End": {
+                "Line": 4,
+                "Column": 12,
+                "Index": 50
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 3,
+          "Column": 8,
+          "Index": 30
+        },
+        "End": {
+          "Line": 5,
+          "Column": 2,
+          "Index": 52
+        }
+      },
+      "Start": {
+        "Line": 3,
+        "Column": 1,
+        "Index": 23
+      },
+      "End": {
+        "Line": 5,
+        "Column": 3,
+        "Index": 53
+      }
+    },
+    {
+      "Name": {
+        "Name": "test_regular_cond",
+        "Start": {
+          "Line": 8,
+          "Column": 4,
+          "Index": 109
+        },
+        "End": {
+          "Line": 8,
+          "Column": 21,
+          "Index": 126
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 8,
+          "Column": 21,
+          "Index": 126
+        },
+        "End": {
+          "Line": 8,
+          "Column": 23,
+          "Index": 128
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "flag",
+                  "Start": {
+                    "Line": 9,
+                    "Column": 9,
+                    "Index": 139
+                  },
+                  "End": {
+                    "Line": 9,
+                    "Column": 13,
+                    "Index": 143
+                  }
+                },
+                "Type": null,
+                "Value": {
+                  "Kind": 0,
+                  "Value": "1",
+                  "Start": {
+                    "Line": 9,
+                    "Column": 17,
+                    "Index": 147
+                  },
+                  "End": {
+                    "Line": 9,
+                    "Column": 18,
+                    "Index": 148
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 9,
+              "Column": 5,
+              "Index": 135
+            },
+            "End": {
+              "Line": 9,
+              "Column": 19,
+              "Index": 149
+            }
+          },
+          {
+            "Cond": {
+              "Name": "flag",
+              "Start": {
+                "Line": 10,
+                "Column": 8,
+                "Index": 157
+              },
+              "End": {
+                "Line": 10,
+                "Column": 12,
+                "Index": 161
+              }
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Decls": [
+                    {
+                      "Name": {
+                        "Name": "x",
+                        "Start": {
+                          "Line": 11,
+                          "Column": 13,
+                          "Index": 176
+                        },
+                        "End": {
+                          "Line": 11,
+                          "Column": 14,
+                          "Index": 177
+                        }
+                      },
+                      "Type": null,
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "1",
+                        "Start": {
+                          "Line": 11,
+                          "Column": 18,
+                          "Index": 181
+                        },
+                        "End": {
+                          "Line": 11,
+                          "Column": 19,
+                          "Index": 182
+                        }
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 11,
+                    "Column": 9,
+                    "Index": 172
+                  },
+                  "End": {
+                    "Line": 11,
+                    "Column": 20,
+                    "Index": 183
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 10,
+                "Column": 13,
+                "Index": 162
+              },
+              "End": {
+                "Line": 12,
+                "Column": 6,
+                "Index": 189
+              }
+            },
+            "Else": null,
+            "Start": {
+              "Line": 10,
+              "Column": 5,
+              "Index": 154
+            },
+            "End": {
+              "Line": 12,
+              "Column": 6,
+              "Index": 189
+            }
+          }
+        ],
+        "Start": {
+          "Line": 8,
+          "Column": 24,
+          "Index": 129
+        },
+        "End": {
+          "Line": 13,
+          "Column": 2,
+          "Index": 191
+        }
+      },
+      "Start": {
+        "Line": 8,
+        "Column": 1,
+        "Index": 106
+      },
+      "End": {
+        "Line": 13,
+        "Column": 2,
+        "Index": 191
+      }
+    },
+    {
+      "Name": {
+        "Name": "test_expr_cond",
+        "Start": {
+          "Line": 16,
+          "Column": 4,
+          "Index": 226
+        },
+        "End": {
+          "Line": 16,
+          "Column": 18,
+          "Index": 240
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 16,
+          "Column": 18,
+          "Index": 240
+        },
+        "End": {
+          "Line": 16,
+          "Column": 20,
+          "Index": 242
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Cond": {
+              "X": {
+                "Kind": 0,
+                "Value": "1",
+                "Start": {
+                  "Line": 17,
+                  "Column": 8,
+                  "Index": 252
+                },
+                "End": {
+                  "Line": 17,
+                  "Column": 9,
+                  "Index": 253
+                }
+              },
+              "Op": {
+                "Kind": "+",
+                "Value": "+",
+                "Start": {
+                  "Line": 17,
+                  "Column": 10,
+                  "Index": 254
+                },
+                "End": {
+                  "Line": 17,
+                  "Column": 11,
+                  "Index": 255
+                }
+              },
+              "Y": {
+                "Kind": 0,
+                "Value": "2",
+                "Start": {
+                  "Line": 17,
+                  "Column": 12,
+                  "Index": 256
+                },
+                "End": {
+                  "Line": 17,
+                  "Column": 13,
+                  "Index": 257
+                }
+              },
+              "Start": null,
+              "End": null
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Decls": [
+                    {
+                      "Name": {
+                        "Name": "y",
+                        "Start": {
+                          "Line": 18,
+                          "Column": 13,
+                          "Index": 272
+                        },
+                        "End": {
+                          "Line": 18,
+                          "Column": 14,
+                          "Index": 273
+                        }
+                      },
+                      "Type": null,
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "2",
+                        "Start": {
+                          "Line": 18,
+                          "Column": 18,
+                          "Index": 277
+                        },
+                        "End": {
+                          "Line": 18,
+                          "Column": 19,
+                          "Index": 278
+                        }
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 18,
+                    "Column": 9,
+                    "Index": 268
+                  },
+                  "End": {
+                    "Line": 18,
+                    "Column": 20,
+                    "Index": 279
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 17,
+                "Column": 14,
+                "Index": 258
+              },
+              "End": {
+                "Line": 19,
+                "Column": 6,
+                "Index": 285
+              }
+            },
+            "Else": null,
+            "Start": {
+              "Line": 17,
+              "Column": 5,
+              "Index": 249
+            },
+            "End": {
+              "Line": 19,
+              "Column": 6,
+              "Index": 285
+            }
+          }
+        ],
+        "Start": {
+          "Line": 16,
+          "Column": 21,
+          "Index": 243
+        },
+        "End": {
+          "Line": 20,
+          "Column": 2,
+          "Index": 287
+        }
+      },
+      "Start": {
+        "Line": 16,
+        "Column": 1,
+        "Index": 223
+      },
+      "End": {
+        "Line": 20,
+        "Column": 2,
+        "Index": 287
+      }
+    },
+    {
+      "Name": {
+        "Name": "test_paren_cond",
+        "Start": {
+          "Line": 23,
+          "Column": 4,
+          "Index": 325
+        },
+        "End": {
+          "Line": 23,
+          "Column": 19,
+          "Index": 340
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 23,
+          "Column": 19,
+          "Index": 340
+        },
+        "End": {
+          "Line": 23,
+          "Column": 21,
+          "Index": 342
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Cond": {
+              "Kind": 0,
+              "Value": "1",
+              "Start": {
+                "Line": 24,
+                "Column": 9,
+                "Index": 353
+              },
+              "End": {
+                "Line": 24,
+                "Column": 10,
+                "Index": 354
+              }
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Decls": [
+                    {
+                      "Name": {
+                        "Name": "z",
+                        "Start": {
+                          "Line": 25,
+                          "Column": 13,
+                          "Index": 370
+                        },
+                        "End": {
+                          "Line": 25,
+                          "Column": 14,
+                          "Index": 371
+                        }
+                      },
+                      "Type": null,
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "3",
+                        "Start": {
+                          "Line": 25,
+                          "Column": 18,
+                          "Index": 375
+                        },
+                        "End": {
+                          "Line": 25,
+                          "Column": 19,
+                          "Index": 376
+                        }
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 25,
+                    "Column": 9,
+                    "Index": 366
+                  },
+                  "End": {
+                    "Line": 25,
+                    "Column": 20,
+                    "Index": 377
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 24,
+                "Column": 12,
+                "Index": 356
+              },
+              "End": {
+                "Line": 26,
+                "Column": 6,
+                "Index": 383
+              }
+            },
+            "Else": null,
+            "Start": {
+              "Line": 24,
+              "Column": 5,
+              "Index": 349
+            },
+            "End": {
+              "Line": 26,
+              "Column": 6,
+              "Index": 383
+            }
+          }
+        ],
+        "Start": {
+          "Line": 23,
+          "Column": 22,
+          "Index": 343
+        },
+        "End": {
+          "Line": 27,
+          "Column": 2,
+          "Index": 385
+        }
+      },
+      "Start": {
+        "Line": 23,
+        "Column": 1,
+        "Index": 322
+      },
+      "End": {
+        "Line": 27,
+        "Column": 2,
+        "Index": 385
+      }
+    },
+    {
+      "Name": {
+        "Name": "test_field_access",
+        "Start": {
+          "Line": 30,
+          "Column": 4,
+          "Index": 422
+        },
+        "End": {
+          "Line": 30,
+          "Column": 21,
+          "Index": 439
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 30,
+          "Column": 21,
+          "Index": 439
+        },
+        "End": {
+          "Line": 30,
+          "Column": 23,
+          "Index": 441
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Decls": [
+              {
+                "Name": {
+                  "Name": "obj",
+                  "Start": {
+                    "Line": 31,
+                    "Column": 9,
+                    "Index": 452
+                  },
+                  "End": {
+                    "Line": 31,
+                    "Column": 12,
+                    "Index": 455
+                  }
+                },
+                "Type": null,
+                "Value": {
+                  "Type": {
+                    "Name": "T",
+                    "Start": {
+                      "Line": 31,
+                      "Column": 16,
+                      "Index": 459
+                    },
+                    "End": {
+                      "Line": 31,
+                      "Column": 17,
+                      "Index": 460
+                    }
+                  },
+                  "Elts": [
+                    {
+                      "Key": {
+                        "Name": "x",
+                        "Start": {
+                          "Line": 31,
+                          "Column": 20,
+                          "Index": 463
+                        },
+                        "End": {
+                          "Line": 31,
+                          "Column": 21,
+                          "Index": 464
+                        }
+                      },
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "5",
+                        "Start": {
+                          "Line": 31,
+                          "Column": 24,
+                          "Index": 467
+                        },
+                        "End": {
+                          "Line": 31,
+                          "Column": 25,
+                          "Index": 468
+                        }
+                      },
+                      "Start": {
+                        "Line": 31,
+                        "Column": 16,
+                        "Index": 459
+                      },
+                      "End": {
+                        "Line": 31,
+                        "Column": 25,
+                        "Index": 468
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 31,
+                    "Column": 16,
+                    "Index": 459
+                  },
+                  "End": {
+                    "Line": 31,
+                    "Column": 27,
+                    "Index": 470
+                  }
+                }
+              }
+            ],
+            "Start": {
+              "Line": 31,
+              "Column": 5,
+              "Index": 448
+            },
+            "End": {
+              "Line": 31,
+              "Column": 28,
+              "Index": 471
+            }
+          },
+          {
+            "Cond": {
+              "X": {
+                "Name": "obj",
+                "Start": {
+                  "Line": 32,
+                  "Column": 8,
+                  "Index": 479
+                },
+                "End": {
+                  "Line": 32,
+                  "Column": 11,
+                  "Index": 482
+                }
+              },
+              "Sel": {
+                "Name": "x",
+                "Start": {
+                  "Line": 32,
+                  "Column": 12,
+                  "Index": 483
+                },
+                "End": {
+                  "Line": 32,
+                  "Column": 13,
+                  "Index": 484
+                }
+              },
+              "Start": null,
+              "End": null
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Decls": [
+                    {
+                      "Name": {
+                        "Name": "w",
+                        "Start": {
+                          "Line": 33,
+                          "Column": 13,
+                          "Index": 499
+                        },
+                        "End": {
+                          "Line": 33,
+                          "Column": 14,
+                          "Index": 500
+                        }
+                      },
+                      "Type": null,
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "4",
+                        "Start": {
+                          "Line": 33,
+                          "Column": 18,
+                          "Index": 504
+                        },
+                        "End": {
+                          "Line": 33,
+                          "Column": 19,
+                          "Index": 505
+                        }
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 33,
+                    "Column": 9,
+                    "Index": 495
+                  },
+                  "End": {
+                    "Line": 33,
+                    "Column": 20,
+                    "Index": 506
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 32,
+                "Column": 14,
+                "Index": 485
+              },
+              "End": {
+                "Line": 34,
+                "Column": 6,
+                "Index": 512
+              }
+            },
+            "Else": null,
+            "Start": {
+              "Line": 32,
+              "Column": 5,
+              "Index": 476
+            },
+            "End": {
+              "Line": 34,
+              "Column": 6,
+              "Index": 512
+            }
+          }
+        ],
+        "Start": {
+          "Line": 30,
+          "Column": 24,
+          "Index": 442
+        },
+        "End": {
+          "Line": 35,
+          "Column": 2,
+          "Index": 514
+        }
+      },
+      "Start": {
+        "Line": 30,
+        "Column": 1,
+        "Index": 419
+      },
+      "End": {
+        "Line": 35,
+        "Column": 2,
+        "Index": 514
+      }
+    },
+    {
+      "Name": {
+        "Name": "test_nested_blocks",
+        "Start": {
+          "Line": 38,
+          "Column": 4,
+          "Index": 557
+        },
+        "End": {
+          "Line": 38,
+          "Column": 22,
+          "Index": 575
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 38,
+          "Column": 22,
+          "Index": 575
+        },
+        "End": {
+          "Line": 38,
+          "Column": 24,
+          "Index": 577
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Cond": {
+              "Kind": 0,
+              "Value": "1",
+              "Start": {
+                "Line": 39,
+                "Column": 8,
+                "Index": 587
+              },
+              "End": {
+                "Line": 39,
+                "Column": 9,
+                "Index": 588
+              }
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Cond": {
+                    "Kind": 0,
+                    "Value": "2",
+                    "Start": {
+                      "Line": 40,
+                      "Column": 12,
+                      "Index": 602
+                    },
+                    "End": {
+                      "Line": 40,
+                      "Column": 13,
+                      "Index": 603
+                    }
+                  },
+                  "Body": {
+                    "Nodes": [
+                      {
+                        "Decls": [
+                          {
+                            "Name": {
+                              "Name": "a",
+                              "Start": {
+                                "Line": 41,
+                                "Column": 17,
+                                "Index": 622
+                              },
+                              "End": {
+                                "Line": 41,
+                                "Column": 18,
+                                "Index": 623
+                              }
+                            },
+                            "Type": null,
+                            "Value": {
+                              "Kind": 0,
+                              "Value": "1",
+                              "Start": {
+                                "Line": 41,
+                                "Column": 22,
+                                "Index": 627
+                              },
+                              "End": {
+                                "Line": 41,
+                                "Column": 23,
+                                "Index": 628
+                              }
+                            }
+                          }
+                        ],
+                        "Start": {
+                          "Line": 41,
+                          "Column": 13,
+                          "Index": 618
+                        },
+                        "End": {
+                          "Line": 41,
+                          "Column": 24,
+                          "Index": 629
+                        }
+                      }
+                    ],
+                    "Start": {
+                      "Line": 40,
+                      "Column": 14,
+                      "Index": 604
+                    },
+                    "End": {
+                      "Line": 42,
+                      "Column": 10,
+                      "Index": 639
+                    }
+                  },
+                  "Else": null,
+                  "Start": {
+                    "Line": 40,
+                    "Column": 9,
+                    "Index": 599
+                  },
+                  "End": {
+                    "Line": 42,
+                    "Column": 10,
+                    "Index": 639
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 39,
+                "Column": 10,
+                "Index": 589
+              },
+              "End": {
+                "Line": 43,
+                "Column": 6,
+                "Index": 645
+              }
+            },
+            "Else": null,
+            "Start": {
+              "Line": 39,
+              "Column": 5,
+              "Index": 584
+            },
+            "End": {
+              "Line": 43,
+              "Column": 6,
+              "Index": 645
+            }
+          }
+        ],
+        "Start": {
+          "Line": 38,
+          "Column": 25,
+          "Index": 578
+        },
+        "End": {
+          "Line": 44,
+          "Column": 2,
+          "Index": 647
+        }
+      },
+      "Start": {
+        "Line": 38,
+        "Column": 1,
+        "Index": 554
+      },
+      "End": {
+        "Line": 44,
+        "Column": 2,
+        "Index": 647
+      }
+    },
+    {
+      "Name": {
+        "Name": "test_else",
+        "Start": {
+          "Line": 47,
+          "Column": 4,
+          "Index": 673
+        },
+        "End": {
+          "Line": 47,
+          "Column": 13,
+          "Index": 682
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 47,
+          "Column": 13,
+          "Index": 682
+        },
+        "End": {
+          "Line": 47,
+          "Column": 15,
+          "Index": 684
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Cond": {
+              "Type": {
+                "Name": "T",
+                "Start": {
+                  "Line": 48,
+                  "Column": 8,
+                  "Index": 694
+                },
+                "End": {
+                  "Line": 48,
+                  "Column": 9,
+                  "Index": 695
+                }
+              },
+              "Elts": [],
+              "Start": {
+                "Line": 48,
+                "Column": 8,
+                "Index": 694
+              },
+              "End": {
+                "Line": 48,
+                "Column": 11,
+                "Index": 697
+              }
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Decls": [
+                    {
+                      "Name": {
+                        "Name": "b",
+                        "Start": {
+                          "Line": 49,
+                          "Column": 13,
+                          "Index": 712
+                        },
+                        "End": {
+                          "Line": 49,
+                          "Column": 14,
+                          "Index": 713
+                        }
+                      },
+                      "Type": null,
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "1",
+                        "Start": {
+                          "Line": 49,
+                          "Column": 18,
+                          "Index": 717
+                        },
+                        "End": {
+                          "Line": 49,
+                          "Column": 19,
+                          "Index": 718
+                        }
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 49,
+                    "Column": 9,
+                    "Index": 708
+                  },
+                  "End": {
+                    "Line": 49,
+                    "Column": 20,
+                    "Index": 719
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 48,
+                "Column": 12,
+                "Index": 698
+              },
+              "End": {
+                "Line": 50,
+                "Column": 6,
+                "Index": 725
+              }
+            },
+            "Else": {
+              "Nodes": [
+                {
+                  "Decls": [
+                    {
+                      "Name": {
+                        "Name": "c",
+                        "Start": {
+                          "Line": 51,
+                          "Column": 13,
+                          "Index": 745
+                        },
+                        "End": {
+                          "Line": 51,
+                          "Column": 14,
+                          "Index": 746
+                        }
+                      },
+                      "Type": null,
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "2",
+                        "Start": {
+                          "Line": 51,
+                          "Column": 18,
+                          "Index": 750
+                        },
+                        "End": {
+                          "Line": 51,
+                          "Column": 19,
+                          "Index": 751
+                        }
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 51,
+                    "Column": 9,
+                    "Index": 741
+                  },
+                  "End": {
+                    "Line": 51,
+                    "Column": 20,
+                    "Index": 752
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 50,
+                "Column": 12,
+                "Index": 731
+              },
+              "End": {
+                "Line": 52,
+                "Column": 6,
+                "Index": 758
+              }
+            },
+            "Start": {
+              "Line": 48,
+              "Column": 5,
+              "Index": 691
+            },
+            "End": {
+              "Line": 52,
+              "Column": 6,
+              "Index": 758
+            }
+          }
+        ],
+        "Start": {
+          "Line": 47,
+          "Column": 16,
+          "Index": 685
+        },
+        "End": {
+          "Line": 53,
+          "Column": 2,
+          "Index": 760
+        }
+      },
+      "Start": {
+        "Line": 47,
+        "Column": 1,
+        "Index": 670
+      },
+      "End": {
+        "Line": 53,
+        "Column": 2,
+        "Index": 760
+      }
+    },
+    {
+      "Name": {
+        "Name": "test_else_if",
+        "Start": {
+          "Line": 56,
+          "Column": 4,
+          "Index": 789
+        },
+        "End": {
+          "Line": 56,
+          "Column": 16,
+          "Index": 801
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": null,
+        "Start": {
+          "Line": 56,
+          "Column": 16,
+          "Index": 801
+        },
+        "End": {
+          "Line": 56,
+          "Column": 18,
+          "Index": 803
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Cond": {
+              "Type": {
+                "Name": "T",
+                "Start": {
+                  "Line": 57,
+                  "Column": 8,
+                  "Index": 813
+                },
+                "End": {
+                  "Line": 57,
+                  "Column": 9,
+                  "Index": 814
+                }
+              },
+              "Elts": [],
+              "Start": {
+                "Line": 57,
+                "Column": 8,
+                "Index": 813
+              },
+              "End": {
+                "Line": 57,
+                "Column": 11,
+                "Index": 816
+              }
+            },
+            "Body": {
+              "Nodes": [
+                {
+                  "Decls": [
+                    {
+                      "Name": {
+                        "Name": "d",
+                        "Start": {
+                          "Line": 58,
+                          "Column": 13,
+                          "Index": 831
+                        },
+                        "End": {
+                          "Line": 58,
+                          "Column": 14,
+                          "Index": 832
+                        }
+                      },
+                      "Type": null,
+                      "Value": {
+                        "Kind": 0,
+                        "Value": "1",
+                        "Start": {
+                          "Line": 58,
+                          "Column": 18,
+                          "Index": 836
+                        },
+                        "End": {
+                          "Line": 58,
+                          "Column": 19,
+                          "Index": 837
+                        }
+                      }
+                    }
+                  ],
+                  "Start": {
+                    "Line": 58,
+                    "Column": 9,
+                    "Index": 827
+                  },
+                  "End": {
+                    "Line": 58,
+                    "Column": 20,
+                    "Index": 838
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 57,
+                "Column": 12,
+                "Index": 817
+              },
+              "End": {
+                "Line": 59,
+                "Column": 6,
+                "Index": 844
+              }
+            },
+            "Else": {
+              "Cond": {
+                "Type": {
+                  "Name": "T",
+                  "Start": {
+                    "Line": 59,
+                    "Column": 15,
+                    "Index": 853
+                  },
+                  "End": {
+                    "Line": 59,
+                    "Column": 16,
+                    "Index": 854
+                  }
+                },
+                "Elts": [
+                  {
+                    "Key": {
+                      "Name": "x",
+                      "Start": {
+                        "Line": 59,
+                        "Column": 19,
+                        "Index": 857
+                      },
+                      "End": {
+                        "Line": 59,
+                        "Column": 20,
+                        "Index": 858
+                      }
+                    },
+                    "Value": {
+                      "Kind": 0,
+                      "Value": "5",
+                      "Start": {
+                        "Line": 59,
+                        "Column": 23,
+                        "Index": 861
+                      },
+                      "End": {
+                        "Line": 59,
+                        "Column": 24,
+                        "Index": 862
+                      }
+                    },
+                    "Start": {
+                      "Line": 59,
+                      "Column": 15,
+                      "Index": 853
+                    },
+                    "End": {
+                      "Line": 59,
+                      "Column": 24,
+                      "Index": 862
+                    }
+                  }
+                ],
+                "Start": {
+                  "Line": 59,
+                  "Column": 15,
+                  "Index": 853
+                },
+                "End": {
+                  "Line": 59,
+                  "Column": 26,
+                  "Index": 864
+                }
+              },
+              "Body": {
+                "Nodes": [
+                  {
+                    "Decls": [
+                      {
+                        "Name": {
+                          "Name": "e",
+                          "Start": {
+                            "Line": 60,
+                            "Column": 13,
+                            "Index": 879
+                          },
+                          "End": {
+                            "Line": 60,
+                            "Column": 14,
+                            "Index": 880
+                          }
+                        },
+                        "Type": null,
+                        "Value": {
+                          "Kind": 0,
+                          "Value": "2",
+                          "Start": {
+                            "Line": 60,
+                            "Column": 18,
+                            "Index": 884
+                          },
+                          "End": {
+                            "Line": 60,
+                            "Column": 19,
+                            "Index": 885
+                          }
+                        }
+                      }
+                    ],
+                    "Start": {
+                      "Line": 60,
+                      "Column": 9,
+                      "Index": 875
+                    },
+                    "End": {
+                      "Line": 60,
+                      "Column": 20,
+                      "Index": 886
+                    }
+                  }
+                ],
+                "Start": {
+                  "Line": 59,
+                  "Column": 27,
+                  "Index": 865
+                },
+                "End": {
+                  "Line": 61,
+                  "Column": 6,
+                  "Index": 892
+                }
+              },
+              "Else": null,
+              "Start": {
+                "Line": 59,
+                "Column": 12,
+                "Index": 850
+              },
+              "End": {
+                "Line": 61,
+                "Column": 6,
+                "Index": 892
+              }
+            },
+            "Start": {
+              "Line": 57,
+              "Column": 5,
+              "Index": 810
+            },
+            "End": {
+              "Line": 61,
+              "Column": 6,
+              "Index": 892
+            }
+          }
+        ],
+        "Start": {
+          "Line": 56,
+          "Column": 19,
+          "Index": 804
+        },
+        "End": {
+          "Line": 62,
+          "Column": 2,
+          "Index": 894
+        }
+      },
+      "Start": {
+        "Line": 56,
+        "Column": 1,
+        "Index": 786
+      },
+      "End": {
+        "Line": 62,
+        "Column": 2,
+        "Index": 894
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}
