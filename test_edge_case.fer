@@ -1,0 +1,5 @@
+// Edge case: uppercase variable name
+let User := true;
+if User {
+    let x := 1;
+}

@@ -1,0 +1,48 @@
+// Comprehensive test of block vs literal disambiguation
+
+type Empty struct {};
+type Point struct { .x: i32, .y: i32 };
+
+let b := true;
+let p1 := Point{.x = 1, .y = 2};
+let e := Empty{};
+
+// Test 1: Empty block with simple condition
+if b {
+}
+
+// Test 2: Empty block with binary expression
+if b == true {
+}
+
+// Test 3: Non-empty block
+if b {
+    let x := 1;
+}
+
+// Test 4: Empty literal on same line in comparison
+if e == Empty{} {
+    let matched := 1;
+}
+
+// Test 5: Non-empty literal in comparison  
+if p1 == Point{.x = 1, .y = 2} {
+    let matched := 1;
+}
+
+// Test 6: Empty literal in assignment
+let e2 := Empty{};
+
+// Test 7: Complex nested case
+if b {
+    if p1 == Point{.x = 1, .y = 2} {
+        let inner := 1;
+    }
+}
+
+// Test 8: Multiple statements in block
+if b {
+    let a := 1;
+    let b := 2;
+    let c := 3;
+}

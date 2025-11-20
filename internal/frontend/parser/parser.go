@@ -8,10 +8,6 @@ import (
 	"fmt"
 )
 
-// ============================================================================
-// PARSER - Token to AST Conversion
-// ============================================================================
-//
 // The Parser builds an AST from a token stream.
 // The ParseFile function is in the pipeline package to avoid import cycles.
 
@@ -389,10 +385,18 @@ func (p *Parser) parsePostfix() ast.Expression {
 		} else if p.match(lexer.SCOPE_TOKEN) {
 			expr = p.parseScopeResolutionExpr(expr)
 		} else if p.match(lexer.OPEN_CURLY) {
-			if !p.isCompositeLiteral() {
+			// Try to parse as composite literal
+			// tryParseCompositeLiteral will check for:
+			// - Empty braces: {}
+			// - Struct literal: .field = value
+			// - Map literal: key => value
+			// If none match, it's a block and we stop postfix parsing
+			if lit, ok := p.tryParseCompositeLiteral(expr); ok {
+				expr = lit
+			} else {
+				// Not a composite literal, stop postfix parsing
 				break
 			}
-			expr = p.parseCompositeLiteralExpr(expr)
 		} else {
 			break
 		}
@@ -494,23 +498,91 @@ func (p *Parser) parseScopeResolutionExpr(x ast.Expression) *ast.ScopeResolution
 	}
 }
 
-func (p *Parser) isCompositeLiteral() bool {
+// tryParseCompositeLiteral attempts to parse a composite literal with speculative parsing
+// Returns (result, true) if successful, (nil, false) if it should be parsed as a block
+// This enables speculative parsing for ambiguous { after expressions
+//
+// Detects composite literals by checking for:
+// - Empty braces: {} (only after identifiers starting with uppercase - likely type names)
+// - Struct field syntax: .field = value
+// - Map entry syntax: key => value
+func (p *Parser) tryParseCompositeLiteral(expr ast.Expression) (*ast.CompositeLit, bool) {
+	if !p.match(lexer.OPEN_CURLY) {
+		return nil, false
+	}
 
+	// Save position for potential backtracking
 	savedPos := p.current
 	p.advance() // consume {
 
-	isCompositeLit := false
-	if p.match(lexer.DOT_TOKEN, lexer.CLOSE_CURLY) {
-		isCompositeLit = true
-	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
-		p.advance()
+	// Check for empty braces first
+	if p.match(lexer.CLOSE_CURLY) {
+		// Empty braces are ambiguous! Both empty blocks and empty literals are valid.
+		// We need to look at what comes AFTER the {} to disambiguate:
+		// - `Type{} {` → likely literal in condition, followed by block: `if x == Type{} {`
+		// - `Type{};` → likely literal in statement: `let e := Type{};`
+		// - `Type{})` → literal in function call: `foo(Type{})`
+		// - `Type{},` → literal in list: `[Type{}, Type{}]`
+		// - `var {}` → likely variable with empty block: `if var {}`
+
+		// Look at what comes after the }
+		p.advance() // consume }
+		nextToken := p.peek()
+		p.current = savedPos // restore position
+
+		// If followed by {, ;, ), ,, or operators like ==, !=, etc., treat as literal
+		if nextToken.Kind == lexer.OPEN_CURLY ||
+			nextToken.Kind == lexer.SEMICOLON_TOKEN ||
+			nextToken.Kind == lexer.CLOSE_PAREN ||
+			nextToken.Kind == lexer.CLOSE_BRACKET ||
+			nextToken.Kind == lexer.COMMA_TOKEN ||
+			nextToken.Kind == lexer.EQUALS_TOKEN ||
+			nextToken.Kind == lexer.NOT_EQUAL_TOKEN ||
+			nextToken.Kind == lexer.LESS_TOKEN ||
+			nextToken.Kind == lexer.GREATER_TOKEN ||
+			nextToken.Kind == lexer.LESS_EQUAL_TOKEN ||
+			nextToken.Kind == lexer.GREATER_EQUAL_TOKEN {
+			// Likely a literal
+			// But still apply uppercase heuristic for better accuracy
+			if ident, ok := expr.(*ast.IdentifierExpr); ok {
+				if len(ident.Name) > 0 && ident.Name[0] >= 'A' && ident.Name[0] <= 'Z' {
+					// Uppercase + followed by likely-literal tokens
+					result := p.parseCompositeLiteralExpr(expr)
+					return result, true
+				}
+			} else if _, ok := expr.(ast.TypeNode); ok {
+				// Explicit type node (like map[K]V)
+				result := p.parseCompositeLiteralExpr(expr)
+				return result, true
+			}
+		}
+		// Otherwise, don't parse as literal (likely an empty block)
+		return nil, false
+	}
+
+	// Check for struct field syntax: .field
+	if p.match(lexer.DOT_TOKEN) {
+		// Struct literal
+		p.current = savedPos
+		result := p.parseCompositeLiteralExpr(expr)
+		return result, true
+	}
+
+	// Check for map entry syntax: expr =>
+	// We need to peek ahead to see if there's a => after the first expression
+	if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
+		p.advance() // consume the potential key
 		if p.match(lexer.FAT_ARROW_TOKEN) {
-			isCompositeLit = true
+			// Map literal
+			p.current = savedPos
+			result := p.parseCompositeLiteralExpr(expr)
+			return result, true
 		}
 	}
 
+	// Not a composite literal - restore position and return false
 	p.current = savedPos
-	return isCompositeLit
+	return nil, false
 }
 
 func (p *Parser) parseCompositeLiteralExpr(expr ast.Expression) *ast.CompositeLit {

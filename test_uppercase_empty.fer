@@ -1,0 +1,4 @@
+// Real edge case: uppercase variable with empty block
+let User := true;
+if User {
+}

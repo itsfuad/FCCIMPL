@@ -1,0 +1,33 @@
+// Test cases for ambiguous { parsing
+
+type Empty struct {};
+
+// Case 1: Empty block after condition
+let b := true;
+if b {
+}
+
+// Case 2: Empty struct literal in condition
+if b == Empty{} {
+    let ok := 1;
+}
+
+// Case 3: Struct literal in condition with complex expression
+type Point struct { .x: i32, .y: i32 };
+let p := Point{.x = 1, .y = 2};
+
+if p == Point{.x = 1, .y = 2} {
+    let matched := 1;
+}
+
+// Case 4: Multiple statements in block
+if b {
+    let a := 1;
+    let b := 2;
+}
+
+// Case 5: Nested if with empty blocks
+if b {
+    if b {
+    }
+}

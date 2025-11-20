@@ -1,0 +1,247 @@
+{
+  "FullPath": "D:\\Dev\\FCCIMPL\\tests\\test_empty_literal.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "Empty",
+        "Start": {
+          "Line": 2,
+          "Column": 6,
+          "Index": 35
+        },
+        "End": {
+          "Line": 2,
+          "Column": 11,
+          "Index": 40
+        }
+      },
+      "Type": {
+        "Fields": [],
+        "Start": {
+          "Line": 2,
+          "Column": 12,
+          "Index": 41
+        },
+        "End": {
+          "Line": 2,
+          "Column": 21,
+          "Index": 50
+        }
+      },
+      "Start": {
+        "Line": 2,
+        "Column": 1,
+        "Index": 30
+      },
+      "End": {
+        "Line": 2,
+        "Column": 22,
+        "Index": 51
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "b",
+            "Start": {
+              "Line": 4,
+              "Column": 5,
+              "Index": 59
+            },
+            "End": {
+              "Line": 4,
+              "Column": 6,
+              "Index": 60
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Name": "true",
+            "Start": {
+              "Line": 4,
+              "Column": 10,
+              "Index": 64
+            },
+            "End": {
+              "Line": 4,
+              "Column": 14,
+              "Index": 68
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 4,
+        "Column": 1,
+        "Index": 55
+      },
+      "End": {
+        "Line": 4,
+        "Column": 15,
+        "Index": 69
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "e1",
+            "Start": {
+              "Line": 5,
+              "Column": 5,
+              "Index": 75
+            },
+            "End": {
+              "Line": 5,
+              "Column": 7,
+              "Index": 77
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Name": "Empty",
+            "Start": {
+              "Line": 5,
+              "Column": 11,
+              "Index": 81
+            },
+            "End": {
+              "Line": 5,
+              "Column": 16,
+              "Index": 86
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 5,
+        "Column": 1,
+        "Index": 71
+      },
+      "End": {
+        "Line": 5,
+        "Column": 16,
+        "Index": 86
+      }
+    },
+    {
+      "Cond": {
+        "X": {
+          "Name": "e1",
+          "Start": {
+            "Line": 7,
+            "Column": 4,
+            "Index": 96
+          },
+          "End": {
+            "Line": 7,
+            "Column": 6,
+            "Index": 98
+          }
+        },
+        "Op": {
+          "Kind": "==",
+          "Value": "==",
+          "Start": {
+            "Line": 7,
+            "Column": 7,
+            "Index": 99
+          },
+          "End": {
+            "Line": 7,
+            "Column": 9,
+            "Index": 101
+          }
+        },
+        "Y": {
+          "Name": "Empty",
+          "Start": {
+            "Line": 7,
+            "Column": 10,
+            "Index": 102
+          },
+          "End": {
+            "Line": 7,
+            "Column": 15,
+            "Index": 107
+          }
+        },
+        "Start": null,
+        "End": null
+      },
+      "Body": {
+        "Nodes": [],
+        "Start": {
+          "Line": 7,
+          "Column": 15,
+          "Index": 107
+        },
+        "End": {
+          "Line": 7,
+          "Column": 17,
+          "Index": 109
+        }
+      },
+      "Else": null,
+      "Start": {
+        "Line": 7,
+        "Column": 1,
+        "Index": 93
+      },
+      "End": {
+        "Line": 7,
+        "Column": 17,
+        "Index": 109
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "ok",
+            "Start": {
+              "Line": 8,
+              "Column": 9,
+              "Index": 121
+            },
+            "End": {
+              "Line": 8,
+              "Column": 11,
+              "Index": 123
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Kind": 0,
+            "Value": "1",
+            "Start": {
+              "Line": 8,
+              "Column": 15,
+              "Index": 127
+            },
+            "End": {
+              "Line": 8,
+              "Column": 16,
+              "Index": 128
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 8,
+        "Column": 5,
+        "Index": 117
+      },
+      "End": {
+        "Line": 8,
+        "Column": 17,
+        "Index": 129
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\dev\\Compiler-Dev\\Ferret\\tests\\simple_map.fer",
+  "FullPath": "D:\\Dev\\FCCIMPL\\tests\\simple_map.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -413,7 +413,6 @@
       }
     }
   ],
-  "Imports": null,
   "Start": null,
   "End": null
 }

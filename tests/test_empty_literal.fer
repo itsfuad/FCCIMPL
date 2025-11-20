@@ -1,0 +1,9 @@
+// Test empty struct literal
+type Empty struct {};
+
+let b := true;
+let e1 := Empty{};
+
+if e1 == Empty{} {
+    let ok := 1;
+}

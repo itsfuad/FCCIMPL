@@ -1,5 +1,5 @@
 {
-  "FullPath": "D:\\Dev\\FCCIMPL\\tests\\if_only.fer",
+  "FullPath": "D:\\Dev\\FCCIMPL\\tests\\test_truly_empty_block.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -94,60 +94,16 @@
         "End": null
       },
       "Body": {
-        "Nodes": [
-          {
-            "Decls": [
-              {
-                "Name": {
-                  "Name": "max",
-                  "Start": {
-                    "Line": 3,
-                    "Column": 9,
-                    "Index": 33
-                  },
-                  "End": {
-                    "Line": 3,
-                    "Column": 12,
-                    "Index": 36
-                  }
-                },
-                "Type": null,
-                "Value": {
-                  "Name": "a",
-                  "Start": {
-                    "Line": 3,
-                    "Column": 16,
-                    "Index": 40
-                  },
-                  "End": {
-                    "Line": 3,
-                    "Column": 17,
-                    "Index": 41
-                  }
-                }
-              }
-            ],
-            "Start": {
-              "Line": 3,
-              "Column": 5,
-              "Index": 29
-            },
-            "End": {
-              "Line": 3,
-              "Column": 18,
-              "Index": 42
-            }
-          }
-        ],
+        "Nodes": [],
         "Start": {
           "Line": 2,
           "Column": 10,
           "Index": 22
         },
         "End": {
-          "Line": 4,
+          "Line": 3,
           "Column": 2,
-          "Index": 45
+          "Index": 26
         }
       },
       "Else": null,
@@ -157,9 +113,9 @@
         "Index": 13
       },
       "End": {
-        "Line": 4,
+        "Line": 3,
         "Column": 2,
-        "Index": 45
+        "Index": 26
       }
     }
   ],

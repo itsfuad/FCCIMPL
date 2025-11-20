@@ -1,0 +1,9 @@
+// Test: empty literal in comparison followed by block
+type Empty struct {};
+let e := Empty{};
+if e == Empty{} {
+    let matched := 1;
+}
+if Empty{} {
+
+}
