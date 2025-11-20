@@ -1,0 +1,172 @@
+// Comprehensive test demonstrating all requirements from problem statement
+// This validates that the parser fork system correctly handles all specified cases
+
+// ============================================================================
+// Type Definitions
+// ============================================================================
+
+type T struct {
+    .x: i32,
+    .y: i32
+};
+
+type S struct {
+    .a: i32,
+    .b: i32
+};
+
+// ============================================================================
+// 1. Composite literal - basic cases
+// ============================================================================
+
+fn test_composite_literal_basic() {
+    // Empty composite literal
+    let t1 := T{};
+    
+    // Composite literal with fields
+    let t2 := T{ .x = 10, .y = 20 };
+    
+    // Nested composite literals
+    let t3 := T{ .x = S{ .a = 1, .b = 2 }.a, .y = 30 };
+}
+
+// ============================================================================
+// 2. Package-qualified composite literal (unknown symbols)
+// ============================================================================
+
+fn test_qualified_composite() {
+    // Qualified name - Type from another package/module
+    let pkg_type := pkg::Type{};
+    
+    // Nested qualification
+    let nested := module::pkg::TypeName{};
+}
+
+// ============================================================================
+// 3. Variable assignment with composite literal
+// ============================================================================
+
+fn test_assignment() {
+    let x := S{.a = 1, .b = 2};
+}
+
+// ============================================================================
+// 4. Blocks in control flow
+// ============================================================================
+
+fn test_blocks() {
+    // Simple identifier condition with block body
+    let flag := 1;
+    if flag {
+        let y := 2;
+    }
+    
+    // Expression condition with block
+    if 1 + 2 {
+        let z := 3;
+    }
+}
+
+// ============================================================================
+// 5. THE KEY AMBIGUITY: if T{} {}
+// ============================================================================
+
+fn test_if_composite_then_block() {
+    // This is the critical test case:
+    // T{} should be parsed as composite literal (condition)
+    // {} should be parsed as block (body)
+    if T{} {
+        let result := 42;
+    }
+}
+
+fn test_if_composite_with_fields_then_block() {
+    // Composite literal with fields as condition
+    if T{ .x = 1, .y = 2 } {
+        let value := 100;
+    }
+}
+
+// ============================================================================
+// 6. Unknown types must be treated as composite literals
+// ============================================================================
+
+fn test_undefined_type() {
+    // MaybeType is not defined - but parser must treat it as composite literal
+    // Type resolution happens later in semantic analysis
+    if MaybeType{} {
+        let x := 1;
+    }
+    
+    // Unknown qualified type
+    if unknown::Package::Type{} {
+        let y := 2;
+    }
+}
+
+// ============================================================================
+// 7. Nested ambiguous cases
+// ============================================================================
+
+fn test_nested_ambiguous() {
+    // Outer if: composite literal condition
+    if T{} {
+        // Inner: another composite literal as expression
+        let inner := T{};
+        
+        // Nested if: also composite literal condition
+        if S{ .a = 1, .b = 2 } {
+            let nested_result := 999;
+        }
+    }
+}
+
+// ============================================================================
+// 8. Else and else-if with ambiguous conditions
+// ============================================================================
+
+fn test_else_clauses() {
+    if T{} {
+        let a := 1;
+    } else {
+        let b := 2;
+    }
+    
+    if T{ .x = 5, .y = 10 } {
+        let c := 3;
+    } else if S{} {
+        let d := 4;
+    } else if S{ .a = 1, .b = 2 } {
+        let e := 5;
+    } else {
+        let f := 6;
+    }
+}
+
+// ============================================================================
+// 9. Complex expressions with composite literals
+// ============================================================================
+
+fn test_complex_expressions() {
+    // Composite literal in expression
+    let val1 := T{ .x = 1, .y = 2 }.x;
+    
+    // Nested field access
+    let val2 := T{ .x = S{ .a = 10, .b = 20 }.a, .y = 30 }.x;
+}
+
+// ============================================================================
+// 10. Ensuring no infinite loops
+// ============================================================================
+
+// The tryParse system prevents infinite loops by:
+// 1. Attempting parse only ONCE (no retry inside tryParse)
+// 2. Using fork/restore to safely roll back on failure
+// 3. No recursive loops on the same token position
+
+fn test_no_infinite_loops() {
+    // These should all parse without hanging:
+    if T{} { let x := 1; }
+    if T{} { let y := 2; }
+    if T{} { let z := 3; }
+}
