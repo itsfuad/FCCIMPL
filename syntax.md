@@ -10,8 +10,9 @@ fn        // define a function
 interface // define an interface
 enum{}      // define an enum
 map[K]V       // define a map
+```
 
-//-----
+```rs
 
 // struct type
 struct{
@@ -20,6 +21,18 @@ struct{
 }    // define a struct
 
 // struct instantiation
+.{
+    .field1 = Value1,
+    .field2 = Value2,
+}
+
+// named struct type
+type StructType struct{
+    .field1: Type1,
+    .field2: Type2,
+};
+
+// instantiate named struct
 StructType{
     .field1 = Value1,
     .field2 = Value2,
@@ -31,6 +44,12 @@ interface{
     fn method2() -> ReturnType,
 }
 
+// named interface type
+type InterfaceType interface{
+    fn method1(param: Type) -> ReturnType,
+    fn method2() -> ReturnType,
+};
+
 // interface cannot be a literal, it must be implemented by a struct or type
 
 // enum type
@@ -38,6 +57,18 @@ enum{
     Variant1,
     Variant2,
 }    // define an enum
+
+// enum instantiation
+enum{
+    Variant1,
+    Variant2,
+}::Variant1 // access enum variant
+
+// named enum type
+type EnumType enum{
+    Variant1,
+    Variant2,
+};
 
 // enum usage
 EnumType::Variant1 // all static symbols are accessed with ::, no dot notation (ex: module, enum)
