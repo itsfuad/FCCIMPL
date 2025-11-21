@@ -1,5 +1,5 @@
 {
-  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\test_operator.fer",
+  "FullPath": "/home/runner/work/FCCIMPL/FCCIMPL/tests/test_operator.fer",
   "ImportPath": "",
   "Alias": "",
   "Nodes": [
@@ -11,12 +11,12 @@
             "Start": {
               "Line": 2,
               "Column": 5,
-              "Index": 35
+              "Index": 34
             },
             "End": {
               "Line": 2,
               "Column": 11,
-              "Index": 41
+              "Index": 40
             }
           },
           "Type": {
@@ -24,12 +24,12 @@
             "Start": {
               "Line": 2,
               "Column": 13,
-              "Index": 43
+              "Index": 42
             },
             "End": {
               "Line": 2,
               "Column": 16,
-              "Index": 46
+              "Index": 45
             }
           },
           "Value": {
@@ -39,12 +39,12 @@
               "Start": {
                 "Line": 2,
                 "Column": 19,
-                "Index": 49
+                "Index": 48
               },
               "End": {
                 "Line": 2,
                 "Column": 25,
-                "Index": 55
+                "Index": 54
               }
             },
             "Op": {
@@ -53,12 +53,12 @@
               "Start": {
                 "Line": 2,
                 "Column": 26,
-                "Index": 56
+                "Index": 55
               },
               "End": {
                 "Line": 2,
                 "Column": 27,
-                "Index": 57
+                "Index": 56
               }
             },
             "Y": {
@@ -67,12 +67,12 @@
               "Start": {
                 "Line": 2,
                 "Column": 28,
-                "Index": 58
+                "Index": 57
               },
               "End": {
                 "Line": 2,
                 "Column": 34,
-                "Index": 64
+                "Index": 63
               }
             },
             "Start": null,
@@ -83,12 +83,12 @@
       "Start": {
         "Line": 2,
         "Column": 1,
-        "Index": 31
+        "Index": 30
       },
       "End": {
         "Line": 2,
         "Column": 35,
-        "Index": 65
+        "Index": 64
       }
     }
   ],

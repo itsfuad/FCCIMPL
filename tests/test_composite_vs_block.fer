@@ -1,0 +1,68 @@
+// Test cases for composite literal vs block ambiguity resolution
+// These test the parser fork system
+
+// Define types for testing
+type T struct {
+    .x: i32,
+    .y: i32
+};
+
+type S struct {
+    .a: i32,
+    .b: i32
+};
+
+// Test 1: Simple composite literal
+fn test_simple_composite() {
+    let empty := T{};
+}
+
+// Test 2: Composite literal with fields
+fn test_composite_with_fields() {
+    let point := T{ .x = 1, .y = 2 };
+}
+
+// Test 3: If statement with composite literal as condition, then block
+// This is the key ambiguity: "if T{} {}"
+// The parser should recognize T{} as a composite literal, not parse { as block start
+fn test_if_composite_then_block() {
+    if T{} {
+        let x := 1;
+    }
+}
+
+// Test 4: If with identifier condition and block body
+fn test_if_identifier_block() {
+    let cond := 1;
+    if cond {
+        let y := 2;
+    }
+}
+
+// Test 5: Nested case - composite literal in condition, with composite in body
+fn test_nested_composite() {
+    if T{ .x = 1, .y = 2 } {
+        let s := S{ .a = 3, .b = 4 };
+    }
+}
+
+// Test 6: Unknown type should still be parsed as composite literal
+fn test_unknown_type() {
+    if MaybeType{} {
+        let z := 3;
+    }
+}
+
+// Test 7: Scope resolution with composite literal
+fn test_scope_composite() {
+    if pkg::Type{} {
+        let w := 4;
+    }
+}
+
+// Test 8: Multiple composite literals in condition
+fn test_complex_condition() {
+    if T{ .x = S{ .a = 1, .b = 2 }.a, .y = 5 } {
+        let result := 100;
+    }
+}

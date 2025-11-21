@@ -24,6 +24,12 @@ type Parser struct {
 	filepath    string
 }
 
+// Savepoint represents a parser state that can be restored
+type Savepoint struct {
+	current         int
+	diagnosticsSize int
+}
+
 // Parse is the internal parsing function called by the pipeline.
 // It takes tokens and diagnostics as parameters to avoid import cycles.
 func Parse(tokens []lexer.Token, filepath string, diag *diagnostics.DiagnosticBag) *ast.Module {
@@ -500,17 +506,88 @@ func (p *Parser) isCompositeLiteral() bool {
 	p.advance() // consume {
 
 	isCompositeLit := false
-	if p.match(lexer.DOT_TOKEN, lexer.CLOSE_CURLY) {
+	if p.match(lexer.DOT_TOKEN) {
+		// Struct field marker: .field = ...
 		isCompositeLit = true
-	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
-		p.advance()
-		if p.match(lexer.FAT_ARROW_TOKEN) {
+	} else if p.match(lexer.CLOSE_CURLY) {
+		// Empty {}: could be composite literal or empty block
+		// Use context-aware parsing: check the token AFTER the } to disambiguate
+		p.advance() // move past }
+		
+		// Tokens that suggest {} was a complete expression (composite literal):
+		// - { : another block follows (e.g., if T{} {})
+		// - ; : end of statement (e.g., let x := T{};)
+		// - , : in a list (e.g., func(T{}, y))
+		// - ) ] : end of grouping (e.g., (T{}), [T{}])
+		if p.match(lexer.OPEN_CURLY, lexer.SEMICOLON_TOKEN, lexer.COMMA_TOKEN, lexer.CLOSE_PAREN, lexer.CLOSE_BRACKET) {
+			isCompositeLit = true
+		} else if p.match(lexer.CLOSE_CURLY) || p.isAtEnd() {
+			// } or EOF after {} suggests it was a block, not composite literal
+			isCompositeLit = false
+		} else if p.match(lexer.LET_TOKEN, lexer.CONST_TOKEN, lexer.IF_TOKEN, lexer.RETURN_TOKEN, lexer.FUNCTION_TOKEN, lexer.TYPE_TOKEN, lexer.IMPORT_TOKEN) {
+			// Statement starter tokens: {} was a block, not composite literal
+			// This handles cases like:
+			//   if i { } let a := 1;
+			// where the {} is the if body block, not a composite literal
+			isCompositeLit = false
+		} else {
+			// Other tokens: default to composite literal
+			// This handles cases like: T{}.field or T{} + something
 			isCompositeLit = true
 		}
+	} else {
+		// Non-empty content: scan for composite literal markers
+		// We need to check if this looks like a composite literal by looking for:
+		// - Fat arrow (=>) which indicates map literal: key => value
+		// Since keys can be ANY expression (function calls, complex expressions),
+		// we scan ahead looking for => before }, handling nesting
+		isCompositeLit = p.scanForCompositeLiteralMarkers()
 	}
 
 	p.current = savedPos
 	return isCompositeLit
+}
+
+// scanForCompositeLiteralMarkers scans ahead to determine if the content
+// looks like a composite literal by checking for => or other markers
+func (p *Parser) scanForCompositeLiteralMarkers() bool {
+	// Track nesting depth to handle nested structures
+	depth := 0
+	maxLookahead := 100 // Limit lookahead to prevent infinite scanning
+	
+	for i := 0; i < maxLookahead && !p.isAtEnd(); i++ {
+		tok := p.peek()
+		
+		switch tok.Kind {
+		case lexer.OPEN_CURLY, lexer.OPEN_PAREN, lexer.OPEN_BRACKET:
+			depth++
+			p.advance()
+		case lexer.CLOSE_CURLY:
+			if depth == 0 {
+				// Reached the end of this literal without finding =>
+				// This means it's not a map literal
+				// Could still be a struct literal or a block
+				// Default to false (block) for safety
+				return false
+			}
+			depth--
+			p.advance()
+		case lexer.CLOSE_PAREN, lexer.CLOSE_BRACKET:
+			depth--
+			p.advance()
+		case lexer.FAT_ARROW_TOKEN:
+			// Found => at our nesting level - this is a composite literal
+			if depth == 0 {
+				return true
+			}
+			p.advance()
+		default:
+			p.advance()
+		}
+	}
+	
+	// If we didn't find => after scanning, assume it's a block
+	return false
 }
 
 func (p *Parser) parseCompositeLiteralExpr(expr ast.Expression) *ast.CompositeLit {
@@ -855,4 +932,89 @@ func (p *Parser) checkTrailing(target, closingToken lexer.TOKEN, contextName str
 func (p *Parser) makeLocation(start source.Position) source.Location {
 	end := p.previous().End
 	return *source.NewLocation(&start, &end)
+}
+
+// ============================================================================
+// PARSER FORK SYSTEM - For handling ambiguous grammar
+// ============================================================================
+
+// fork creates a savepoint of the current parser state
+// This captures the current token position and diagnostics size
+// for potential rollback if parsing fails
+func (p *Parser) fork() Savepoint {
+	return Savepoint{
+		current:         p.current,
+		diagnosticsSize: p.diagnostics.Size(),
+	}
+}
+
+// restore rolls back the parser to a previous savepoint
+// This resets the token position and removes any diagnostics
+// that were added after the savepoint was created
+func (p *Parser) restore(sp Savepoint) {
+	p.current = sp.current
+	p.diagnostics.Truncate(sp.diagnosticsSize)
+}
+
+// commit accepts the parsing done after a savepoint
+// This is currently a no-op but exists for symmetry and future extensions
+func (p *Parser) commit(sp Savepoint) {
+	// No-op: we keep the current state and diagnostics
+}
+
+// tryParse attempts to parse using the given function
+// If parsing succeeds, it commits and returns the result
+// If parsing fails, it restores the parser state and returns nil
+// This prevents infinite loops by attempting parsing only once
+func (p *Parser) tryParse(parseFn func() (ast.Node, error)) (ast.Node, bool) {
+	sp := p.fork()
+	node, err := parseFn()
+	if err == nil && node != nil {
+		p.commit(sp)
+		return node, true
+	}
+	p.restore(sp)
+	return nil, false
+}
+
+// tryParseCompositeLiteral attempts to parse a composite literal starting from
+// the type expression (before the opening brace). Returns the node and success status.
+// This is safe for use with the fork system because it checks for composite literal
+// markers and returns an error if they're not found.
+func (p *Parser) tryParseCompositeLiteral(typeExpr ast.Expression) (ast.Node, error) {
+	// We must be at an OPEN_CURLY token
+	if !p.match(lexer.OPEN_CURLY) {
+		return nil, fmt.Errorf("expected {")
+	}
+	
+	// Look ahead to check if this looks like a composite literal
+	savedPos := p.current
+	p.advance() // consume {
+	
+	// Check for composite literal markers:
+	// - .field = value (struct field)
+	// - key => value (map literal)
+	// Note: We do NOT treat {} as composite literal here because it's ambiguous
+	// with empty blocks. Empty composite literals T{} will be handled by the
+	// existing parsePostfix logic, not the fork system.
+	isCompositeLit := false
+	if p.match(lexer.DOT_TOKEN) {
+		isCompositeLit = true
+	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
+		p.advance()
+		if p.match(lexer.FAT_ARROW_TOKEN) {
+			isCompositeLit = true
+		}
+	}
+	
+	// Restore position
+	p.current = savedPos
+	
+	if !isCompositeLit {
+		return nil, fmt.Errorf("not a composite literal")
+	}
+	
+	// Parse the composite literal
+	node := p.parseCompositeLiteralExpr(typeExpr)
+	return node, nil
 }

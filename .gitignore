@@ -27,3 +27,7 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# Generated AST files
+*.ast.json
+

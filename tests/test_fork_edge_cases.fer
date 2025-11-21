@@ -1,0 +1,62 @@
+// Edge cases testing
+
+type T struct {
+    .x: i32
+};
+
+// Test: Regular condition (not composite literal)
+fn test_regular_cond() {
+    let flag := 1;
+    if flag {
+        let x := 1;
+    }
+}
+
+// Test: Expression condition
+fn test_expr_cond() {
+    if 1 + 2 {
+        let y := 2;
+    }
+}
+
+// Test: Parenthesized condition
+fn test_paren_cond() {
+    if (1) {
+        let z := 3;
+    }
+}
+
+// Test: Field access condition
+fn test_field_access() {
+    let obj := T{ .x = 5 };
+    if obj.x {
+        let w := 4;
+    }
+}
+
+// Test: Nested blocks (no ambiguity)
+fn test_nested_blocks() {
+    if 1 {
+        if 2 {
+            let a := 1;
+        }
+    }
+}
+
+// Test: Else clause
+fn test_else() {
+    if T{} {
+        let b := 1;
+    } else {
+        let c := 2;
+    }
+}
+
+// Test: Else if clause
+fn test_else_if() {
+    if T{} {
+        let d := 1;
+    } else if T{ .x = 5 } {
+        let e := 2;
+    }
+}

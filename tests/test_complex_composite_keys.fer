@@ -1,0 +1,79 @@
+// Test cases for composite literals with complex key/value expressions
+// Issue: Composite literals should support any expression as key or value,
+// not just simple identifiers, numbers, or strings
+
+type Point struct {
+    .x: i32,
+    .y: i32
+};
+
+fn getKey() -> i32 {
+    return 42;
+}
+
+fn getValue() -> i32 {
+    return 100;
+}
+
+fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
+// Test 1: Function call as key in map literal
+fn test_function_call_keys() {
+    let m := map[i32]i32{
+        getKey() => 10,
+        getValue() => 20
+    };
+}
+
+// Test 2: Complex expressions as keys
+fn test_complex_expression_keys() {
+    let m := map[i32]i32{
+        (1 + 2) => 30,
+        (10 * 5) => 50,
+        add(3, 4) => 70
+    };
+}
+
+// Test 3: Nested expressions
+fn test_nested_expressions() {
+    let m := map[i32]i32{
+        add(getKey(), 10) => getValue(),
+        (getKey() + getValue()) => 200
+    };
+}
+
+// Test 4: Array as key (if supported)
+fn test_complex_keys_with_arrays() {
+    let x := 1;
+    let y := 2;
+    let m := map[i32]i32{
+        (x + y) => 300,
+        getKey() => getKey()
+    };
+}
+
+// Test 5: Struct literal with function call values
+fn test_struct_with_function_calls() {
+    let p := Point{
+        .x = getKey(),
+        .y = getValue()
+    };
+}
+
+// Test 6: Struct literal with complex expressions
+fn test_struct_with_expressions() {
+    let p := Point{
+        .x = (5 + 10),
+        .y = add(20, 30)
+    };
+}
+
+// Test 7: Nested composite literals
+fn test_nested_composites() {
+    let m := map[i32]Point{
+        getKey() => Point{ .x = 1, .y = 2 },
+        (10 + 20) => Point{ .x = getKey(), .y = getValue() }
+    };
+}
