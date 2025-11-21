@@ -174,28 +174,11 @@ func (p *Parser) parseReturnStmt() *ast.ReturnStmt {
 }
 
 // parseIfStmt: if cond { } else { }
-// Handles ambiguous cases like "if T{} {}" where T{} is a composite literal
 func (p *Parser) parseIfStmt() *ast.IfStmt {
 
 	start := p.advance().Start
 
 	cond := p.parseExpr()
-	
-	// Check for ambiguous case: if we're at { and the condition could be extended
-	// with a composite literal (e.g., "if T" followed by "{}"), try parsing
-	// the composite literal first
-	if p.match(lexer.OPEN_CURLY) {
-		// Try to parse as composite literal extending the condition
-		node, ok := p.tryParse(func() (ast.Node, error) {
-			return p.tryParseCompositeLiteral(cond)
-		})
-		if ok {
-			// Successfully parsed composite literal, use it as the condition
-			cond = node.(ast.Expression)
-		}
-		// If not a composite literal, the { starts the body block (handled below)
-	}
-	
 	body := p.parseBlock()
 
 	var elseNode ast.Node
@@ -523,11 +506,32 @@ func (p *Parser) isCompositeLiteral() bool {
 	p.advance() // consume {
 
 	isCompositeLit := false
-	if p.match(lexer.DOT_TOKEN, lexer.CLOSE_CURLY) {
+	if p.match(lexer.DOT_TOKEN) {
+		// Struct field marker: .field = ...
 		isCompositeLit = true
+	} else if p.match(lexer.CLOSE_CURLY) {
+		// Empty {}: could be composite literal or empty block
+		// Look at the token AFTER the } to disambiguate:
+		// - if T{} { ... }  -> next is {, so T{} is composite literal
+		// - if T{};         -> next is ;, so T{} is composite literal  
+		// - if i { }        -> next is }, so i { } is empty block (not composite)
+		// - if i {}         -> depends on context, but if followed by } or EOF, likely block
+		p.advance() // move past }
+		if p.match(lexer.OPEN_CURLY, lexer.SEMICOLON_TOKEN, lexer.COMMA_TOKEN, lexer.CLOSE_PAREN, lexer.CLOSE_BRACKET) {
+			// These tokens suggest the {} was a complete expression (composite literal)
+			isCompositeLit = true
+		} else if p.match(lexer.CLOSE_CURLY) || p.isAtEnd() {
+			// } or EOF after {} suggests it was a block, not composite literal
+			isCompositeLit = false
+		} else {
+			// Other tokens: default to composite literal
+			// This handles cases like: T{}.field or T{} + something
+			isCompositeLit = true
+		}
 	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
 		p.advance()
 		if p.match(lexer.FAT_ARROW_TOKEN) {
+			// Map entry: key => value
 			isCompositeLit = true
 		}
 	}
@@ -939,10 +943,12 @@ func (p *Parser) tryParseCompositeLiteral(typeExpr ast.Expression) (ast.Node, er
 	
 	// Check for composite literal markers:
 	// - .field = value (struct field)
-	// - } (empty composite literal)
 	// - key => value (map literal)
+	// Note: We do NOT treat {} as composite literal here because it's ambiguous
+	// with empty blocks. Empty composite literals T{} will be handled by the
+	// existing parsePostfix logic, not the fork system.
 	isCompositeLit := false
-	if p.match(lexer.DOT_TOKEN, lexer.CLOSE_CURLY) {
+	if p.match(lexer.DOT_TOKEN) {
 		isCompositeLit = true
 	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
 		p.advance()
