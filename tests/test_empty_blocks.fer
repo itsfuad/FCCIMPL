@@ -1,0 +1,58 @@
+// Test cases for empty block parsing fix
+// Issue: Empty blocks were incorrectly parsed as composite literals
+
+type T struct {
+    .x: i32
+};
+
+// Test 1: Empty block in if statement
+fn test_empty_if_block() {
+    let i := 1;
+    if i {
+        // Empty block - should parse correctly
+    }
+}
+
+// Test 2: Empty block in nested if
+fn test_nested_empty_blocks() {
+    let flag := 1;
+    if flag {
+        if flag {
+            // Nested empty block
+        }
+    }
+}
+
+// Test 3: Composite literal followed by empty block
+fn test_composite_then_empty_block() {
+    if T{} {
+        // T{} is composite literal, this is empty block
+    }
+}
+
+// Test 4: Empty composite literal in assignment
+fn test_empty_composite_assignment() {
+    let x := T{};
+}
+
+// Test 5: Mix of empty and non-empty blocks
+fn test_mixed() {
+    let i := 1;
+    if i {
+        let y := 2;
+    }
+    
+    if i {
+        // Empty
+    }
+}
+
+// Test 6: Else with empty block
+fn test_else_empty() {
+    let i := 1;
+    if i {
+        let x := 1;
+    } else {
+        // Empty else block
+    }
+}
