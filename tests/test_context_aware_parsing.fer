@@ -1,0 +1,79 @@
+// Test cases for context-aware parsing of empty blocks
+// Issue: Empty blocks followed by statements were incorrectly parsed as composite literals
+
+type T struct {
+    .x: i32
+};
+
+// Test 1: Empty block followed by let statement
+fn test_empty_block_then_let() {
+    let i := 1;
+    if i {
+    }
+    let a := 1;
+}
+
+// Test 2: Empty block followed by const statement
+fn test_empty_block_then_const() {
+    let i := 1;
+    if i {
+    }
+    const b := 2;
+}
+
+// Test 3: Empty block followed by if statement
+fn test_empty_block_then_if() {
+    let i := 1;
+    if i {
+    }
+    if i {
+        let c := 3;
+    }
+}
+
+// Test 4: Empty block followed by return
+fn test_empty_block_then_return() {
+    let i := 1;
+    if i {
+    }
+    return;
+}
+
+// Test 5: Multiple empty blocks in sequence
+fn test_multiple_empty_blocks() {
+    let i := 1;
+    if i {
+    }
+    if i {
+    }
+    if i {
+    }
+    let d := 4;
+}
+
+// Test 6: Composite literal still works after semicolon
+fn test_composite_after_semicolon() {
+    let x := T{};
+    let y := T{};
+}
+
+// Test 7: Mix of empty blocks and composite literals
+fn test_mixed() {
+    let i := 1;
+    
+    // Empty block
+    if i {
+    }
+    
+    // Composite literal
+    let t := T{};
+    
+    // Another empty block
+    if i {
+    }
+    
+    // Composite literal in if condition
+    if T{} {
+        let z := 5;
+    }
+}

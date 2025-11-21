@@ -511,17 +511,24 @@ func (p *Parser) isCompositeLiteral() bool {
 		isCompositeLit = true
 	} else if p.match(lexer.CLOSE_CURLY) {
 		// Empty {}: could be composite literal or empty block
-		// Look at the token AFTER the } to disambiguate:
-		// - if T{} { ... }  -> next is {, so T{} is composite literal
-		// - if T{};         -> next is ;, so T{} is composite literal  
-		// - if i { }        -> next is }, so i { } is empty block (not composite)
-		// - if i {}         -> depends on context, but if followed by } or EOF, likely block
+		// Use context-aware parsing: check the token AFTER the } to disambiguate
 		p.advance() // move past }
+		
+		// Tokens that suggest {} was a complete expression (composite literal):
+		// - { : another block follows (e.g., if T{} {})
+		// - ; : end of statement (e.g., let x := T{};)
+		// - , : in a list (e.g., func(T{}, y))
+		// - ) ] : end of grouping (e.g., (T{}), [T{}])
 		if p.match(lexer.OPEN_CURLY, lexer.SEMICOLON_TOKEN, lexer.COMMA_TOKEN, lexer.CLOSE_PAREN, lexer.CLOSE_BRACKET) {
-			// These tokens suggest the {} was a complete expression (composite literal)
 			isCompositeLit = true
 		} else if p.match(lexer.CLOSE_CURLY) || p.isAtEnd() {
 			// } or EOF after {} suggests it was a block, not composite literal
+			isCompositeLit = false
+		} else if p.match(lexer.LET_TOKEN, lexer.CONST_TOKEN, lexer.IF_TOKEN, lexer.RETURN_TOKEN, lexer.FUNCTION_TOKEN, lexer.TYPE_TOKEN, lexer.IMPORT_TOKEN) {
+			// Statement starter tokens: {} was a block, not composite literal
+			// This handles cases like:
+			//   if i { } let a := 1;
+			// where the {} is the if body block, not a composite literal
 			isCompositeLit = false
 		} else {
 			// Other tokens: default to composite literal
