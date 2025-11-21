@@ -535,16 +535,59 @@ func (p *Parser) isCompositeLiteral() bool {
 			// This handles cases like: T{}.field or T{} + something
 			isCompositeLit = true
 		}
-	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
-		p.advance()
-		if p.match(lexer.FAT_ARROW_TOKEN) {
-			// Map entry: key => value
-			isCompositeLit = true
-		}
+	} else {
+		// Non-empty content: scan for composite literal markers
+		// We need to check if this looks like a composite literal by looking for:
+		// - Fat arrow (=>) which indicates map literal: key => value
+		// Since keys can be ANY expression (function calls, complex expressions),
+		// we scan ahead looking for => before }, handling nesting
+		isCompositeLit = p.scanForCompositeLiteralMarkers()
 	}
 
 	p.current = savedPos
 	return isCompositeLit
+}
+
+// scanForCompositeLiteralMarkers scans ahead to determine if the content
+// looks like a composite literal by checking for => or other markers
+func (p *Parser) scanForCompositeLiteralMarkers() bool {
+	// Track nesting depth to handle nested structures
+	depth := 0
+	maxLookahead := 100 // Limit lookahead to prevent infinite scanning
+	
+	for i := 0; i < maxLookahead && !p.isAtEnd(); i++ {
+		tok := p.peek()
+		
+		switch tok.Kind {
+		case lexer.OPEN_CURLY, lexer.OPEN_PAREN, lexer.OPEN_BRACKET:
+			depth++
+			p.advance()
+		case lexer.CLOSE_CURLY:
+			if depth == 0 {
+				// Reached the end of this literal without finding =>
+				// This means it's not a map literal
+				// Could still be a struct literal or a block
+				// Default to false (block) for safety
+				return false
+			}
+			depth--
+			p.advance()
+		case lexer.CLOSE_PAREN, lexer.CLOSE_BRACKET:
+			depth--
+			p.advance()
+		case lexer.FAT_ARROW_TOKEN:
+			// Found => at our nesting level - this is a composite literal
+			if depth == 0 {
+				return true
+			}
+			p.advance()
+		default:
+			p.advance()
+		}
+	}
+	
+	// If we didn't find => after scanning, assume it's a block
+	return false
 }
 
 func (p *Parser) parseCompositeLiteralExpr(expr ast.Expression) *ast.CompositeLit {
