@@ -53,6 +53,6 @@ fn main() {
 
 ## Next Steps
 
-- [Learn about Ferret's syntax](/language/syntax)
-- [Explore the type system](/language/types)
+- [Learn about Ferret's syntax](/syntax)
+- [Explore the type system](/types)
 - [See more examples](/examples)
