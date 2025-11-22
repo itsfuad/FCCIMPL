@@ -461,6 +461,8 @@ func (c *Checker) checkExpr(expr ast.Expression) semantics.Type {
 		return c.checkCompositeLit(e)
 	case *ast.ElvisExpr:
 		return c.checkElvisExpr(e)
+	case *ast.CastExpr:
+		return c.checkCastExpr(e)
 	// Add more expression types as needed
 	default:
 		return nil
@@ -690,6 +692,24 @@ func (c *Checker) checkCompositeLit(lit *ast.CompositeLit) semantics.Type {
 	return nil
 }
 
+// checkCastExpr checks a type cast expression (expr as Type)
+func (c *Checker) checkCastExpr(expr *ast.CastExpr) semantics.Type {
+	// Check the expression being cast
+	sourceType := c.checkExpr(expr.X)
+	
+	// Convert AST type to semantic type
+	// TODO: Implement proper AST type to semantic type conversion
+	// For now, we'll do a basic conversion for common types
+	targetType := c.astTypeToSemanticType(expr.Type)
+	
+	// Validate that the cast is legal
+	// For now, we'll allow most casts and let runtime handle errors
+	// TODO: Add proper cast validation rules
+	_ = sourceType // Will use this for validation later
+	
+	return targetType
+}
+
 // isAssignable checks if a value of type 'from' can be assigned to type 'to'
 func (c *Checker) isAssignable(to, from semantics.Type) bool {
 	if to == nil || from == nil {
@@ -801,4 +821,86 @@ func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type,
 	}
 
 	c.ctx.Diagnostics.Add(diag)
+}
+
+// astTypeToSemanticType converts an AST type node to a semantic type
+// This is a basic implementation - expand as needed
+func (c *Checker) astTypeToSemanticType(astType ast.TypeNode) semantics.Type {
+	if astType == nil {
+		return nil
+	}
+
+	switch t := astType.(type) {
+	case *ast.IdentifierExpr:
+		// Handle primitive type names
+		switch t.Name {
+		case "i8", "i16", "i32", "i64":
+			return &semantics.PrimitiveType{TypeName: types.TYPE_NAME(t.Name)}
+		case "u8", "u16", "u32", "u64":
+			return &semantics.PrimitiveType{TypeName: types.TYPE_NAME(t.Name)}
+		case "f32", "f64":
+			return &semantics.PrimitiveType{TypeName: types.TYPE_NAME(t.Name)}
+		case "bool":
+			return &semantics.PrimitiveType{TypeName: types.TYPE_BOOL}
+		case "str":
+			return &semantics.PrimitiveType{TypeName: types.TYPE_STRING}
+		default:
+			// Look up named type in scope
+			if sym, ok := c.currentScope.Lookup(t.Name); ok {
+				return sym.Type
+			}
+			return &semantics.Invalid{}
+		}
+
+	case *ast.StructType:
+		// Convert struct type
+		fields := make(map[string]semantics.Type)
+		for _, field := range t.Fields {
+			fieldType := c.astTypeToSemanticType(field.Type)
+			fields[field.Name.Name] = fieldType
+		}
+		return &semantics.StructType{Fields: fields}
+
+	case *ast.ArrayType:
+		// Convert array type
+		elemType := c.astTypeToSemanticType(t.ElType)
+		return &semantics.ArrayType{
+			IsFixed:     t.Len != nil,
+			ElementType: elemType,
+		}
+
+	case *ast.MapType:
+		// Convert map type
+		keyType := c.astTypeToSemanticType(t.Key)
+		valueType := c.astTypeToSemanticType(t.Value)
+		return &semantics.MapType{
+			KeyType:   keyType,
+			ValueType: valueType,
+		}
+
+	case *ast.OptionalType:
+		// Convert optional type
+		baseType := c.astTypeToSemanticType(t.Base)
+		return &semantics.OptionalType{Base: baseType}
+
+	case *ast.FuncType:
+		// Convert function type
+		params := []semantics.ParamsType{}
+		for _, param := range t.Params {
+			paramType := c.astTypeToSemanticType(param.Type)
+			params = append(params, semantics.ParamsType{
+				Name:       param.Name.Name,
+				Type:       paramType,
+				IsVariadic: param.IsVariadic,
+			})
+		}
+		returnType := c.astTypeToSemanticType(t.Result)
+		return &semantics.FunctionType{
+			Parameters: params,
+			ReturnType: returnType,
+		}
+
+	default:
+		return &semantics.Invalid{}
+	}
 }

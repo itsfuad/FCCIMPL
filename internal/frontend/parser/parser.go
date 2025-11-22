@@ -19,7 +19,7 @@ import (
 // This is created on-the-fly, not stored persistently.
 type Parser struct {
 	tokens      []lexer.Token
-	current     int
+	current     int // current position in tokens
 	diagnostics *diagnostics.DiagnosticBag
 	filepath    string
 }
@@ -388,11 +388,9 @@ func (p *Parser) parsePostfix() ast.Expression {
 			expr = p.parseSelectorExpr(expr)
 		} else if p.match(lexer.SCOPE_TOKEN) {
 			expr = p.parseScopeResolutionExpr(expr)
-		} else if p.match(lexer.OPEN_CURLY) {
-			if !p.isCompositeLiteral() {
-				break
-			}
-			expr = p.parseCompositeLiteralExpr(expr)
+		} else if p.match(lexer.AS_TOKEN) {
+			// Type casting: expr as Type
+			expr = p.parseCastExpr(expr)
 		} else {
 			break
 		}
@@ -494,48 +492,41 @@ func (p *Parser) parseScopeResolutionExpr(x ast.Expression) *ast.ScopeResolution
 	}
 }
 
+func (p *Parser) parseCastExpr(x ast.Expression) *ast.CastExpr {
+	start := x.Loc().Start
+	p.advance() // consume 'as'
+	targetType := p.parseType()
+	return &ast.CastExpr{
+		X:        x,
+		Type:     targetType,
+		Location: p.makeLocation(*start),
+	}
+}
+
 func (p *Parser) isCompositeLiteral() bool {
 
 	savedPos := p.current
-	p.advance() // consume {
+	p.advance() // consume the {
 
-	isCompositeLit := false
+	// Empty {} or starts with .field = val (struct literal)
 	if p.match(lexer.DOT_TOKEN, lexer.CLOSE_CURLY) {
-		isCompositeLit = true
-	} else if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN) {
+		p.current = savedPos
+		return true
+	}
+
+	// Check for key => val (map literal)
+	// We need to parse ahead to see if there's a =>
+	if p.match(lexer.IDENTIFIER_TOKEN, lexer.NUMBER_TOKEN, lexer.STRING_TOKEN, lexer.OPEN_PAREN, lexer.OPEN_BRACKET) {
+		// Try to skip past a potential key expression
 		p.advance()
 		if p.match(lexer.FAT_ARROW_TOKEN) {
-			isCompositeLit = true
+			p.current = savedPos
+			return true
 		}
 	}
 
 	p.current = savedPos
-	return isCompositeLit
-}
-
-func (p *Parser) parseCompositeLiteralExpr(expr ast.Expression) *ast.CompositeLit {
-	p.advance() // consume {
-
-	var startPos source.Position
-	if expr != nil && expr.Loc() != nil && expr.Loc().Start != nil {
-		startPos = *expr.Loc().Start
-	} else {
-		startPos = p.previous().Start
-	}
-
-	elts := p.parseCompositeLiteralElements(startPos)
-	p.expect(lexer.CLOSE_CURLY)
-
-	var typ ast.TypeNode
-	if tnode, ok := expr.(ast.TypeNode); ok {
-		typ = tnode
-	}
-
-	return &ast.CompositeLit{
-		Type:     typ,
-		Elts:     elts,
-		Location: p.makeLocation(startPos),
-	}
+	return false
 }
 
 func (p *Parser) parseCompositeLiteralElements(startPos source.Position) []ast.Expression {
@@ -670,33 +661,55 @@ func (p *Parser) parsePrimary() ast.Expression {
 		// Parse as function literal
 		return p.parseFuncLit(start, params)
 
-	case lexer.DOT_TOKEN:
-		// Anonymous struct literal: .{ .field = value, ... }
-		// This is Zig-style syntax for struct literals without explicit type
-		start := p.peek().Start
-		p.advance() // consume '.'
-
-		if !p.match(lexer.OPEN_CURLY) {
-			p.error("expected '{' after '.' for anonymous struct literal")
+	case lexer.OPEN_CURLY:
+		// Anonymous struct/map literal: { .field = value } or { key => value }
+		if !p.isCompositeLiteral() {
+			p.error("unexpected '{' in expression context")
 			return nil
 		}
-
+		start := p.peek().Start
 		p.advance() // consume '{'
-		startPos := start
-		elems := p.parseCompositeLiteralElements(startPos)
+		elems := p.parseCompositeLiteralElements(start)
 		p.expect(lexer.CLOSE_CURLY)
 
 		// Create a composite literal with nil type (anonymous)
 		return &ast.CompositeLit{
-			Type:     nil, // Anonymous struct literal has no explicit type
+			Type:     nil, // Anonymous struct/map literal
 			Elts:     elems,
-			Location: p.makeLocation(startPos),
+			Location: p.makeLocation(start),
 		}
 
 	default:
-		p.error(fmt.Sprintf("unexpected token in expression: %s", tok.Value))
-		p.advance()
-		return nil
+		start := p.peek().Start
+		tok := p.peek()
+		
+		// Create a detailed error message with helpful labels
+		diag := diagnostics.NewError(fmt.Sprintf("unexpected token '%s' in expression", tok.Value)).
+			WithCode("P0001").
+			WithPrimaryLabel(p.filepath, source.NewLocation(&tok.Start, &tok.End), 
+				fmt.Sprintf("cannot use '%s' here", tok.Value))
+		
+		// Add context-specific help messages
+		if tok.Kind == lexer.SEMICOLON_TOKEN {
+			diag = diag.WithHelp("Unexpected semicolon - check if previous statement is complete")
+		} else {
+			diag = diag.WithHelp("Expected a value, identifier, literal, or expression here")
+		}
+		
+		p.diagnostics.Add(diag)
+		p.advance() // Skip only the invalid token
+		
+		// Try to continue parsing - maybe the next token starts a valid expression
+		// This allows recovery like: let x := . {.a = 1} 
+		if !p.isAtEnd() {
+			// Recursively try to parse what follows as primary expression
+			return p.parsePrimary()
+		}
+		
+		// If at end, return invalid
+		return &ast.Invalid{
+			Location: p.makeLocation(start),
+		}
 	}
 }
 

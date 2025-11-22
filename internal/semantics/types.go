@@ -173,6 +173,16 @@ func (i *InterfaceType) String() string {
 	return fmt.Sprintf("interface { \n%s\n}", strings.Join(methodStrs, ",\n"))
 }
 
+// MapType represents map types with key and value types
+type MapType struct {
+	KeyType   Type
+	ValueType Type
+}
+
+func (m *MapType) String() string {
+	return fmt.Sprintf("map[%s]%s", m.KeyType, m.ValueType)
+}
+
 type Invalid struct {
 	// Represents an invalid type, used for error handling
 }

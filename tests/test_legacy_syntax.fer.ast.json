@@ -1,0 +1,255 @@
+{
+  "FullPath": "/home/fuad/dev/go/FCCIMPL/tests/test_legacy_syntax.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "p1",
+            "Start": {
+              "Line": 4,
+              "Column": 5,
+              "Index": 92
+            },
+            "End": {
+              "Line": 4,
+              "Column": 7,
+              "Index": 94
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Type": null,
+            "Elts": [
+              {
+                "Key": {
+                  "Name": "x",
+                  "Start": {
+                    "Line": 5,
+                    "Column": 6,
+                    "Index": 106
+                  },
+                  "End": {
+                    "Line": 5,
+                    "Column": 7,
+                    "Index": 107
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "10",
+                  "Start": {
+                    "Line": 5,
+                    "Column": 10,
+                    "Index": 110
+                  },
+                  "End": {
+                    "Line": 5,
+                    "Column": 12,
+                    "Index": 112
+                  }
+                },
+                "Start": {
+                  "Line": 4,
+                  "Column": 11,
+                  "Index": 98
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 12,
+                  "Index": 112
+                }
+              },
+              {
+                "Key": {
+                  "Name": "y",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 6,
+                    "Index": 119
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 7,
+                    "Index": 120
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "20",
+                  "Start": {
+                    "Line": 6,
+                    "Column": 10,
+                    "Index": 123
+                  },
+                  "End": {
+                    "Line": 6,
+                    "Column": 12,
+                    "Index": 125
+                  }
+                },
+                "Start": {
+                  "Line": 4,
+                  "Column": 11,
+                  "Index": 98
+                },
+                "End": {
+                  "Line": 6,
+                  "Column": 12,
+                  "Index": 125
+                }
+              }
+            ],
+            "Start": {
+              "Line": 4,
+              "Column": 11,
+              "Index": 98
+            },
+            "End": {
+              "Line": 7,
+              "Column": 2,
+              "Index": 128
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 4,
+        "Column": 1,
+        "Index": 88
+      },
+      "End": {
+        "Line": 7,
+        "Column": 3,
+        "Index": 129
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "p2",
+            "Start": {
+              "Line": 10,
+              "Column": 5,
+              "Index": 163
+            },
+            "End": {
+              "Line": 10,
+              "Column": 7,
+              "Index": 165
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Type": null,
+            "Elts": [
+              {
+                "Key": {
+                  "Name": "x",
+                  "Start": {
+                    "Line": 11,
+                    "Column": 6,
+                    "Index": 176
+                  },
+                  "End": {
+                    "Line": 11,
+                    "Column": 7,
+                    "Index": 177
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "30",
+                  "Start": {
+                    "Line": 11,
+                    "Column": 10,
+                    "Index": 180
+                  },
+                  "End": {
+                    "Line": 11,
+                    "Column": 12,
+                    "Index": 182
+                  }
+                },
+                "Start": {
+                  "Line": 10,
+                  "Column": 11,
+                  "Index": 169
+                },
+                "End": {
+                  "Line": 11,
+                  "Column": 12,
+                  "Index": 182
+                }
+              },
+              {
+                "Key": {
+                  "Name": "y",
+                  "Start": {
+                    "Line": 12,
+                    "Column": 6,
+                    "Index": 189
+                  },
+                  "End": {
+                    "Line": 12,
+                    "Column": 7,
+                    "Index": 190
+                  }
+                },
+                "Value": {
+                  "Kind": 0,
+                  "Value": "40",
+                  "Start": {
+                    "Line": 12,
+                    "Column": 10,
+                    "Index": 193
+                  },
+                  "End": {
+                    "Line": 12,
+                    "Column": 12,
+                    "Index": 195
+                  }
+                },
+                "Start": {
+                  "Line": 10,
+                  "Column": 11,
+                  "Index": 169
+                },
+                "End": {
+                  "Line": 12,
+                  "Column": 12,
+                  "Index": 195
+                }
+              }
+            ],
+            "Start": {
+              "Line": 10,
+              "Column": 11,
+              "Index": 169
+            },
+            "End": {
+              "Line": 13,
+              "Column": 2,
+              "Index": 198
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 10,
+        "Column": 1,
+        "Index": 159
+      },
+      "End": {
+        "Line": 13,
+        "Column": 3,
+        "Index": 199
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

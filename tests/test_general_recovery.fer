@@ -1,0 +1,20 @@
+// Test general error recovery with various invalid tokens
+
+// Test 1: Invalid token before {}
+let bad1 := @{
+    .x = 1
+};
+
+// This should still parse correctly after the error
+let good1 := {
+    .x = 10,
+    .y = 20
+};
+
+// Test 2: Another case with .{
+let bad2 := .{
+    .a = 1
+};
+
+// This should also parse correctly
+let good2 := 42;

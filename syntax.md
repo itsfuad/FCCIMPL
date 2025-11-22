@@ -20,23 +20,35 @@ struct{
     .field2: Type2,
 }    // define a struct
 
-// struct instantiation
-.{
+// Anonymous struct literal (type inferred from fields)
+{
     .field1 = Value1,
     .field2 = Value2,
 }
+
+// Anonymous struct with explicit type cast
+{
+    .field1 = Value1,
+    .field2 = Value2,
+} as StructType
+
+// struct literal with type annotation
+let x: StructType = {
+    .field1 = Value1,
+    .field2 = Value2,
+};
+
+// Shorthand with walrus operator and type cast
+let x := {
+    .field1 = Value1,
+    .field2 = Value2,
+} as StructType;
 
 // named struct type
 type StructType struct{
     .field1: Type1,
     .field2: Type2,
 };
-
-// instantiate named struct
-StructType{
-    .field1 = Value1,
-    .field2 = Value2,
-}
 
 // interface type
 interface{
@@ -73,13 +85,32 @@ type EnumType enum{
 // enum usage
 EnumType::Variant1 // all static symbols are accessed with ::, no dot notation (ex: module, enum)
 
-//map type
+// map type
 map[KeyType]ValueType   // define a map
-// map literal
-map[KeyType]ValueType {
+
+// Anonymous map literal (type inferred from key/value types)
+{
     Key1 => Value1,
     Key2 => Value2,
 }
+
+// Anonymous map with explicit type cast
+{
+    "key1" => 10,
+    "key2" => 20,
+} as map[str]i32
+
+// Map literal with type annotation
+let m: map[str]i32 = {
+    "key1" => 10,
+    "key2" => 20,
+};
+
+// Shorthand with walrus operator and type cast
+let m := {
+    "a" => 1,
+    "b" => 2,
+} as map[str]i32;
 
 ```
 

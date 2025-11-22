@@ -1,0 +1,15 @@
+// Test backward compatibility with legacy .{} syntax
+
+// Legacy .{} syntax still works
+let p1 := .{
+    .x = 10,
+    .y = 20,
+};
+
+// New {} syntax also works
+let p2 := {
+    .x = 30,
+    .y = 40,
+};
+
+// Both produce the same result - anonymous struct literals

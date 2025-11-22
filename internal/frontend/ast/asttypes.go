@@ -16,6 +16,7 @@ type Invalid struct {
 }
 
 func (i *Invalid) INode()                {} // Implements Node interface
+func (i *Invalid) Expr()                 {} // Can be used as expression (for error recovery)
 func (i *Invalid) TypeExpr()             {} // Type nodes implement TypeExpr
 func (i *Invalid) Loc() *source.Location { return &i.Location }
 
