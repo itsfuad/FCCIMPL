@@ -329,6 +329,8 @@ header a[href="/"] {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 1rem;
+  position: relative;
+  isolation: isolate;
 }
 
 /* Section Labels */
@@ -342,6 +344,8 @@ header a[href="/"] {
   text-transform: uppercase;
   border-bottom: 1px solid var(--foreground);
   color: var(--foreground);
+  position: relative;
+  overflow: hidden;
 }
 
 /* Features Section - Vertical List */
@@ -353,11 +357,14 @@ header a[href="/"] {
   margin-bottom: 4rem;
   padding-left: 1rem;
   border-left: 1px solid var(--border);
-  transition: border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .feature-item:hover {
   border-left-color: var(--foreground);
+  transform: translateX(8px);
 }
 
 .feature-header {
@@ -379,6 +386,16 @@ header a[href="/"] {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--foreground);
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, var(--foreground) 0%, var(--foreground) 50%, var(--accent-color) 100%);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.feature-item:hover h2 {
+  background-position: 100% 0;
+  -webkit-text-fill-color: transparent;
 }
 
 .feature-description {
@@ -415,7 +432,8 @@ header a[href="/"] {
   padding: 2rem 0;
   border-top: 1px solid var(--border);
   text-decoration: none;
-  transition: all 0.2s ease;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .path-link:last-child {
@@ -424,6 +442,7 @@ header a[href="/"] {
 
 .path-link:hover {
   padding-left: 1rem;
+  transform: scale(1.01);
 }
 
 .path-content {
@@ -492,3 +511,198 @@ header a[href="/"] {
 * {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ==================== SCROLL ANIMATIONS ==================== */
+
+/* Base state for scroll-triggered animations */
+.scroll-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-slide-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.scroll-slide-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays */
+[data-delay="0"].visible {
+  transition-delay: 0ms;
+}
+
+[data-delay="100"].visible {
+  transition-delay: 100ms;
+}
+
+[data-delay="200"].visible {
+  transition-delay: 200ms;
+}
+
+[data-delay="300"].visible {
+  transition-delay: 300ms;
+}
+
+/* ==================== MOUSE POSITION EFFECTS ==================== */
+
+/* Interactive background that follows mouse */
+.modern-layout::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(244, 69, 151, 0.12),
+    transparent 50%
+  );
+  pointer-events: none;
+  opacity: var(--show-effect, 0);
+  transition: opacity 0.5s ease;
+  z-index: -1;
+}
+
+/* Ensure content is above the effect */
+.modern-layout > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Enhanced hover effects for feature items */
+.feature-item {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.feature-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244, 69, 151, 0.05),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.feature-item:hover::before {
+  left: 100%;
+}
+
+.feature-item:hover {
+  transform: translateX(8px);
+}
+
+/* Enhanced path link hover with glow effect */
+.path-link {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.path-link::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(244, 69, 151, 0.05),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.path-link:hover::after {
+  opacity: 1;
+}
+
+.path-link:hover {
+  transform: scale(1.01);
+}
+
+/* Add subtle scale animation to code blocks on scroll */
+.example-modern .scroll-fade-in {
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.example-modern .scroll-fade-in.visible {
+  animation: subtle-scale 0.6s ease-out forwards;
+}
+
+.example-modern .expressive-code,
+.example-modern .astro-code {
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes subtle-scale {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add perspective for 3D transforms */
+.scroll-animate {
+  perspective: 1000px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .scroll-fade-in,
+  .scroll-slide-up {
+    opacity: 1;
+    transform: none;
+  }
+}
+

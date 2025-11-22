@@ -18,13 +18,16 @@ hero:
 ---
 
 import CustomFooter from '../../components/CustomFooter.astro';
+import HomepageAnimations from '../../components/HomepageAnimations.astro';
 
-<div class="modern-layout">
+<HomepageAnimations />
 
-<section class="features-modern">
-  <div class="section-label">Features</div>
+<div class="modern-layout" id="homepage-content">
+
+<section class="features-modern scroll-animate">
+  <div class="section-label scroll-fade-in">Features</div>
   
-  <div class="feature-item">
+  <div class="feature-item scroll-slide-up" data-delay="0">
     <div class="feature-header">
       <span class="feature-marker">01</span>
       <h2>Type Safety</h2>
@@ -34,7 +37,7 @@ import CustomFooter from '../../components/CustomFooter.astro';
     </p>
   </div>
 
-  <div class="feature-item">
+  <div class="feature-item scroll-slide-up" data-delay="100">
     <div class="feature-header">
       <span class="feature-marker">02</span>
       <h2>Optional Types</h2>
@@ -44,7 +47,7 @@ import CustomFooter from '../../components/CustomFooter.astro';
     </p>
   </div>
 
-  <div class="feature-item">
+  <div class="feature-item scroll-slide-up" data-delay="200">
     <div class="feature-header">
       <span class="feature-marker">03</span>
       <h2>Error Handling</h2>
@@ -54,7 +57,7 @@ import CustomFooter from '../../components/CustomFooter.astro';
     </p>
   </div>
 
-  <div class="feature-item">
+  <div class="feature-item scroll-slide-up" data-delay="300">
     <div class="feature-header">
       <span class="feature-marker">04</span>
       <h2>Modern Syntax</h2>
@@ -65,8 +68,9 @@ import CustomFooter from '../../components/CustomFooter.astro';
   </div>
 </section>
 
-<section class="example-modern">
-  <div class="section-label">Quick Look</div>
+<section class="example-modern scroll-animate">
+  <div class="section-label scroll-fade-in">Quick Look</div>
+  <div class="scroll-fade-in" data-delay="200">
   
 ```ferret
 // Variables with type inference
@@ -85,12 +89,13 @@ fn greet(name: str) -> str {
     return "Hello, " + name + "!";
 }
 ```
+  </div>
 </section>
 
-<section class="paths-modern">
-  <div class="section-label">Learning Paths</div>
+<section class="paths-modern scroll-animate">
+  <div class="section-label scroll-fade-in">Learning Paths</div>
   
-  <a href="/getting-started/installation/" class="path-link">
+  <a href="/getting-started/installation/" class="path-link scroll-slide-up" data-delay="0">
     <div class="path-content">
       <span class="path-step">Step 1</span>
       <h3>Installation</h3>
@@ -99,7 +104,7 @@ fn greet(name: str) -> str {
     <span class="path-icon">→</span>
   </a>
 
-  <a href="/getting-started/hello-world/" class="path-link">
+  <a href="/getting-started/hello-world/" class="path-link scroll-slide-up" data-delay="100">
     <div class="path-content">
       <span class="path-step">Step 2</span>
       <h3>Hello World</h3>
@@ -108,7 +113,7 @@ fn greet(name: str) -> str {
     <span class="path-icon">→</span>
   </a>
 
-  <a href="/language/variables/" class="path-link">
+  <a href="/language/variables/" class="path-link scroll-slide-up" data-delay="200">
     <div class="path-content">
       <span class="path-step">Step 3</span>
       <h3>Language Guide</h3>

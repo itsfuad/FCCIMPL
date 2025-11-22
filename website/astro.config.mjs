@@ -67,13 +67,8 @@ export default defineConfig({
                     ],
                 },
                 {
-                    label: 'Playground',
-                    link: '/playground/',
-                },
-                {
                     label: 'Basics',
                     items: [
-                        { label: 'Syntax', slug: 'language/basics/syntax' },
                         { label: 'Variables & Constants', slug: 'language/basics/variables' },
                         { label: 'Data Types', slug: 'language/basics/types' },
                         { label: 'Operators', slug: 'language/basics/operators' },
@@ -83,32 +78,32 @@ export default defineConfig({
                 {
                     label: 'Control Flow',
                     items: [
-                        { label: 'If Statements', slug: 'language/if-statements' },
-                        { label: 'Loops', slug: 'language/loops' },
-                        { label: 'When Expressions', slug: 'language/when' },
+                        { label: 'If Statements', slug: 'language/control-flow/if-statements' },
+                        { label: 'Loops', slug: 'language/control-flow/loops' },
+                        { label: 'When Expressions', slug: 'language/control-flow/when' },
                     ],
                 },
                 {
                     label: 'Functions',
                     items: [
-                        { label: 'Function Basics', slug: 'language/functions' },
-                        { label: 'Parameters & Returns', slug: 'language/parameters' },
+                        { label: 'Function Basics', slug: 'language/functions/functions' },
+                        { label: 'Parameters & Returns', slug: 'language/functions/parameters' },
                     ],
                 },
                 {
                     label: 'Type System',
                     items: [
-                        { label: 'Structs', slug: 'language/structs' },
-                        { label: 'Enums', slug: 'language/enums' },
-                        { label: 'Interfaces', slug: 'language/interfaces' },
-                        { label: 'Optional Types', slug: 'language/optionals' },
+                        { label: 'Structs', slug: 'language/type-system/structs' },
+                        { label: 'Enums', slug: 'language/type-system/enums' },
+                        { label: 'Interfaces', slug: 'language/type-system/interfaces' },
+                        { label: 'Optional Types', slug: 'language/type-system/optionals' },
                     ],
                 },
                 {
                     label: 'Advanced',
                     items: [
-                        { label: 'Error Handling', slug: 'language/errors' },
-                        { label: 'Generics', slug: 'language/generics' },
+                        { label: 'Error Handling', slug: 'language/advanced/errors' },
+                        { label: 'Generics', slug: 'language/advanced/generics' },
                     ],
                 },
             ],
