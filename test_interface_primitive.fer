@@ -1,0 +1,7 @@
+type Shape interface {
+    area() -> f64
+};
+
+fn test(s: Shape) {}
+
+test(42);

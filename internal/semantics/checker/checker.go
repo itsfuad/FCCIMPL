@@ -458,6 +458,8 @@ func (c *Checker) checkExpr(expr ast.Expression) semantics.Type {
 		return c.checkCallExpr(e)
 	case *ast.SelectorExpr:
 		return c.checkSelectorExpr(e)
+	case *ast.ScopeResolutionExpr:
+		return c.checkScopeResolutionExpr(e)
 	case *ast.CompositeLit:
 		return c.checkCompositeLit(e)
 	case *ast.ElvisExpr:
@@ -533,8 +535,70 @@ func (c *Checker) checkCallExpr(expr *ast.CallExpr) semantics.Type {
 
 	// Check if it's a function type
 	if ft, ok := funcType.(*semantics.FunctionType); ok {
-		// Check argument count and types
-		// TODO: Implement argument checking
+		// Check argument count
+		expectedCount := len(ft.Parameters)
+		actualCount := len(expr.Args)
+
+		// Handle variadic functions
+		isVariadic := expectedCount > 0 && ft.Parameters[expectedCount-1].IsVariadic
+		minArgs := expectedCount
+		if isVariadic {
+			minArgs = expectedCount - 1
+		}
+
+		if actualCount < minArgs {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("not enough arguments in call to function: expected at least %d, got %d", minArgs, actualCount)).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, expr.Loc(),
+						fmt.Sprintf("expected at least %d argument(s)", minArgs)),
+			)
+		} else if !isVariadic && actualCount > expectedCount {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("too many arguments in call to function: expected %d, got %d", expectedCount, actualCount)).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, expr.Loc(),
+						fmt.Sprintf("expected %d argument(s)", expectedCount)),
+			)
+		}
+
+		// Check argument types
+		for i, arg := range expr.Args {
+			argType := c.checkExpr(arg)
+
+			// Determine expected parameter type
+			var expectedParam semantics.ParamsType
+			if i < len(ft.Parameters) {
+				expectedParam = ft.Parameters[i]
+			} else if isVariadic && len(ft.Parameters) > 0 {
+				// Use the variadic parameter type for remaining arguments
+				expectedParam = ft.Parameters[len(ft.Parameters)-1]
+			} else {
+				// Too many arguments, already reported above
+				continue
+			}
+
+			// Check if argument type is assignable to parameter type
+			if !c.isAssignable(expectedParam.Type, argType) {
+				paramName := expectedParam.Name
+				if paramName == "" {
+					paramName = fmt.Sprintf("parameter %d", i+1)
+				}
+
+				c.ctx.Diagnostics.Add(
+					diagnostics.NewError(
+						fmt.Sprintf("cannot use type %s as type %s in argument to function call",
+							c.typeString(argType),
+							c.typeString(expectedParam.Type))).
+						WithCode(diagnostics.ErrTypeMismatch).
+						WithPrimaryLabel(c.currentFile, arg.Loc(),
+							fmt.Sprintf("argument has type %s", c.typeString(argType))).
+						WithNote(fmt.Sprintf("%s expects type %s", paramName, c.typeString(expectedParam.Type))),
+				)
+			}
+		}
 
 		returnType := ft.ReturnType
 
@@ -746,6 +810,36 @@ func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 		)
 		return &semantics.Invalid{}
 	}
+
+	return nil
+}
+
+// checkScopeResolutionExpr checks scope resolution expressions (Type::variant or module::symbol)
+func (c *Checker) checkScopeResolutionExpr(expr *ast.ScopeResolutionExpr) semantics.Type {
+	baseType := c.checkExpr(expr.X)
+
+	// Handle enum variant access (Enum::Variant)
+	if userType, ok := baseType.(*semantics.UserType); ok {
+		// For enums, we need to check the AST definition since enum types aren't
+		// fully represented in the semantic type system yet
+		// Look up the type declaration to see if it's an enum
+		if ident, ok := expr.X.(*ast.IdentifierExpr); ok {
+			symbol, exists := c.currentScope.Lookup(ident.Name)
+			if exists && symbol.Type == userType {
+				// Check if this symbol has an enum type definition in the AST
+				// For now, we'll accept any static access on user types and validate at runtime
+				// TODO: Implement full enum type checking when enum semantics are complete
+				return userType
+			}
+		}
+
+		// Check for static methods or other static members
+		// For now, only enum-like access is supported
+		// Since we don't have full enum support yet, we'll be lenient
+		return userType
+	}
+
+	// TODO: Handle module::symbol access when module system is implemented
 
 	return nil
 }

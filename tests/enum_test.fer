@@ -1,0 +1,25 @@
+// Test enum variant access with ::
+
+type Color enum {
+    Red,
+    Green,
+    Blue
+};
+
+type Status enum {
+    Success,
+    Failure,
+    Pending
+};
+
+// Valid enum access
+let c1: Color = Color::Red;
+let c2: Color = Color::Green;
+let c3: Color = Color::Blue;
+
+let s1: Status = Status::Success;
+let s2: Status = Status::Failure;
+let s3: Status = Status::Pending;
+
+// Invalid variant - should error
+let invalid: Status = Status::Invalid;

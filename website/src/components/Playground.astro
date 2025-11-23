@@ -96,6 +96,18 @@ self.MonacoEnvironment = {
   }
 };
 
+declare global {
+  interface Window {
+    ferretCompile?: (code: string, debug: boolean) => { success: boolean; output?: string; error?: string };
+    ferretWasmVersion?: string;
+    ferretEditor?: monaco.editor.IStandaloneCodeEditor;
+  }
+  class Go {
+    importObject: any;
+    run(instance: WebAssembly.Instance): Promise<void>;
+  }
+}
+
 // Initialize Go WASM
 let wasmReady = false;
 let wasmGo = null;
@@ -143,8 +155,8 @@ async function initWasm() {
       console.log('📌 WASM Version:', version);
       
       // Update status to ready
-      const status = document.getElementById('output-status');
-      const statusText = status.querySelector('.status-text');
+      const status = document.getElementById('output-status') as HTMLElement;
+      const statusText = status.querySelector('.status-text') as HTMLElement;
       status.setAttribute('data-status', 'ready');
       statusText.textContent = 'Ready';
     } else {
@@ -152,17 +164,18 @@ async function initWasm() {
     }
   } catch (error) {
     console.error('❌ Failed to load WASM:', error);
-    console.error('Error details:', error.stack);
+    console.error('Error details:', (error as Error).stack);
     wasmReady = false;
     
     // Update status to error and show in output
-    const status = document.getElementById('output-status');
-    const statusText = status.querySelector('.status-text');
-    const output = document.getElementById('output');
+    const status = document.getElementById('output-status') as HTMLElement;
+    const statusText = status.querySelector('.status-text') as HTMLElement;
+    const output = document.getElementById('output') as HTMLElement;
     
     status.setAttribute('data-status', 'error');
     statusText.textContent = 'Error';
-    output.innerHTML = `<p style="color: #ef4444;">❌ Failed to load compiler: ${escapeHtml(error.message || error.toString())}</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Please refresh the page to try again.</p>`;
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    output.innerHTML = `<p style="color: #ef4444;">❌ Failed to load compiler: ${escapeHtml(errorMessage)}</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Please refresh the page to try again.</p>`;
   }
 }
 
@@ -294,12 +307,23 @@ monaco.languages.register({ id: 'ferret' });
 
 
   // Dynamic theme switching for Monaco
-  const editorContainer = document.getElementById('editor');
+  const editorContainer = document.getElementById('editor') as HTMLElement;
   editorContainer.offsetHeight;
-  const defaultCode = [
-    'let name := "Ferret";',
-    'name = 10;'
-  ].join('\n');
+  
+  // Load default code from file
+  let defaultCode = '// Loading...';
+  try {
+    const response = await fetch('/examples/default.fer');
+    if (response.ok) {
+      defaultCode = await response.text();
+    } else {
+      console.warn('Failed to load default code, using fallback');
+      defaultCode = 'let name := "Ferret";\nname = 10;';
+    }
+  } catch (error) {
+    console.error('Error loading default code:', error);
+    defaultCode = 'let name := "Ferret";\nname = 10;';
+  }
 
   // Define both dark and light themes
   monaco.editor.defineTheme('ferret-one-dark-pro', {
@@ -385,22 +409,22 @@ monaco.languages.register({ id: 'ferret' });
 
   // Update cursor position
   editor.onDidChangeCursorPosition((e) => {
-    document.getElementById('output-info').textContent = `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
+    (document.getElementById('output-info') as HTMLElement).textContent = `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
   });
 
   // Add keyboard shortcut: Ctrl+Enter to run code
   editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
-    document.getElementById('run-btn').click();
+    (document.getElementById('run-btn') as HTMLElement).click();
   });
 
   // No theme switching: always use 'ferret-one-dark-pro' for consistency with code snippets
 
   // Button handlers
-  document.getElementById('run-btn').addEventListener('click', async function() {
+  (document.getElementById('run-btn') as HTMLButtonElement).addEventListener('click', async function() {
     const code = editor.getValue();
-    const output = document.getElementById('output');
-    const status = document.getElementById('output-status');
-    const statusText = status.querySelector('.status-text');
+    const output = document.getElementById('output') as HTMLElement;
+    const status = document.getElementById('output-status') as HTMLElement;
+    const statusText = status.querySelector('.status-text') as HTMLElement;
     const runBtn = this;
     
     console.log('WASM Ready:', wasmReady);
@@ -454,7 +478,7 @@ monaco.languages.register({ id: 'ferret' });
       
     } catch (error) {
       console.error('💥 Exception during compilation:', error);
-      console.error('Error stack:', error.stack);
+      console.error('Error stack:', (error as Error).stack);
       
       // Mark WASM as not ready (it may have crashed)
       wasmReady = false;
@@ -492,19 +516,19 @@ monaco.languages.register({ id: 'ferret' });
             console.error('❌ Retry compilation also failed:', retryError);
             status.setAttribute('data-status', 'error');
             statusText.textContent = 'Error';
-            output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Error: ${escapeHtml(retryError.message || retryError.toString())}</p>`;
+            output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Error: ${escapeHtml((retryError as Error).message || String(retryError))}</p>`;
           }
         } else {
           // Restart failed
           status.setAttribute('data-status', 'error');
           statusText.textContent = 'Error';
-          output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and could not be restarted. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Original error: ${escapeHtml(error.message || error.toString())}</p>`;
+          output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and could not be restarted. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Original error: ${escapeHtml((error as Error).message || String(error))}</p>`;
         }
       } catch (restartError) {
         console.error('❌ WASM restart failed:', restartError);
         status.setAttribute('data-status', 'error');
         statusText.textContent = 'Error';
-        output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Restart error: ${escapeHtml(restartError.message || restartError.toString())}</p>`;
+        output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Restart error: ${escapeHtml((restartError as Error).message || String(restartError))}</p>`;
       }
     } finally {
       runBtn.disabled = false;
@@ -519,17 +543,17 @@ monaco.languages.register({ id: 'ferret' });
   });
 
   // Helper function to escape HTML
-  function escapeHtml(text) {
+  function escapeHtml(text: string): string {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
-  document.getElementById('copy-btn').addEventListener('click', function() {
+  (document.getElementById('copy-btn') as HTMLButtonElement).addEventListener('click', function() {
     const code = editor.getValue();
     navigator.clipboard.writeText(code).then(() => {
-      const btnIcon = this.querySelector('.copyicon');
-      const btnText = this.querySelector('.copytext');
+      const btnIcon = this.querySelector('.copyicon') as HTMLElement;
+      const btnText = this.querySelector('.copytext') as HTMLElement;
       console.log(btnIcon, btnText);
       const originalBtnHTML = btnIcon.innerHTML;
       const originalText = btnText.textContent;
@@ -551,7 +575,7 @@ monaco.languages.register({ id: 'ferret' });
     });
   });
 
-  document.getElementById('export-btn').addEventListener('click', function() {
+  (document.getElementById('export-btn') as HTMLButtonElement).addEventListener('click', function() {
     const code = editor.getValue();
     const blob = new Blob([code], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -562,10 +586,10 @@ monaco.languages.register({ id: 'ferret' });
     URL.revokeObjectURL(url);
   });
 
-  document.getElementById('clear-btn').addEventListener('click', function() {
+  (document.getElementById('clear-btn') as HTMLButtonElement).addEventListener('click', function() {
     if (confirm('Are you sure you want to clear the editor?')) {
       editor.setValue('');
-      document.getElementById('output').innerHTML = '<p class="output-placeholder">Editor cleared</p>';
+      (document.getElementById('output') as HTMLElement).innerHTML = '<p class="output-placeholder">Editor cleared</p>';
     }
   });
 
@@ -573,10 +597,10 @@ monaco.languages.register({ id: 'ferret' });
   window.ferretEditor = editor;
 
   // Resize functionality
-  const resizeHandle = document.getElementById('resize-handle');
-  const editorPanel = document.querySelector('.editor-panel');
-  const outputPanel = document.querySelector('.output-panel');
-  const playgroundContent = document.querySelector('.playground-content');
+  const resizeHandle = document.getElementById('resize-handle') as HTMLElement;
+  const editorPanel = document.querySelector('.editor-panel') as HTMLElement;
+  const outputPanel = document.querySelector('.output-panel') as HTMLElement;
+  const playgroundContent = document.querySelector('.playground-content') as HTMLElement;
   
   let isResizing = false;
   let startX = 0;

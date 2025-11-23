@@ -1,0 +1,248 @@
+{
+  "FullPath": "E:\\Dev\\FCCIMPL\\test_interface_primitive.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "Shape",
+        "Start": {
+          "Line": 1,
+          "Column": 6,
+          "Index": 5
+        },
+        "End": {
+          "Line": 1,
+          "Column": 11,
+          "Index": 10
+        }
+      },
+      "Type": {
+        "Methods": [
+          {
+            "Name": {
+              "Name": "area",
+              "Start": {
+                "Line": 2,
+                "Column": 5,
+                "Index": 28
+              },
+              "End": {
+                "Line": 2,
+                "Column": 9,
+                "Index": 32
+              }
+            },
+            "Type": {
+              "Params": null,
+              "Result": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 2,
+                  "Column": 15,
+                  "Index": 38
+                },
+                "End": {
+                  "Line": 2,
+                  "Column": 18,
+                  "Index": 41
+                }
+              },
+              "Start": {
+                "Line": 2,
+                "Column": 9,
+                "Index": 32
+              },
+              "End": {
+                "Line": 2,
+                "Column": 18,
+                "Index": 41
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 2,
+              "Column": 5,
+              "Index": 28
+            },
+            "End": {
+              "Line": 2,
+              "Column": 18,
+              "Index": 41
+            }
+          }
+        ],
+        "Start": {
+          "Line": 1,
+          "Column": 12,
+          "Index": 11
+        },
+        "End": {
+          "Line": 3,
+          "Column": 2,
+          "Index": 44
+        }
+      },
+      "Start": {
+        "Line": 1,
+        "Column": 1,
+        "Index": 0
+      },
+      "End": {
+        "Line": 3,
+        "Column": 3,
+        "Index": 45
+      }
+    },
+    {
+      "Name": {
+        "Name": "test",
+        "Start": {
+          "Line": 5,
+          "Column": 4,
+          "Index": 52
+        },
+        "End": {
+          "Line": 5,
+          "Column": 8,
+          "Index": 56
+        }
+      },
+      "Type": {
+        "Params": [
+          {
+            "Name": {
+              "Name": "s",
+              "Start": {
+                "Line": 5,
+                "Column": 9,
+                "Index": 57
+              },
+              "End": {
+                "Line": 5,
+                "Column": 10,
+                "Index": 58
+              }
+            },
+            "Type": {
+              "Name": "Shape",
+              "Start": {
+                "Line": 5,
+                "Column": 12,
+                "Index": 60
+              },
+              "End": {
+                "Line": 5,
+                "Column": 17,
+                "Index": 65
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 5,
+              "Column": 9,
+              "Index": 57
+            },
+            "End": {
+              "Line": 5,
+              "Column": 17,
+              "Index": 65
+            }
+          }
+        ],
+        "Result": null,
+        "Start": {
+          "Line": 5,
+          "Column": 8,
+          "Index": 56
+        },
+        "End": {
+          "Line": 5,
+          "Column": 18,
+          "Index": 66
+        }
+      },
+      "Body": {
+        "Nodes": [],
+        "Start": {
+          "Line": 5,
+          "Column": 19,
+          "Index": 67
+        },
+        "End": {
+          "Line": 5,
+          "Column": 21,
+          "Index": 69
+        }
+      },
+      "Start": {
+        "Line": 5,
+        "Column": 1,
+        "Index": 49
+      },
+      "End": {
+        "Line": 5,
+        "Column": 21,
+        "Index": 69
+      }
+    },
+    {
+      "X": {
+        "Fun": {
+          "Name": "test",
+          "Start": {
+            "Line": 7,
+            "Column": 1,
+            "Index": 73
+          },
+          "End": {
+            "Line": 7,
+            "Column": 5,
+            "Index": 77
+          }
+        },
+        "Args": [
+          {
+            "Kind": 0,
+            "Value": "42",
+            "Start": {
+              "Line": 7,
+              "Column": 6,
+              "Index": 78
+            },
+            "End": {
+              "Line": 7,
+              "Column": 8,
+              "Index": 80
+            }
+          }
+        ],
+        "Catch": null,
+        "Start": {
+          "Line": 7,
+          "Column": 1,
+          "Index": 73
+        },
+        "End": {
+          "Line": 7,
+          "Column": 9,
+          "Index": 81
+        }
+      },
+      "Start": {
+        "Line": 7,
+        "Column": 1,
+        "Index": 73
+      },
+      "End": {
+        "Line": 7,
+        "Column": 10,
+        "Index": 82
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

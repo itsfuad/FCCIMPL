@@ -1,0 +1,711 @@
+{
+  "FullPath": "E:\\Dev\\FCCIMPL\\tests\\enum_test.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "Color",
+        "Start": {
+          "Line": 3,
+          "Column": 6,
+          "Index": 44
+        },
+        "End": {
+          "Line": 3,
+          "Column": 11,
+          "Index": 49
+        }
+      },
+      "Type": {
+        "Variants": [
+          {
+            "Name": {
+              "Name": "Red",
+              "Start": {
+                "Line": 4,
+                "Column": 5,
+                "Index": 62
+              },
+              "End": {
+                "Line": 4,
+                "Column": 8,
+                "Index": 65
+              }
+            },
+            "Type": null,
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "Green",
+              "Start": {
+                "Line": 5,
+                "Column": 5,
+                "Index": 72
+              },
+              "End": {
+                "Line": 5,
+                "Column": 10,
+                "Index": 77
+              }
+            },
+            "Type": null,
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "Blue",
+              "Start": {
+                "Line": 6,
+                "Column": 5,
+                "Index": 84
+              },
+              "End": {
+                "Line": 6,
+                "Column": 9,
+                "Index": 88
+              }
+            },
+            "Type": null,
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 3,
+          "Column": 12,
+          "Index": 50
+        },
+        "End": {
+          "Line": 7,
+          "Column": 2,
+          "Index": 91
+        }
+      },
+      "Start": {
+        "Line": 3,
+        "Column": 1,
+        "Index": 39
+      },
+      "End": {
+        "Line": 7,
+        "Column": 3,
+        "Index": 92
+      }
+    },
+    {
+      "Name": {
+        "Name": "Status",
+        "Start": {
+          "Line": 9,
+          "Column": 6,
+          "Index": 101
+        },
+        "End": {
+          "Line": 9,
+          "Column": 12,
+          "Index": 107
+        }
+      },
+      "Type": {
+        "Variants": [
+          {
+            "Name": {
+              "Name": "Success",
+              "Start": {
+                "Line": 10,
+                "Column": 5,
+                "Index": 120
+              },
+              "End": {
+                "Line": 10,
+                "Column": 12,
+                "Index": 127
+              }
+            },
+            "Type": null,
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "Failure",
+              "Start": {
+                "Line": 11,
+                "Column": 5,
+                "Index": 134
+              },
+              "End": {
+                "Line": 11,
+                "Column": 12,
+                "Index": 141
+              }
+            },
+            "Type": null,
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "Pending",
+              "Start": {
+                "Line": 12,
+                "Column": 5,
+                "Index": 148
+              },
+              "End": {
+                "Line": 12,
+                "Column": 12,
+                "Index": 155
+              }
+            },
+            "Type": null,
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 9,
+          "Column": 13,
+          "Index": 108
+        },
+        "End": {
+          "Line": 13,
+          "Column": 2,
+          "Index": 158
+        }
+      },
+      "Start": {
+        "Line": 9,
+        "Column": 1,
+        "Index": 96
+      },
+      "End": {
+        "Line": 13,
+        "Column": 3,
+        "Index": 159
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "c1",
+            "Start": {
+              "Line": 16,
+              "Column": 5,
+              "Index": 189
+            },
+            "End": {
+              "Line": 16,
+              "Column": 7,
+              "Index": 191
+            }
+          },
+          "Type": {
+            "Name": "Color",
+            "Start": {
+              "Line": 16,
+              "Column": 9,
+              "Index": 193
+            },
+            "End": {
+              "Line": 16,
+              "Column": 14,
+              "Index": 198
+            }
+          },
+          "Value": {
+            "X": {
+              "Name": "Color",
+              "Start": {
+                "Line": 16,
+                "Column": 17,
+                "Index": 201
+              },
+              "End": {
+                "Line": 16,
+                "Column": 22,
+                "Index": 206
+              }
+            },
+            "Selector": {
+              "Name": "Red",
+              "Start": {
+                "Line": 16,
+                "Column": 24,
+                "Index": 208
+              },
+              "End": {
+                "Line": 16,
+                "Column": 27,
+                "Index": 211
+              }
+            },
+            "Start": null,
+            "End": null
+          }
+        }
+      ],
+      "Start": {
+        "Line": 16,
+        "Column": 1,
+        "Index": 185
+      },
+      "End": {
+        "Line": 16,
+        "Column": 28,
+        "Index": 212
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "c2",
+            "Start": {
+              "Line": 17,
+              "Column": 5,
+              "Index": 218
+            },
+            "End": {
+              "Line": 17,
+              "Column": 7,
+              "Index": 220
+            }
+          },
+          "Type": {
+            "Name": "Color",
+            "Start": {
+              "Line": 17,
+              "Column": 9,
+              "Index": 222
+            },
+            "End": {
+              "Line": 17,
+              "Column": 14,
+              "Index": 227
+            }
+          },
+          "Value": {
+            "X": {
+              "Name": "Color",
+              "Start": {
+                "Line": 17,
+                "Column": 17,
+                "Index": 230
+              },
+              "End": {
+                "Line": 17,
+                "Column": 22,
+                "Index": 235
+              }
+            },
+            "Selector": {
+              "Name": "Green",
+              "Start": {
+                "Line": 17,
+                "Column": 24,
+                "Index": 237
+              },
+              "End": {
+                "Line": 17,
+                "Column": 29,
+                "Index": 242
+              }
+            },
+            "Start": null,
+            "End": null
+          }
+        }
+      ],
+      "Start": {
+        "Line": 17,
+        "Column": 1,
+        "Index": 214
+      },
+      "End": {
+        "Line": 17,
+        "Column": 30,
+        "Index": 243
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "c3",
+            "Start": {
+              "Line": 18,
+              "Column": 5,
+              "Index": 249
+            },
+            "End": {
+              "Line": 18,
+              "Column": 7,
+              "Index": 251
+            }
+          },
+          "Type": {
+            "Name": "Color",
+            "Start": {
+              "Line": 18,
+              "Column": 9,
+              "Index": 253
+            },
+            "End": {
+              "Line": 18,
+              "Column": 14,
+              "Index": 258
+            }
+          },
+          "Value": {
+            "X": {
+              "Name": "Color",
+              "Start": {
+                "Line": 18,
+                "Column": 17,
+                "Index": 261
+              },
+              "End": {
+                "Line": 18,
+                "Column": 22,
+                "Index": 266
+              }
+            },
+            "Selector": {
+              "Name": "Blue",
+              "Start": {
+                "Line": 18,
+                "Column": 24,
+                "Index": 268
+              },
+              "End": {
+                "Line": 18,
+                "Column": 28,
+                "Index": 272
+              }
+            },
+            "Start": null,
+            "End": null
+          }
+        }
+      ],
+      "Start": {
+        "Line": 18,
+        "Column": 1,
+        "Index": 245
+      },
+      "End": {
+        "Line": 18,
+        "Column": 29,
+        "Index": 273
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "s1",
+            "Start": {
+              "Line": 20,
+              "Column": 5,
+              "Index": 281
+            },
+            "End": {
+              "Line": 20,
+              "Column": 7,
+              "Index": 283
+            }
+          },
+          "Type": {
+            "Name": "Status",
+            "Start": {
+              "Line": 20,
+              "Column": 9,
+              "Index": 285
+            },
+            "End": {
+              "Line": 20,
+              "Column": 15,
+              "Index": 291
+            }
+          },
+          "Value": {
+            "X": {
+              "Name": "Status",
+              "Start": {
+                "Line": 20,
+                "Column": 18,
+                "Index": 294
+              },
+              "End": {
+                "Line": 20,
+                "Column": 24,
+                "Index": 300
+              }
+            },
+            "Selector": {
+              "Name": "Success",
+              "Start": {
+                "Line": 20,
+                "Column": 26,
+                "Index": 302
+              },
+              "End": {
+                "Line": 20,
+                "Column": 33,
+                "Index": 309
+              }
+            },
+            "Start": null,
+            "End": null
+          }
+        }
+      ],
+      "Start": {
+        "Line": 20,
+        "Column": 1,
+        "Index": 277
+      },
+      "End": {
+        "Line": 20,
+        "Column": 34,
+        "Index": 310
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "s2",
+            "Start": {
+              "Line": 21,
+              "Column": 5,
+              "Index": 316
+            },
+            "End": {
+              "Line": 21,
+              "Column": 7,
+              "Index": 318
+            }
+          },
+          "Type": {
+            "Name": "Status",
+            "Start": {
+              "Line": 21,
+              "Column": 9,
+              "Index": 320
+            },
+            "End": {
+              "Line": 21,
+              "Column": 15,
+              "Index": 326
+            }
+          },
+          "Value": {
+            "X": {
+              "Name": "Status",
+              "Start": {
+                "Line": 21,
+                "Column": 18,
+                "Index": 329
+              },
+              "End": {
+                "Line": 21,
+                "Column": 24,
+                "Index": 335
+              }
+            },
+            "Selector": {
+              "Name": "Failure",
+              "Start": {
+                "Line": 21,
+                "Column": 26,
+                "Index": 337
+              },
+              "End": {
+                "Line": 21,
+                "Column": 33,
+                "Index": 344
+              }
+            },
+            "Start": null,
+            "End": null
+          }
+        }
+      ],
+      "Start": {
+        "Line": 21,
+        "Column": 1,
+        "Index": 312
+      },
+      "End": {
+        "Line": 21,
+        "Column": 34,
+        "Index": 345
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "s3",
+            "Start": {
+              "Line": 22,
+              "Column": 5,
+              "Index": 351
+            },
+            "End": {
+              "Line": 22,
+              "Column": 7,
+              "Index": 353
+            }
+          },
+          "Type": {
+            "Name": "Status",
+            "Start": {
+              "Line": 22,
+              "Column": 9,
+              "Index": 355
+            },
+            "End": {
+              "Line": 22,
+              "Column": 15,
+              "Index": 361
+            }
+          },
+          "Value": {
+            "X": {
+              "Name": "Status",
+              "Start": {
+                "Line": 22,
+                "Column": 18,
+                "Index": 364
+              },
+              "End": {
+                "Line": 22,
+                "Column": 24,
+                "Index": 370
+              }
+            },
+            "Selector": {
+              "Name": "Pending",
+              "Start": {
+                "Line": 22,
+                "Column": 26,
+                "Index": 372
+              },
+              "End": {
+                "Line": 22,
+                "Column": 33,
+                "Index": 379
+              }
+            },
+            "Start": null,
+            "End": null
+          }
+        }
+      ],
+      "Start": {
+        "Line": 22,
+        "Column": 1,
+        "Index": 347
+      },
+      "End": {
+        "Line": 22,
+        "Column": 34,
+        "Index": 380
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "invalid",
+            "Start": {
+              "Line": 25,
+              "Column": 5,
+              "Index": 423
+            },
+            "End": {
+              "Line": 25,
+              "Column": 12,
+              "Index": 430
+            }
+          },
+          "Type": {
+            "Name": "Status",
+            "Start": {
+              "Line": 25,
+              "Column": 14,
+              "Index": 432
+            },
+            "End": {
+              "Line": 25,
+              "Column": 20,
+              "Index": 438
+            }
+          },
+          "Value": {
+            "X": {
+              "Name": "Status",
+              "Start": {
+                "Line": 25,
+                "Column": 23,
+                "Index": 441
+              },
+              "End": {
+                "Line": 25,
+                "Column": 29,
+                "Index": 447
+              }
+            },
+            "Selector": {
+              "Name": "Invalid",
+              "Start": {
+                "Line": 25,
+                "Column": 31,
+                "Index": 449
+              },
+              "End": {
+                "Line": 25,
+                "Column": 38,
+                "Index": 456
+              }
+            },
+            "Start": null,
+            "End": null
+          }
+        }
+      ],
+      "Start": {
+        "Line": 25,
+        "Column": 1,
+        "Index": 419
+      },
+      "End": {
+        "Line": 25,
+        "Column": 39,
+        "Index": 457
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

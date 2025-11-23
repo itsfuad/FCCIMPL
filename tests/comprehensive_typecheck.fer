@@ -1,0 +1,216 @@
+// Comprehensive Type Checker Test
+// This file tests all implemented and missing type checking features
+
+// ============================================================================
+// 1. STRUCT LITERALS - IMPLEMENTED
+// ============================================================================
+type Person struct {
+    .name: str,
+    .age: i32
+};
+
+let p1 := {.name = "Alice", .age = 30} as Person;  // ✓ Named struct inference
+let p2 := {.name = "Bob", .age = "wrong"} as Person;  // ✗ Should error: wrong type
+
+// ============================================================================
+// 2. MAP LITERALS - IMPLEMENTED ✓
+// ============================================================================
+let map1 := {.a = 1, .b = 2} as map[str, i32];  // ✓ Map type inference
+let map2 := {.a = 1, .b = "mixed"} as map[str, i32];  // ✗ Should error: mixed value types
+
+// ============================================================================
+// 3. ARRAY LITERALS - IMPLEMENTED ✓
+// ============================================================================
+let arr1 := [1, 2, 3] as [i32];  // ✓ Array inference
+let arr2 := [1, "two", 3] as [i32];  // ✗ Should error: mixed element types
+
+// ============================================================================
+// 4. INTERFACES - IMPLEMENTED ✓
+// ============================================================================
+type Writer interface {
+    write(data: str) -> i32
+};
+
+type FileWriter struct {
+    .path: str
+};
+
+fn (fw: FileWriter) write(data: str) -> i32 {
+    return data.len();
+}
+
+fn (fw: FileWriter) close() -> void {
+    // Close file
+}
+
+type BadWriter struct {
+    .id: i32
+};
+
+fn (bw: BadWriter) write(data: i32) -> i32 {  // Wrong signature
+    return data;
+}
+
+let fw := {.path = "/tmp/file"} as FileWriter;
+let writer1: Writer = fw;  // ✓ FileWriter implements Writer
+let writer2: Writer = {.id = 1} as BadWriter;  // ✗ Should error: wrong signature
+
+// ============================================================================
+// 5. INTERFACE METHOD CALLS - IMPLEMENTED ✓
+// ============================================================================
+fn logData(w: Writer, data: str) -> i32 {
+    return w.write(data);  // ✓ Method call through interface
+}
+
+let result := logData(fw, "Hello");  // ✓ Works
+
+// ============================================================================
+// 6. FUNCTION ARGUMENT TYPE CHECKING - IMPLEMENTED ✓
+// ============================================================================
+fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
+let sum1 := add(1, 2);  // ✓ Correct types
+let sum2 := add(1, "two");  // ✗ Should error: wrong argument type
+let sum3 := add(1);  // ✗ Should error: not enough arguments
+let sum4 := add(1, 2, 3);  // ✗ Should error: too many arguments
+
+// ============================================================================
+// 7. TYPE CASTING - IMPLEMENTED ✓
+// ============================================================================
+let num: i32 = 42;
+let floatNum := num as f64;  // ✓ Numeric cast
+let badCast := num as str;  // ✗ Should error: cannot cast i32 to str
+
+// ============================================================================
+// 8. RETURN TYPE CHECKING - MISSING? ❌
+// ============================================================================
+fn returnWrongType() -> i32 {
+    return "not a number";  // ✗ Should error: return type mismatch
+}
+
+fn earlyReturn(x: i32) -> i32 {
+    if x > 0 {
+        return x;
+    }
+    // ✗ Should warn: missing return statement
+}
+
+// ============================================================================
+// 9. BINARY OPERATIONS - MISSING? ❌
+// ============================================================================
+fn binaryOps() -> void {
+    let a: i32 = 10;
+    let b: str = "hello";
+    let invalid := a + b;  // ✗ Should error: cannot add i32 and str
+    let invalid2 := a && b;  // ✗ Should error: && requires bool operands
+}
+
+// ============================================================================
+// 10. UNARY OPERATIONS - MISSING? ❌
+// ============================================================================
+fn unaryOps() -> void {
+    let s: str = "hello";
+    let invalid := -s;  // ✗ Should error: cannot negate string
+    let invalid2 := !s;  // ✗ Should error: ! requires bool operand
+}
+
+// ============================================================================
+// 11. ARRAY INDEX ACCESS - MISSING? ❌
+// ============================================================================
+fn arrayAccess() -> void {
+    let arr := [1, 2, 3] as [i32];
+    let elem := arr[0];  // ✓ Should be valid
+    let invalid := arr["zero"];  // ✗ Should error: index must be integer
+}
+
+// ============================================================================
+// 12. MAP ACCESS - MISSING? ❌
+// ============================================================================
+fn mapAccess() -> void {
+    let m := {.a = 1, .b = 2} as map[str, i32];
+    let val := m["a"];  // ✓ Should be valid (if syntax supported)
+    let invalid := m[123];  // ✗ Should error: key must be str
+}
+
+// ============================================================================
+// 13. STRUCT FIELD ACCESS - PARTIALLY IMPLEMENTED? ⚠️
+// ============================================================================
+fn fieldAccess() -> void {
+    let p := {.name = "Alice", .age = 30} as Person;
+    let name := p.name;  // ✓ Should be valid
+    let invalid := p.nonexistent;  // ✗ Should error: field not found
+}
+
+// ============================================================================
+// 14. OPTIONAL/NULLABLE TYPES - MISSING? ❌
+// ============================================================================
+fn optionalOps() -> void {
+    let nullable: i32? = none;  // ✓ Should be valid
+    let val: i32 = nullable;  // ✗ Should error: cannot use i32? as i32 without unwrap
+    // Unwrap operators probably not implemented yet
+}
+
+// ============================================================================
+// 15. FOR LOOP TYPE CHECKING - MISSING? ❌
+// ============================================================================
+fn forLoops() -> void {
+    let arr := [1, 2, 3] as [i32];
+    for item in arr {
+        let x: i32 = item;  // ✓ item should be inferred as i32
+    }
+    
+    let m := {.a = 1, .b = 2} as map[str, i32];
+    for key in m {
+        let k: str = key;  // ✓ key should be inferred as str
+    }
+}
+
+// ============================================================================
+// 16. MATCH EXPRESSION - MISSING? ❌
+// ============================================================================
+fn matchExpr(x: i32) -> str {
+    // If match expressions exist, they need type checking:
+    // - All branches must return same type
+    // - Pattern types must match scrutinee type
+    return "test";
+}
+
+// ============================================================================
+// 17. ENUM VARIANT CHECKING - MISSING? ❌
+// ============================================================================
+type Status enum {
+    Success,
+    Failure
+};
+
+fn enumTest() -> void {
+    let s: Status = Status.Success;  // ✓ Should be valid
+    let invalid: Status = Status.Invalid;  // ✗ Should error: variant not found
+}
+
+// ============================================================================
+// 18. GENERIC TYPES - NOT IMPLEMENTED? ❌
+// ============================================================================
+// Generic type checking probably not implemented at all yet
+
+// ============================================================================
+// 19. CLOSURE/LAMBDA TYPE CHECKING - MISSING? ❌
+// ============================================================================
+// If closures exist, need to check:
+// - Captured variable types
+// - Parameter types match usage
+// - Return type inference
+
+// ============================================================================
+// 20. ERROR PROPAGATION (!) - MISSING? ❌
+// ============================================================================
+fn propagateError() -> i32! {
+    // If error propagation exists
+    return 42;
+}
+
+fn callWithProp() -> void {
+    let x := propagateError()!;  // Need to check error unwrap validity
+}

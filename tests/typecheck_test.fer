@@ -1,0 +1,116 @@
+// Type Checker Test - All Features
+
+// 1. STRUCT LITERALS - Should catch type errors
+type Person struct {
+    .name: str,
+    .age: i32
+};
+
+let p1 := {.name = "Alice", .age = 30} as Person;
+let p2 := {.name = "Bob", .age = "wrong"} as Person;  // ERROR: age should be i32
+
+// 2. MAP LITERALS - Should catch mixed types
+let map1 := {.a = 1, .b = 2} as map[str, i32];
+let map2 := {.a = 1, .b = "mixed"} as map[str, i32];  // ERROR: mixed value types
+
+// 3. ARRAY LITERALS - Should catch mixed element types
+let arr1 := [1, 2, 3] as [i32];
+let arr2 := [1, "two", 3] as [i32];  // ERROR: mixed element types
+
+// 4. INTERFACES - Should catch implementation errors
+type Writer interface {
+    write(data: str) -> i32
+};
+
+type FileWriter struct {
+    .path: str
+};
+
+fn (fw: FileWriter) write(data: str) -> i32 {
+    return 42;
+}
+
+type BadWriter struct {
+    .id: i32
+};
+
+fn (bw: BadWriter) write(data: i32) -> i32 {
+    return data;
+}
+
+let fw := {.path = "/tmp/file"} as FileWriter;
+let writer1: Writer = fw;
+let writer2: Writer = {.id = 1} as BadWriter;  // ERROR: wrong method signature
+
+// 5. INTERFACE METHOD CALLS
+fn logData(w: Writer, data: str) -> i32 {
+    return w.write(data);
+}
+
+let result := logData(fw, "Hello");
+
+// 6. FUNCTION ARGUMENT CHECKING
+fn add(a: i32, b: i32) -> i32 {
+    return a + b;
+}
+
+let sum1 := add(1, 2);
+let sum2 := add(1, "two");  // ERROR: wrong argument type
+let sum3 := add(1);  // ERROR: not enough arguments
+let sum4 := add(1, 2, 3);  // ERROR: too many arguments
+
+// 7. TYPE CASTING
+let num: i32 = 42;
+let floatNum := num as f64;
+let badCast := num as str;  // ERROR: cannot cast i32 to str
+
+// 8. RETURN TYPE CHECKING
+fn returnWrongType() -> i32 {
+    return "not a number";  // ERROR: return type mismatch
+}
+
+fn earlyReturn(x: i32) -> i32 {
+    if x > 0 {
+        return x;
+    }
+    // MISSING: no error for missing return statement
+}
+
+// 9. BINARY OPERATIONS
+fn binaryOps() -> void {
+    let a: i32 = 10;
+    let b: str = "hello";
+    let invalid := a + b;  // MISSING: no error for incompatible types
+    let invalid2 := a && b;  // MISSING: no error for non-bool operands
+}
+
+// 10. UNARY OPERATIONS
+fn unaryOps() -> void {
+    let s: str = "hello";
+    let invalid := -s;  // MISSING: no error for negating string
+}
+
+// 11. ARRAY INDEX ACCESS
+fn arrayAccess() -> void {
+    let arr := [1, 2, 3] as [i32];
+    let elem := arr[0];
+    let invalid := arr["zero"];  // MISSING: no error for wrong index type
+}
+
+// 12. STRUCT FIELD ACCESS
+fn fieldAccess() -> void {
+    let p := {.name = "Alice", .age = 30} as Person;
+    let name := p.name;
+    let invalid := p.nonexistent;  // MISSING: no error for nonexistent field
+}
+
+// 13. ENUM VARIANT CHECKING
+type Status enum {
+    Success,
+    Failure
+};
+
+fn enumTest() -> void {
+    let s: Status = Status::Success;
+    let invalid: Status = Status::Invalid;  // MISSING: no error for invalid variant
+}
