@@ -1,5 +1,10 @@
 ---
+// Your imports
 import Navbar from './Navbar.astro';
 ---
+<header class="your-header-styles">
+  <Navbar {...Astro.props} showSearch={true} />
 
-<Navbar {...Astro.props} showSearch={true} />
+  <!-- This is required for Starlight features -->
+  <slot name="actions" />
+</header>

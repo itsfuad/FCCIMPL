@@ -24,7 +24,7 @@ export default defineConfig({
             disable404Route: true, // Use custom 404 page instead of Starlight's
             lastUpdated: true,
             editLink: {
-                baseUrl: 'https://github.com/itsfuad/FCCIMPL/edit/main/website/src/content/docs/',
+                baseUrl: 'https://github.com/itsfuad/FCCIMPL/edit/main/src/content/docs/',
             },
             social: [
                 { icon: 'github', label: 'GitHub', href: 'https://github.com/itsfuad/FCCIMPL' }
@@ -41,7 +41,7 @@ export default defineConfig({
             },
             // Use a single theme for both code snippets and playground for visual consistency.
             expressiveCode: {
-                themes: ['one-dark-pro'], // Change this to your preferred built-in Shiki theme
+                themes: ['one-dark-pro', 'one-light'], // Change this to your preferred built-in Shiki theme
                 shiki: {
                     langs: [ferretGrammar],
                 },
