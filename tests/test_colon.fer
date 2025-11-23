@@ -1,9 +1,0 @@
-type P struct {
-    .s: i32,
-};
-
-let p := P{.s = 10};
-
-if p == P{.s = 10} {
-    let x := 1;
-}

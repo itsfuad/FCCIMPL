@@ -1,9 +1,0 @@
-// Test multiple secondary labels (like Rust's multiple borrow error)
-fn main() {
-    let x: i32 = 42;
-    let y: str = "hello";
-    let z: i32 = 100;
-    
-    // This will have type mismatch with multiple context points
-    let result: i32 = y;  // ERROR: trying to assign str to i32
-}

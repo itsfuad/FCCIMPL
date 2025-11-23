@@ -31,6 +31,11 @@ func Run(ctx *context.CompilerContext) {
 	for _, file := range ctx.GetAllFiles() {
 		resolver.ResolveFile(file)
 	}
+
+	// Second pass: register methods on types
+	for _, file := range ctx.GetAllFiles() {
+		resolver.RegisterMethods(file)
+	}
 }
 
 // ResolveFile resolves types for a single source file
@@ -59,6 +64,110 @@ func (r *Resolver) resolveBlockScopes() {
 			r.resolveSymbolType(sym)
 		}
 	}
+}
+
+// RegisterMethods registers methods on their associated types
+func (r *Resolver) RegisterMethods(file *context.SourceFile) {
+	r.currentFile = file.Path
+	r.currentScope = file.Scope
+
+	if file.AST == nil || file.Scope == nil {
+		return
+	}
+
+	// Walk all declarations looking for methods
+	for _, node := range file.AST.Nodes {
+		if methodDecl, ok := node.(*ast.MethodDecl); ok {
+			r.registerMethod(methodDecl)
+		}
+	}
+}
+
+// registerMethod registers a method on its receiver type
+func (r *Resolver) registerMethod(methodDecl *ast.MethodDecl) {
+	if methodDecl.Receiver == nil || methodDecl.Receiver.Type == nil {
+		return
+	}
+
+	// Get the receiver type name
+	var receiverTypeName string
+	if ident, ok := methodDecl.Receiver.Type.(*ast.IdentifierExpr); ok {
+		receiverTypeName = ident.Name
+	} else {
+		// Methods can only be defined on named types
+		r.ctx.Diagnostics.Add(
+			diagnostics.NewError("methods can only be defined on named types").
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(r.currentFile, methodDecl.Receiver.Type.Loc(), "receiver must be a named type"),
+		)
+		return
+	}
+
+	// Look up the receiver type in the symbol table
+	typeSym, ok := r.currentScope.Lookup(receiverTypeName)
+	if !ok {
+		r.ctx.Diagnostics.Add(
+			diagnostics.UndefinedSymbol(r.currentFile, methodDecl.Receiver.Type.Loc(), receiverTypeName),
+		)
+		return
+	}
+
+	// Ensure it's a type symbol
+	if typeSym.Kind != semantics.SymbolType {
+		r.ctx.Diagnostics.Add(
+			diagnostics.NewError(fmt.Sprintf("'%s' is not a type", receiverTypeName)).
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(r.currentFile, methodDecl.Receiver.Type.Loc(), "expected a type"),
+		)
+		return
+	}
+
+	// Get the UserType
+	userType, ok := typeSym.Type.(*semantics.UserType)
+	if !ok {
+		r.ctx.Diagnostics.Add(
+			diagnostics.NewError(fmt.Sprintf("methods can only be defined on user-defined types, not %s", typeSym.Type.String())).
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(r.currentFile, methodDecl.Receiver.Type.Loc(), "not a user-defined type"),
+		)
+		return
+	}
+
+	// Build the method signature
+	methodType := &semantics.FunctionType{
+		Parameters: []semantics.ParamsType{},
+	}
+
+	// Add method parameters
+	if methodDecl.Type != nil {
+		for _, param := range methodDecl.Type.Params {
+			paramType := r.resolveTypeNode(param.Type)
+			methodType.Parameters = append(methodType.Parameters, semantics.ParamsType{
+				Name:       param.Name.Name,
+				Type:       paramType,
+				IsVariadic: param.IsVariadic,
+			})
+		}
+
+		// Add return type
+		if methodDecl.Type.Result != nil {
+			methodType.ReturnType = r.resolveTypeNode(methodDecl.Type.Result)
+		}
+	}
+
+	// Check for duplicate methods
+	methodName := methodDecl.Name.Name
+	if _, exists := userType.Methods[methodName]; exists {
+		r.ctx.Diagnostics.Add(
+			diagnostics.NewError(fmt.Sprintf("method '%s' already defined on type '%s'", methodName, receiverTypeName)).
+				WithCode(diagnostics.ErrRedeclaredSymbol).
+				WithPrimaryLabel(r.currentFile, methodDecl.Name.Loc(), "duplicate method"),
+		)
+		return
+	}
+
+	// Register the method
+	userType.Methods[methodName] = methodType
 }
 
 // resolveSymbolType resolves the type of a symbol based on its declaration
@@ -258,9 +367,12 @@ func (r *Resolver) resolveTypeNode(node ast.TypeNode) semantics.Type {
 		return funcType
 
 	case *ast.MapType:
-		// Map types not yet implemented in semantic type system
-		// For now, return a simple representation
-		return &semantics.PrimitiveType{TypeName: types.TYPE_MAP}
+		keyType := r.resolveTypeNode(t.Key)
+		valueType := r.resolveTypeNode(t.Value)
+		return &semantics.MapType{
+			KeyType:   keyType,
+			ValueType: valueType,
+		}
 
 	case *ast.InterfaceType:
 		interfaceType := &semantics.InterfaceType{

@@ -1,2 +1,0 @@
-// Simple operator error test
-let result: i32 = "text" + "more";

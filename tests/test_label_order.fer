@@ -1,4 +1,0 @@
-// Test: secondary label appears before primary label in source
-fn main() {
-    let result: str = 42;  // type mismatch: i32 literal (left) assigned to str variable (right)
-}

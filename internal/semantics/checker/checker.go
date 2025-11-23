@@ -661,7 +661,7 @@ func (c *Checker) checkElvisExpr(expr *ast.ElvisExpr) semantics.Type {
 func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 	baseType := c.checkExpr(expr.X)
 
-	// Check if base type has the field
+	// Handle struct field access
 	if structType, ok := baseType.(*semantics.StructType); ok {
 		fieldType := structType.GetFieldType(expr.Sel.Name)
 		if fieldType == nil {
@@ -678,6 +678,36 @@ func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 		return fieldType
 	}
 
+	// Handle method access on user-defined types
+	if userType, ok := baseType.(*semantics.UserType); ok {
+		// First check if the underlying definition has this field
+		if userType.Definition != nil {
+			if structType, ok := userType.Definition.(*semantics.StructType); ok {
+				fieldType := structType.GetFieldType(expr.Sel.Name)
+				if fieldType != nil {
+					return fieldType
+				}
+			}
+		}
+
+		// Check if it's a method
+		if methodType, ok := userType.Methods[expr.Sel.Name]; ok {
+			return methodType
+		}
+
+		// Neither field nor method found
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError(
+				fmt.Sprintf("type '%s' has no field or method '%s'",
+					c.typeString(baseType),
+					expr.Sel.Name)).
+				WithCode(diagnostics.ErrFieldNotFound).
+				WithPrimaryLabel(c.currentFile, expr.Sel.Loc(),
+					fmt.Sprintf("'%s' not found", expr.Sel.Name)),
+		)
+		return &semantics.Invalid{}
+	}
+
 	return nil
 }
 
@@ -685,29 +715,491 @@ func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 func (c *Checker) checkCompositeLit(lit *ast.CompositeLit) semantics.Type {
 	// If type is specified, resolve it
 	if lit.Type != nil {
-		// TODO: Convert AST type to semantic type
-		// For now, return a placeholder
-		return nil
+		targetType := c.astTypeToSemanticType(lit.Type)
+		c.checkCompositeLitElements(lit, targetType)
+		return targetType
 	}
-	return nil
+
+	// Type inference based on elements
+	if len(lit.Elts) == 0 {
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError("cannot infer type of empty composite literal").
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(c.currentFile, lit.Loc(), "add type annotation or elements").
+				WithHelp("use {} as Type to specify the type"),
+		)
+		return &semantics.Invalid{}
+	}
+
+	// Check first element to determine if it's a struct, map, or array
+	firstElem := lit.Elts[0]
+
+	if kvExpr, ok := firstElem.(*ast.KeyValueExpr); ok {
+		// Key-value syntax - could be struct or map
+		// If all elements are KeyValueExpr, check the first key type
+		// Structs will have identifiers as keys (from .field syntax)
+		// Maps will have expression keys
+
+		// Since parser creates identifiers for .field syntax,
+		// we need another way to distinguish. We'll check if this is being
+		// assigned to a known type or look at the syntax context.
+		// For now, we'll infer as struct if keys are simple identifiers
+		// and as map otherwise.
+
+		if ident, ok := kvExpr.Key.(*ast.IdentifierExpr); ok {
+			// Simple identifier - likely a struct field from .field syntax
+			_ = ident
+			return c.inferStructType(lit)
+		}
+
+		// Complex expression key - it's a map
+		return c.inferMapType(lit)
+	}
+
+	// Array literal: {val1, val2, val3}
+	return c.inferArrayType(lit)
+}
+
+// inferStructType infers an anonymous struct type from composite literal
+func (c *Checker) inferStructType(lit *ast.CompositeLit) semantics.Type {
+	fields := make(map[string]semantics.Type)
+
+	for _, elem := range lit.Elts {
+		kvExpr, ok := elem.(*ast.KeyValueExpr)
+		if !ok {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError("struct literal must use field syntax: .field = value").
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, elem.Loc(), "expected .field = value"),
+			)
+			continue
+		}
+
+		// Key should be an identifier (field name) for struct literals
+		ident, ok := kvExpr.Key.(*ast.IdentifierExpr)
+		if !ok {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError("struct field must be an identifier").
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, kvExpr.Key.Loc(), "expected field name"),
+			)
+			continue
+		}
+
+		fieldName := ident.Name
+
+		// Check for duplicate fields
+		if _, exists := fields[fieldName]; exists {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(fmt.Sprintf("duplicate field '%s' in struct literal", fieldName)).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, kvExpr.Key.Loc(), "duplicate field"),
+			)
+			continue
+		}
+
+		// Infer type from value
+		valueType := c.checkExpr(kvExpr.Value)
+		if valueType != nil {
+			fields[fieldName] = valueType
+		}
+	}
+
+	return &semantics.StructType{Fields: fields}
+}
+
+// inferMapType infers a map type from composite literal
+func (c *Checker) inferMapType(lit *ast.CompositeLit) semantics.Type {
+	if len(lit.Elts) == 0 {
+		return &semantics.Invalid{}
+	}
+
+	var keyType, valueType semantics.Type
+
+	for i, elem := range lit.Elts {
+		kvExpr, ok := elem.(*ast.KeyValueExpr)
+		if !ok {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError("map literal must use key => value syntax").
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, elem.Loc(), "expected key => value"),
+			)
+			continue
+		}
+
+		elemKeyType := c.checkExpr(kvExpr.Key)
+		elemValueType := c.checkExpr(kvExpr.Value)
+
+		if i == 0 {
+			// First element determines the map type
+			keyType = elemKeyType
+			valueType = elemValueType
+		} else {
+			// Subsequent elements must match the inferred types
+			if !c.isAssignable(keyType, elemKeyType) {
+				c.ctx.Diagnostics.Add(
+					diagnostics.NewError(
+						fmt.Sprintf("map key type mismatch: expected %s, got %s",
+							c.typeString(keyType),
+							c.typeString(elemKeyType))).
+						WithCode(diagnostics.ErrTypeMismatch).
+						WithPrimaryLabel(c.currentFile, kvExpr.Key.Loc(),
+							fmt.Sprintf("type %s", c.typeString(elemKeyType))).
+						WithSecondaryLabel(c.currentFile, lit.Elts[0].Loc(),
+							fmt.Sprintf("first element has key type %s", c.typeString(keyType))),
+				)
+			}
+
+			if !c.isAssignable(valueType, elemValueType) {
+				c.ctx.Diagnostics.Add(
+					diagnostics.NewError(
+						fmt.Sprintf("map value type mismatch: expected %s, got %s",
+							c.typeString(valueType),
+							c.typeString(elemValueType))).
+						WithCode(diagnostics.ErrTypeMismatch).
+						WithPrimaryLabel(c.currentFile, kvExpr.Value.Loc(),
+							fmt.Sprintf("type %s", c.typeString(elemValueType))).
+						WithSecondaryLabel(c.currentFile, lit.Elts[0].Loc(),
+							fmt.Sprintf("first element has value type %s", c.typeString(valueType))),
+				)
+			}
+		}
+	}
+
+	return &semantics.MapType{
+		KeyType:   keyType,
+		ValueType: valueType,
+	}
+}
+
+// inferArrayType infers an array type from composite literal
+func (c *Checker) inferArrayType(lit *ast.CompositeLit) semantics.Type {
+	if len(lit.Elts) == 0 {
+		return &semantics.Invalid{}
+	}
+
+	var elemType semantics.Type
+
+	for i, elem := range lit.Elts {
+		currentType := c.checkExpr(elem)
+
+		if i == 0 {
+			elemType = currentType
+		} else {
+			// All elements must have the same type
+			if !c.isAssignable(elemType, currentType) {
+				c.ctx.Diagnostics.Add(
+					diagnostics.NewError(
+						fmt.Sprintf("array element type mismatch: expected %s, got %s",
+							c.typeString(elemType),
+							c.typeString(currentType))).
+						WithCode(diagnostics.ErrTypeMismatch).
+						WithPrimaryLabel(c.currentFile, elem.Loc(),
+							fmt.Sprintf("type %s", c.typeString(currentType))).
+						WithSecondaryLabel(c.currentFile, lit.Elts[0].Loc(),
+							fmt.Sprintf("first element has type %s", c.typeString(elemType))),
+				)
+			}
+		}
+	}
+
+	return &semantics.ArrayType{
+		IsFixed:     false,
+		ElementType: elemType,
+	}
+}
+
+// checkCompositeLitElements validates elements against target type
+func (c *Checker) checkCompositeLitElements(lit *ast.CompositeLit, targetType semantics.Type) {
+	switch t := targetType.(type) {
+	case *semantics.StructType:
+		c.checkStructLitElements(lit, t)
+	case *semantics.MapType:
+		c.checkMapLitElements(lit, t)
+	case *semantics.ArrayType:
+		c.checkArrayLitElements(lit, t)
+	case *semantics.UserType:
+		// Named type - check the underlying definition
+		if t.Definition != nil {
+			c.checkCompositeLitElements(lit, t.Definition)
+		}
+	}
+}
+
+// checkStructLitElements validates struct literal elements
+func (c *Checker) checkStructLitElements(lit *ast.CompositeLit, structType *semantics.StructType) {
+	providedFields := make(map[string]bool)
+
+	for _, elem := range lit.Elts {
+		kvExpr, ok := elem.(*ast.KeyValueExpr)
+		if !ok {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError("struct literal must use field syntax: .field = value").
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, elem.Loc(), "expected .field = value"),
+			)
+			continue
+		}
+
+		ident, ok := kvExpr.Key.(*ast.IdentifierExpr)
+		if !ok {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError("struct field must be an identifier").
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, kvExpr.Key.Loc(), "expected field name"),
+			)
+			continue
+		}
+
+		fieldName := ident.Name
+
+		// Check if field exists in struct type
+		fieldType, exists := structType.Fields[fieldName]
+		if !exists {
+			c.ctx.Diagnostics.Add(
+				diagnostics.FieldNotFound(
+					c.currentFile,
+					kvExpr.Key.Loc(),
+					fieldName,
+					structType.String(),
+				),
+			)
+			continue
+		}
+
+		// Check for duplicate field assignments
+		if providedFields[fieldName] {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(fmt.Sprintf("duplicate field '%s' in struct literal", fieldName)).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, kvExpr.Key.Loc(), "duplicate field"),
+			)
+			continue
+		}
+
+		providedFields[fieldName] = true
+
+		// Check value type matches field type
+		valueType := c.checkExpr(kvExpr.Value)
+		if !c.isAssignable(fieldType, valueType) {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("cannot assign value of type %s to field '%s' of type %s",
+						c.typeString(valueType),
+						fieldName,
+						c.typeString(fieldType))).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, kvExpr.Value.Loc(),
+						fmt.Sprintf("type %s", c.typeString(valueType))).
+					WithSecondaryLabel(c.currentFile, kvExpr.Key.Loc(),
+						fmt.Sprintf("field has type %s", c.typeString(fieldType))),
+			)
+		}
+	}
+
+	// Check if all required fields are provided
+	for fieldName := range structType.Fields {
+		if !providedFields[fieldName] {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("missing field '%s' in struct literal", fieldName)).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, lit.Loc(), fmt.Sprintf("missing field .%s", fieldName)),
+			)
+		}
+	}
+}
+
+// checkMapLitElements validates map literal elements
+func (c *Checker) checkMapLitElements(lit *ast.CompositeLit, mapType *semantics.MapType) {
+	for _, elem := range lit.Elts {
+		kvExpr, ok := elem.(*ast.KeyValueExpr)
+		if !ok {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError("map literal must use key => value syntax").
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, elem.Loc(), "expected key => value"),
+			)
+			continue
+		}
+
+		keyType := c.checkExpr(kvExpr.Key)
+		valueType := c.checkExpr(kvExpr.Value)
+
+		// Check key type
+		if !c.isAssignable(mapType.KeyType, keyType) {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("map key type mismatch: expected %s, got %s",
+						c.typeString(mapType.KeyType),
+						c.typeString(keyType))).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, kvExpr.Key.Loc(),
+						fmt.Sprintf("type %s", c.typeString(keyType))),
+			)
+		}
+
+		// Check value type
+		if !c.isAssignable(mapType.ValueType, valueType) {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("map value type mismatch: expected %s, got %s",
+						c.typeString(mapType.ValueType),
+						c.typeString(valueType))).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, kvExpr.Value.Loc(),
+						fmt.Sprintf("type %s", c.typeString(valueType))),
+			)
+		}
+	}
+}
+
+// checkArrayLitElements validates array literal elements
+func (c *Checker) checkArrayLitElements(lit *ast.CompositeLit, arrayType *semantics.ArrayType) {
+	for _, elem := range lit.Elts {
+		elemType := c.checkExpr(elem)
+
+		if !c.isAssignable(arrayType.ElementType, elemType) {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("array element type mismatch: expected %s, got %s",
+						c.typeString(arrayType.ElementType),
+						c.typeString(elemType))).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, elem.Loc(),
+						fmt.Sprintf("type %s", c.typeString(elemType))),
+			)
+		}
+	}
+
+	// Check fixed array size
+	if arrayType.IsFixed && len(lit.Elts) != arrayType.Size {
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError(
+				fmt.Sprintf("fixed array literal has %d elements, expected %d",
+					len(lit.Elts),
+					arrayType.Size)).
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(c.currentFile, lit.Loc(),
+					fmt.Sprintf("%d elements provided", len(lit.Elts))),
+		)
+	}
 }
 
 // checkCastExpr checks a type cast expression (expr as Type)
 func (c *Checker) checkCastExpr(expr *ast.CastExpr) semantics.Type {
 	// Check the expression being cast
 	sourceType := c.checkExpr(expr.X)
-	
+
 	// Convert AST type to semantic type
-	// TODO: Implement proper AST type to semantic type conversion
-	// For now, we'll do a basic conversion for common types
 	targetType := c.astTypeToSemanticType(expr.Type)
-	
+
 	// Validate that the cast is legal
-	// For now, we'll allow most casts and let runtime handle errors
-	// TODO: Add proper cast validation rules
-	_ = sourceType // Will use this for validation later
-	
+	if !c.isCastable(sourceType, targetType) {
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError(
+				fmt.Sprintf("cannot cast value of type %s to type %s",
+					c.typeString(sourceType),
+					c.typeString(targetType))).
+				WithCode(diagnostics.ErrInvalidCast).
+				WithPrimaryLabel(c.currentFile, expr.X.Loc(),
+					fmt.Sprintf("expression has type %s", c.typeString(sourceType))).
+				WithSecondaryLabel(c.currentFile, expr.Type.Loc(),
+					fmt.Sprintf("cannot cast to %s", c.typeString(targetType))),
+		)
+		return &semantics.Invalid{}
+	}
+
 	return targetType
+}
+
+// isCastable checks if a value of type 'from' can be cast to type 'to'
+func (c *Checker) isCastable(from, to semantics.Type) bool {
+	if from == nil || to == nil {
+		return false
+	}
+
+	// Invalid types cannot be cast
+	if _, ok := from.(*semantics.Invalid); ok {
+		return false
+	}
+	if _, ok := to.(*semantics.Invalid); ok {
+		return false
+	}
+
+	// Check if types are already assignable (safe cast)
+	if c.isAssignable(to, from) {
+		return true
+	}
+
+	// Allow casting between primitive numeric types
+	fromPrim, fromIsPrim := from.(*semantics.PrimitiveType)
+	toPrim, toIsPrim := to.(*semantics.PrimitiveType)
+
+	if fromIsPrim && toIsPrim {
+		// Allow numeric conversions
+		if c.isNumericType(fromPrim.TypeName) && c.isNumericType(toPrim.TypeName) {
+			return true
+		}
+	}
+
+	// Allow casting from anonymous struct to named type if structurally compatible
+	fromStruct, fromIsStruct := from.(*semantics.StructType)
+	toUser, toIsUser := to.(*semantics.UserType)
+
+	if fromIsStruct && toIsUser {
+		if toUser.Definition != nil {
+			if toStruct, ok := toUser.Definition.(*semantics.StructType); ok {
+				return c.areStructsCompatible(toStruct, fromStruct)
+			}
+		}
+	}
+
+	// Allow casting between named types with same underlying structure
+	fromUser, fromIsUser := from.(*semantics.UserType)
+
+	if fromIsUser && toIsUser {
+		if fromUser.Definition != nil && toUser.Definition != nil {
+			return c.isStructurallyCompatible(toUser.Definition, fromUser.Definition)
+		}
+	}
+
+	// Allow casting from named type to its underlying structure
+	if fromIsUser {
+		if fromUser.Definition != nil {
+			return c.isCastable(fromUser.Definition, to)
+		}
+	}
+
+	// Allow casting from anonymous map to named map type if compatible
+	fromMap, fromIsMap := from.(*semantics.MapType)
+	toMap, toIsMap := to.(*semantics.MapType)
+
+	if fromIsMap && toIsMap {
+		return c.isAssignable(toMap.KeyType, fromMap.KeyType) &&
+			c.isAssignable(toMap.ValueType, fromMap.ValueType)
+	}
+
+	// Allow casting from anonymous array to named array type if compatible
+	fromArray, fromIsArray := from.(*semantics.ArrayType)
+	toArray, toIsArray := to.(*semantics.ArrayType)
+
+	if fromIsArray && toIsArray {
+		return c.isAssignable(toArray.ElementType, fromArray.ElementType)
+	}
+
+	return false
+}
+
+// isNumericType checks if a type name represents a numeric type
+func (c *Checker) isNumericType(typeName types.TYPE_NAME) bool {
+	switch typeName {
+	case types.TYPE_I8, types.TYPE_I16, types.TYPE_I32, types.TYPE_I64,
+		types.TYPE_U8, types.TYPE_U16, types.TYPE_U32, types.TYPE_U64,
+		types.TYPE_F32, types.TYPE_F64:
+		return true
+	}
+	return false
 }
 
 // isAssignable checks if a value of type 'from' can be assigned to type 'to'
@@ -754,6 +1246,69 @@ func (c *Checker) isAssignable(to, from semantics.Type) bool {
 		return true
 	}
 
+	// Handle user-defined types and structural compatibility
+	toUser, toIsUser := to.(*semantics.UserType)
+	fromUser, fromIsUser := from.(*semantics.UserType)
+
+	// Named type to named type - must be exact match or underlying compatible
+	if toIsUser && fromIsUser {
+		// Same named type
+		if toUser.Name == fromUser.Name {
+			return true
+		}
+		// Check underlying structural compatibility
+		if toUser.Definition != nil && fromUser.Definition != nil {
+			return c.isStructurallyCompatible(toUser.Definition, fromUser.Definition)
+		}
+		return false
+	}
+
+	// Named type to structural type - check underlying definition
+	if toIsUser && !fromIsUser {
+		if toUser.Definition != nil {
+			return c.isStructurallyCompatible(toUser.Definition, from)
+		}
+		return false
+	}
+
+	// Structural type to named type - check underlying definition
+	if !toIsUser && fromIsUser {
+		if fromUser.Definition != nil {
+			return c.isStructurallyCompatible(to, fromUser.Definition)
+		}
+		return false
+	}
+
+	// Struct type compatibility - structural typing
+	toStruct, toIsStruct := to.(*semantics.StructType)
+	fromStruct, fromIsStruct := from.(*semantics.StructType)
+
+	if toIsStruct && fromIsStruct {
+		return c.areStructsCompatible(toStruct, fromStruct)
+	}
+
+	// Map type compatibility
+	toMap, toIsMap := to.(*semantics.MapType)
+	fromMap, fromIsMap := from.(*semantics.MapType)
+
+	if toIsMap && fromIsMap {
+		return c.isAssignable(toMap.KeyType, fromMap.KeyType) &&
+			c.isAssignable(toMap.ValueType, fromMap.ValueType)
+	}
+
+	// Array type compatibility
+	toArray, toIsArray := to.(*semantics.ArrayType)
+	fromArray, fromIsArray := from.(*semantics.ArrayType)
+
+	if toIsArray && fromIsArray {
+		// Fixed arrays must have same size
+		if toArray.IsFixed && fromArray.IsFixed && toArray.Size != fromArray.Size {
+			return false
+		}
+		// Element types must be compatible
+		return c.isAssignable(toArray.ElementType, fromArray.ElementType)
+	}
+
 	// Check primitive type compatibility
 	toPrim, toIsPrim := to.(*semantics.PrimitiveType)
 	fromPrim, fromIsPrim := from.(*semantics.PrimitiveType)
@@ -761,16 +1316,58 @@ func (c *Checker) isAssignable(to, from semantics.Type) bool {
 	if toIsPrim && fromIsPrim {
 		// Allow compatible primitive types
 		// For now, require exact match
-		// TODO: Add numeric type conversions (i32 -> i64, etc.)
 		return toPrim.TypeName == fromPrim.TypeName
 	}
 
-	// TODO: Add more type compatibility rules
-	// - Interface implementation
-	// - Struct compatibility
-	// - Array element type matching
-
 	return false
+}
+
+// isStructurallyCompatible checks if two types are structurally compatible
+func (c *Checker) isStructurallyCompatible(to, from semantics.Type) bool {
+	// Unwrap user types
+	if toUser, ok := to.(*semantics.UserType); ok {
+		if toUser.Definition != nil {
+			to = toUser.Definition
+		}
+	}
+	if fromUser, ok := from.(*semantics.UserType); ok {
+		if fromUser.Definition != nil {
+			from = fromUser.Definition
+		}
+	}
+
+	// Now check structural compatibility
+	toStruct, toIsStruct := to.(*semantics.StructType)
+	fromStruct, fromIsStruct := from.(*semantics.StructType)
+
+	if toIsStruct && fromIsStruct {
+		return c.areStructsCompatible(toStruct, fromStruct)
+	}
+
+	// For other types, use standard assignment check
+	return c.isAssignable(to, from)
+}
+
+// areStructsCompatible checks if two struct types are compatible
+// Structs are compatible if they have the same fields with compatible types
+func (c *Checker) areStructsCompatible(to, from *semantics.StructType) bool {
+	// Must have same number of fields
+	if len(to.Fields) != len(from.Fields) {
+		return false
+	}
+
+	// All fields must match
+	for fieldName, toFieldType := range to.Fields {
+		fromFieldType, exists := from.Fields[fieldName]
+		if !exists {
+			return false
+		}
+		if !c.isAssignable(toFieldType, fromFieldType) {
+			return false
+		}
+	}
+
+	return true
 }
 
 // typeString returns a human-readable string for a type
@@ -824,7 +1421,6 @@ func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type,
 }
 
 // astTypeToSemanticType converts an AST type node to a semantic type
-// This is a basic implementation - expand as needed
 func (c *Checker) astTypeToSemanticType(astType ast.TypeNode) semantics.Type {
 	if astType == nil {
 		return nil
@@ -864,10 +1460,11 @@ func (c *Checker) astTypeToSemanticType(astType ast.TypeNode) semantics.Type {
 	case *ast.ArrayType:
 		// Convert array type
 		elemType := c.astTypeToSemanticType(t.ElType)
-		return &semantics.ArrayType{
+		arrayType := &semantics.ArrayType{
 			IsFixed:     t.Len != nil,
 			ElementType: elemType,
 		}
+		return arrayType
 
 	case *ast.MapType:
 		// Convert map type

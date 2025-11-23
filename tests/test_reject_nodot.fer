@@ -1,8 +1,0 @@
-// Test that shorthand syntax WITHOUT dots is rejected
-
-type P struct {
-    .s: i32,
-};
-
-// This should FAIL - no dots in literal
-let p := P{s: 10};

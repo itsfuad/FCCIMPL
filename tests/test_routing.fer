@@ -1,6 +1,0 @@
-// Test: Labels on different lines (needs routing)
-let x: i32 = 42;
-
-fn test() {
-    let y: str = x;  // ERROR: x is i32, y expects str
-}

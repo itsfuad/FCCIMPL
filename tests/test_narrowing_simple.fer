@@ -1,9 +1,0 @@
-// Simple narrowing test
-
-let x: i32? = 10;
-
-if x != none {
-    // Inside: x should be narrowed to i32
-    let y: i32 = x;  // Should be OK
-    let z: str = x;  // Should ERROR: can't assign i32 to str
-}

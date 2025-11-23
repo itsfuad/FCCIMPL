@@ -1,0 +1,992 @@
+{
+  "FullPath": "E:\\Dev\\FCCIMPL\\test_optional_casting.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "Point",
+        "Start": {
+          "Line": 3,
+          "Column": 6,
+          "Index": 44
+        },
+        "End": {
+          "Line": 3,
+          "Column": 11,
+          "Index": 49
+        }
+      },
+      "Type": {
+        "Fields": [
+          {
+            "Name": {
+              "Name": "x",
+              "Start": {
+                "Line": 4,
+                "Column": 4,
+                "Index": 63
+              },
+              "End": {
+                "Line": 4,
+                "Column": 5,
+                "Index": 64
+              }
+            },
+            "Type": {
+              "Name": "i32",
+              "Start": {
+                "Line": 4,
+                "Column": 7,
+                "Index": 66
+              },
+              "End": {
+                "Line": 4,
+                "Column": 10,
+                "Index": 69
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "y",
+              "Start": {
+                "Line": 5,
+                "Column": 4,
+                "Index": 75
+              },
+              "End": {
+                "Line": 5,
+                "Column": 5,
+                "Index": 76
+              }
+            },
+            "Type": {
+              "Name": "i32",
+              "Start": {
+                "Line": 5,
+                "Column": 7,
+                "Index": 78
+              },
+              "End": {
+                "Line": 5,
+                "Column": 10,
+                "Index": 81
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 3,
+          "Column": 12,
+          "Index": 50
+        },
+        "End": {
+          "Line": 6,
+          "Column": 2,
+          "Index": 84
+        }
+      },
+      "Start": {
+        "Line": 3,
+        "Column": 1,
+        "Index": 39
+      },
+      "End": {
+        "Line": 6,
+        "Column": 3,
+        "Index": 85
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "p1",
+            "Start": {
+              "Line": 9,
+              "Column": 5,
+              "Index": 135
+            },
+            "End": {
+              "Line": 9,
+              "Column": 7,
+              "Index": 137
+            }
+          },
+          "Type": {
+            "Base": {
+              "Name": "Point",
+              "Start": {
+                "Line": 9,
+                "Column": 9,
+                "Index": 139
+              },
+              "End": {
+                "Line": 9,
+                "Column": 14,
+                "Index": 144
+              }
+            },
+            "Start": {
+              "Line": 9,
+              "Column": 9,
+              "Index": 139
+            },
+            "End": {
+              "Line": 9,
+              "Column": 14,
+              "Index": 144
+            }
+          },
+          "Value": {
+            "Name": "none",
+            "Start": {
+              "Line": 9,
+              "Column": 18,
+              "Index": 148
+            },
+            "End": {
+              "Line": 9,
+              "Column": 22,
+              "Index": 152
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 9,
+        "Column": 1,
+        "Index": 131
+      },
+      "End": {
+        "Line": 9,
+        "Column": 23,
+        "Index": 153
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "p2",
+            "Start": {
+              "Line": 12,
+              "Column": 5,
+              "Index": 211
+            },
+            "End": {
+              "Line": 12,
+              "Column": 7,
+              "Index": 213
+            }
+          },
+          "Type": {
+            "Base": {
+              "Name": "Point",
+              "Start": {
+                "Line": 12,
+                "Column": 9,
+                "Index": 215
+              },
+              "End": {
+                "Line": 12,
+                "Column": 14,
+                "Index": 220
+              }
+            },
+            "Start": {
+              "Line": 12,
+              "Column": 9,
+              "Index": 215
+            },
+            "End": {
+              "Line": 12,
+              "Column": 14,
+              "Index": 220
+            }
+          },
+          "Value": {
+            "X": {
+              "Type": null,
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "x",
+                    "Start": {
+                      "Line": 12,
+                      "Column": 20,
+                      "Index": 226
+                    },
+                    "End": {
+                      "Line": 12,
+                      "Column": 21,
+                      "Index": 227
+                    }
+                  },
+                  "Value": {
+                    "Kind": 0,
+                    "Value": "10",
+                    "Start": {
+                      "Line": 12,
+                      "Column": 24,
+                      "Index": 230
+                    },
+                    "End": {
+                      "Line": 12,
+                      "Column": 26,
+                      "Index": 232
+                    }
+                  },
+                  "Start": {
+                    "Line": 12,
+                    "Column": 18,
+                    "Index": 224
+                  },
+                  "End": {
+                    "Line": 12,
+                    "Column": 26,
+                    "Index": 232
+                  }
+                },
+                {
+                  "Key": {
+                    "Name": "y",
+                    "Start": {
+                      "Line": 12,
+                      "Column": 29,
+                      "Index": 235
+                    },
+                    "End": {
+                      "Line": 12,
+                      "Column": 30,
+                      "Index": 236
+                    }
+                  },
+                  "Value": {
+                    "Kind": 0,
+                    "Value": "20",
+                    "Start": {
+                      "Line": 12,
+                      "Column": 33,
+                      "Index": 239
+                    },
+                    "End": {
+                      "Line": 12,
+                      "Column": 35,
+                      "Index": 241
+                    }
+                  },
+                  "Start": {
+                    "Line": 12,
+                    "Column": 18,
+                    "Index": 224
+                  },
+                  "End": {
+                    "Line": 12,
+                    "Column": 35,
+                    "Index": 241
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 12,
+                "Column": 18,
+                "Index": 224
+              },
+              "End": {
+                "Line": 12,
+                "Column": 36,
+                "Index": 242
+              }
+            },
+            "Type": {
+              "Name": "Point",
+              "Start": {
+                "Line": 12,
+                "Column": 40,
+                "Index": 246
+              },
+              "End": {
+                "Line": 12,
+                "Column": 45,
+                "Index": 251
+              }
+            },
+            "Start": {
+              "Line": 12,
+              "Column": 18,
+              "Index": 224
+            },
+            "End": {
+              "Line": 12,
+              "Column": 45,
+              "Index": 251
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 12,
+        "Column": 1,
+        "Index": 207
+      },
+      "End": {
+        "Line": 12,
+        "Column": 46,
+        "Index": 252
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "p3_opt",
+            "Start": {
+              "Line": 15,
+              "Column": 5,
+              "Index": 301
+            },
+            "End": {
+              "Line": 15,
+              "Column": 11,
+              "Index": 307
+            }
+          },
+          "Type": {
+            "Base": {
+              "Name": "Point",
+              "Start": {
+                "Line": 15,
+                "Column": 13,
+                "Index": 309
+              },
+              "End": {
+                "Line": 15,
+                "Column": 18,
+                "Index": 314
+              }
+            },
+            "Start": {
+              "Line": 15,
+              "Column": 13,
+              "Index": 309
+            },
+            "End": {
+              "Line": 15,
+              "Column": 18,
+              "Index": 314
+            }
+          },
+          "Value": {
+            "X": {
+              "Type": null,
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "x",
+                    "Start": {
+                      "Line": 15,
+                      "Column": 24,
+                      "Index": 320
+                    },
+                    "End": {
+                      "Line": 15,
+                      "Column": 25,
+                      "Index": 321
+                    }
+                  },
+                  "Value": {
+                    "Kind": 0,
+                    "Value": "5",
+                    "Start": {
+                      "Line": 15,
+                      "Column": 28,
+                      "Index": 324
+                    },
+                    "End": {
+                      "Line": 15,
+                      "Column": 29,
+                      "Index": 325
+                    }
+                  },
+                  "Start": {
+                    "Line": 15,
+                    "Column": 22,
+                    "Index": 318
+                  },
+                  "End": {
+                    "Line": 15,
+                    "Column": 29,
+                    "Index": 325
+                  }
+                },
+                {
+                  "Key": {
+                    "Name": "y",
+                    "Start": {
+                      "Line": 15,
+                      "Column": 32,
+                      "Index": 328
+                    },
+                    "End": {
+                      "Line": 15,
+                      "Column": 33,
+                      "Index": 329
+                    }
+                  },
+                  "Value": {
+                    "Kind": 0,
+                    "Value": "8",
+                    "Start": {
+                      "Line": 15,
+                      "Column": 36,
+                      "Index": 332
+                    },
+                    "End": {
+                      "Line": 15,
+                      "Column": 37,
+                      "Index": 333
+                    }
+                  },
+                  "Start": {
+                    "Line": 15,
+                    "Column": 22,
+                    "Index": 318
+                  },
+                  "End": {
+                    "Line": 15,
+                    "Column": 37,
+                    "Index": 333
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 15,
+                "Column": 22,
+                "Index": 318
+              },
+              "End": {
+                "Line": 15,
+                "Column": 38,
+                "Index": 334
+              }
+            },
+            "Type": {
+              "Name": "Point",
+              "Start": {
+                "Line": 15,
+                "Column": 42,
+                "Index": 338
+              },
+              "End": {
+                "Line": 15,
+                "Column": 47,
+                "Index": 343
+              }
+            },
+            "Start": {
+              "Line": 15,
+              "Column": 22,
+              "Index": 318
+            },
+            "End": {
+              "Line": 15,
+              "Column": 47,
+              "Index": 343
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 15,
+        "Column": 1,
+        "Index": 297
+      },
+      "End": {
+        "Line": 15,
+        "Column": 48,
+        "Index": 344
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "p3",
+            "Start": {
+              "Line": 16,
+              "Column": 5,
+              "Index": 350
+            },
+            "End": {
+              "Line": 16,
+              "Column": 7,
+              "Index": 352
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Cond": {
+              "Name": "p3_opt",
+              "Start": {
+                "Line": 16,
+                "Column": 11,
+                "Index": 356
+              },
+              "End": {
+                "Line": 16,
+                "Column": 17,
+                "Index": 362
+              }
+            },
+            "Default": {
+              "X": {
+                "Type": null,
+                "Elts": [
+                  {
+                    "Key": {
+                      "Name": "x",
+                      "Start": {
+                        "Line": 16,
+                        "Column": 23,
+                        "Index": 368
+                      },
+                      "End": {
+                        "Line": 16,
+                        "Column": 24,
+                        "Index": 369
+                      }
+                    },
+                    "Value": {
+                      "Kind": 0,
+                      "Value": "0",
+                      "Start": {
+                        "Line": 16,
+                        "Column": 27,
+                        "Index": 372
+                      },
+                      "End": {
+                        "Line": 16,
+                        "Column": 28,
+                        "Index": 373
+                      }
+                    },
+                    "Start": {
+                      "Line": 16,
+                      "Column": 21,
+                      "Index": 366
+                    },
+                    "End": {
+                      "Line": 16,
+                      "Column": 28,
+                      "Index": 373
+                    }
+                  },
+                  {
+                    "Key": {
+                      "Name": "y",
+                      "Start": {
+                        "Line": 16,
+                        "Column": 31,
+                        "Index": 376
+                      },
+                      "End": {
+                        "Line": 16,
+                        "Column": 32,
+                        "Index": 377
+                      }
+                    },
+                    "Value": {
+                      "Kind": 0,
+                      "Value": "0",
+                      "Start": {
+                        "Line": 16,
+                        "Column": 35,
+                        "Index": 380
+                      },
+                      "End": {
+                        "Line": 16,
+                        "Column": 36,
+                        "Index": 381
+                      }
+                    },
+                    "Start": {
+                      "Line": 16,
+                      "Column": 21,
+                      "Index": 366
+                    },
+                    "End": {
+                      "Line": 16,
+                      "Column": 36,
+                      "Index": 381
+                    }
+                  }
+                ],
+                "Start": {
+                  "Line": 16,
+                  "Column": 21,
+                  "Index": 366
+                },
+                "End": {
+                  "Line": 16,
+                  "Column": 37,
+                  "Index": 382
+                }
+              },
+              "Type": {
+                "Name": "Point",
+                "Start": {
+                  "Line": 16,
+                  "Column": 41,
+                  "Index": 386
+                },
+                "End": {
+                  "Line": 16,
+                  "Column": 46,
+                  "Index": 391
+                }
+              },
+              "Start": {
+                "Line": 16,
+                "Column": 21,
+                "Index": 366
+              },
+              "End": {
+                "Line": 16,
+                "Column": 46,
+                "Index": 391
+              }
+            },
+            "Start": {
+              "Line": 16,
+              "Column": 11,
+              "Index": 356
+            },
+            "End": {
+              "Line": 16,
+              "Column": 46,
+              "Index": 391
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 16,
+        "Column": 1,
+        "Index": 346
+      },
+      "End": {
+        "Line": 16,
+        "Column": 47,
+        "Index": 392
+      }
+    },
+    {
+      "Name": {
+        "Name": "Container",
+        "Start": {
+          "Line": 19,
+          "Column": 6,
+          "Index": 438
+        },
+        "End": {
+          "Line": 19,
+          "Column": 15,
+          "Index": 447
+        }
+      },
+      "Type": {
+        "Fields": [
+          {
+            "Name": {
+              "Name": "value",
+              "Start": {
+                "Line": 20,
+                "Column": 4,
+                "Index": 461
+              },
+              "End": {
+                "Line": 20,
+                "Column": 9,
+                "Index": 466
+              }
+            },
+            "Type": {
+              "Base": {
+                "Name": "Point",
+                "Start": {
+                  "Line": 20,
+                  "Column": 11,
+                  "Index": 468
+                },
+                "End": {
+                  "Line": 20,
+                  "Column": 16,
+                  "Index": 473
+                }
+              },
+              "Start": {
+                "Line": 20,
+                "Column": 11,
+                "Index": 468
+              },
+              "End": {
+                "Line": 20,
+                "Column": 16,
+                "Index": 473
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 19,
+          "Column": 16,
+          "Index": 448
+        },
+        "End": {
+          "Line": 21,
+          "Column": 2,
+          "Index": 477
+        }
+      },
+      "Start": {
+        "Line": 19,
+        "Column": 1,
+        "Index": 433
+      },
+      "End": {
+        "Line": 21,
+        "Column": 3,
+        "Index": 478
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "container",
+            "Start": {
+              "Line": 23,
+              "Column": 5,
+              "Index": 486
+            },
+            "End": {
+              "Line": 23,
+              "Column": 14,
+              "Index": 495
+            }
+          },
+          "Type": null,
+          "Value": {
+            "X": {
+              "Type": null,
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "value",
+                    "Start": {
+                      "Line": 24,
+                      "Column": 4,
+                      "Index": 505
+                    },
+                    "End": {
+                      "Line": 24,
+                      "Column": 9,
+                      "Index": 510
+                    }
+                  },
+                  "Value": {
+                    "X": {
+                      "Type": null,
+                      "Elts": [
+                        {
+                          "Key": {
+                            "Name": "x",
+                            "Start": {
+                              "Line": 24,
+                              "Column": 14,
+                              "Index": 515
+                            },
+                            "End": {
+                              "Line": 24,
+                              "Column": 15,
+                              "Index": 516
+                            }
+                          },
+                          "Value": {
+                            "Kind": 0,
+                            "Value": "10",
+                            "Start": {
+                              "Line": 24,
+                              "Column": 18,
+                              "Index": 519
+                            },
+                            "End": {
+                              "Line": 24,
+                              "Column": 20,
+                              "Index": 521
+                            }
+                          },
+                          "Start": {
+                            "Line": 24,
+                            "Column": 12,
+                            "Index": 513
+                          },
+                          "End": {
+                            "Line": 24,
+                            "Column": 20,
+                            "Index": 521
+                          }
+                        },
+                        {
+                          "Key": {
+                            "Name": "y",
+                            "Start": {
+                              "Line": 24,
+                              "Column": 23,
+                              "Index": 524
+                            },
+                            "End": {
+                              "Line": 24,
+                              "Column": 24,
+                              "Index": 525
+                            }
+                          },
+                          "Value": {
+                            "Kind": 0,
+                            "Value": "20",
+                            "Start": {
+                              "Line": 24,
+                              "Column": 27,
+                              "Index": 528
+                            },
+                            "End": {
+                              "Line": 24,
+                              "Column": 29,
+                              "Index": 530
+                            }
+                          },
+                          "Start": {
+                            "Line": 24,
+                            "Column": 12,
+                            "Index": 513
+                          },
+                          "End": {
+                            "Line": 24,
+                            "Column": 29,
+                            "Index": 530
+                          }
+                        }
+                      ],
+                      "Start": {
+                        "Line": 24,
+                        "Column": 12,
+                        "Index": 513
+                      },
+                      "End": {
+                        "Line": 24,
+                        "Column": 30,
+                        "Index": 531
+                      }
+                    },
+                    "Type": {
+                      "Name": "Point",
+                      "Start": {
+                        "Line": 24,
+                        "Column": 34,
+                        "Index": 535
+                      },
+                      "End": {
+                        "Line": 24,
+                        "Column": 39,
+                        "Index": 540
+                      }
+                    },
+                    "Start": {
+                      "Line": 24,
+                      "Column": 12,
+                      "Index": 513
+                    },
+                    "End": {
+                      "Line": 24,
+                      "Column": 39,
+                      "Index": 540
+                    }
+                  },
+                  "Start": {
+                    "Line": 23,
+                    "Column": 18,
+                    "Index": 499
+                  },
+                  "End": {
+                    "Line": 24,
+                    "Column": 39,
+                    "Index": 540
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 23,
+                "Column": 18,
+                "Index": 499
+              },
+              "End": {
+                "Line": 25,
+                "Column": 2,
+                "Index": 543
+              }
+            },
+            "Type": {
+              "Name": "Container",
+              "Start": {
+                "Line": 25,
+                "Column": 6,
+                "Index": 547
+              },
+              "End": {
+                "Line": 25,
+                "Column": 15,
+                "Index": 556
+              }
+            },
+            "Start": {
+              "Line": 23,
+              "Column": 18,
+              "Index": 499
+            },
+            "End": {
+              "Line": 25,
+              "Column": 15,
+              "Index": 556
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 23,
+        "Column": 1,
+        "Index": 482
+      },
+      "End": {
+        "Line": 25,
+        "Column": 16,
+        "Index": 557
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

@@ -1,8 +1,0 @@
-// Simple map test
-type MyMap map[str]i32;
-
-let m := MyMap{"a" => 1, "b" => 2};
-
-if m == MyMap{"a" => 1, "b" => 2} {
-    let ok := 1;
-}
