@@ -1,0 +1,57 @@
+// Test interface implementation
+
+// 1. Empty interface - implemented by all types
+type Any interface {};
+
+// 2. Interface with methods
+type Shape interface {
+    area() -> f64,
+    perimeter() -> f64
+};
+
+// 3. Concrete type with methods
+type Rectangle struct {
+    .width: f64,
+    .height: f64
+};
+
+fn (r: Rectangle) area() -> f64 {
+    return r.width * r.height;
+}
+
+fn (r: Rectangle) perimeter() -> f64 {
+    return 2.0 * (r.width + r.height);
+}
+
+// 4. Assign concrete type to interface
+let rect := {.width = 10.0, .height = 5.0} as Rectangle;
+let shape: Shape = rect;
+
+// 5. Empty interface accepts all types
+let anyInt: Any = 42;
+let anyStr: Any = "hello";
+let anyStruct: Any = rect;
+
+// 6. Function accepting interface
+// Note: Method calls through interface variables not yet implemented
+fn acceptShape(s: Shape) {
+    // Cannot call s.area() yet - would require dynamic dispatch
+}
+
+acceptShape(rect);
+
+// 7. Multiple types implementing same interface
+type Circle struct {
+    .radius: f64
+};
+
+fn (c: Circle) area() -> f64 {
+    return 3.14159 * c.radius * c.radius;
+}
+
+fn (c: Circle) perimeter() -> f64 {
+    return 2.0 * 3.14159 * c.radius;
+}
+
+let circle := {.radius = 5.0} as Circle;
+let shape2: Shape = circle;

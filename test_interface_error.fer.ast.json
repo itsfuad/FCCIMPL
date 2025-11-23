@@ -1,0 +1,592 @@
+{
+  "FullPath": "E:\\Dev\\FCCIMPL\\test_interface_error.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "Printable",
+        "Start": {
+          "Line": 3,
+          "Column": 6,
+          "Index": 48
+        },
+        "End": {
+          "Line": 3,
+          "Column": 15,
+          "Index": 57
+        }
+      },
+      "Type": {
+        "Methods": [
+          {
+            "Name": {
+              "Name": "print",
+              "Start": {
+                "Line": 4,
+                "Column": 5,
+                "Index": 75
+              },
+              "End": {
+                "Line": 4,
+                "Column": 10,
+                "Index": 80
+              }
+            },
+            "Type": {
+              "Params": null,
+              "Result": {
+                "Name": "str",
+                "Start": {
+                  "Line": 4,
+                  "Column": 16,
+                  "Index": 86
+                },
+                "End": {
+                  "Line": 4,
+                  "Column": 19,
+                  "Index": 89
+                }
+              },
+              "Start": {
+                "Line": 4,
+                "Column": 10,
+                "Index": 80
+              },
+              "End": {
+                "Line": 4,
+                "Column": 19,
+                "Index": 89
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 4,
+              "Column": 5,
+              "Index": 75
+            },
+            "End": {
+              "Line": 4,
+              "Column": 19,
+              "Index": 89
+            }
+          },
+          {
+            "Name": {
+              "Name": "format",
+              "Start": {
+                "Line": 5,
+                "Column": 5,
+                "Index": 96
+              },
+              "End": {
+                "Line": 5,
+                "Column": 11,
+                "Index": 102
+              }
+            },
+            "Type": {
+              "Params": null,
+              "Result": {
+                "Name": "str",
+                "Start": {
+                  "Line": 5,
+                  "Column": 17,
+                  "Index": 108
+                },
+                "End": {
+                  "Line": 5,
+                  "Column": 20,
+                  "Index": 111
+                }
+              },
+              "Start": {
+                "Line": 5,
+                "Column": 11,
+                "Index": 102
+              },
+              "End": {
+                "Line": 5,
+                "Column": 20,
+                "Index": 111
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 5,
+              "Column": 5,
+              "Index": 96
+            },
+            "End": {
+              "Line": 5,
+              "Column": 20,
+              "Index": 111
+            }
+          }
+        ],
+        "Start": {
+          "Line": 3,
+          "Column": 16,
+          "Index": 58
+        },
+        "End": {
+          "Line": 6,
+          "Column": 2,
+          "Index": 114
+        }
+      },
+      "Start": {
+        "Line": 3,
+        "Column": 1,
+        "Index": 43
+      },
+      "End": {
+        "Line": 6,
+        "Column": 3,
+        "Index": 115
+      }
+    },
+    {
+      "Name": {
+        "Name": "Point",
+        "Start": {
+          "Line": 8,
+          "Column": 6,
+          "Index": 124
+        },
+        "End": {
+          "Line": 8,
+          "Column": 11,
+          "Index": 129
+        }
+      },
+      "Type": {
+        "Fields": [
+          {
+            "Name": {
+              "Name": "x",
+              "Start": {
+                "Line": 9,
+                "Column": 6,
+                "Index": 145
+              },
+              "End": {
+                "Line": 9,
+                "Column": 7,
+                "Index": 146
+              }
+            },
+            "Type": {
+              "Name": "f64",
+              "Start": {
+                "Line": 9,
+                "Column": 9,
+                "Index": 148
+              },
+              "End": {
+                "Line": 9,
+                "Column": 12,
+                "Index": 151
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "y",
+              "Start": {
+                "Line": 10,
+                "Column": 6,
+                "Index": 159
+              },
+              "End": {
+                "Line": 10,
+                "Column": 7,
+                "Index": 160
+              }
+            },
+            "Type": {
+              "Name": "f64",
+              "Start": {
+                "Line": 10,
+                "Column": 9,
+                "Index": 162
+              },
+              "End": {
+                "Line": 10,
+                "Column": 12,
+                "Index": 165
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 8,
+          "Column": 12,
+          "Index": 130
+        },
+        "End": {
+          "Line": 11,
+          "Column": 2,
+          "Index": 168
+        }
+      },
+      "Start": {
+        "Line": 8,
+        "Column": 1,
+        "Index": 119
+      },
+      "End": {
+        "Line": 11,
+        "Column": 3,
+        "Index": 169
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "p",
+          "Start": {
+            "Line": 14,
+            "Column": 5,
+            "Index": 225
+          },
+          "End": {
+            "Line": 14,
+            "Column": 6,
+            "Index": 226
+          }
+        },
+        "Type": {
+          "Name": "Point",
+          "Start": {
+            "Line": 14,
+            "Column": 8,
+            "Index": 228
+          },
+          "End": {
+            "Line": 14,
+            "Column": 13,
+            "Index": 233
+          }
+        },
+        "Value": null,
+        "IsVariadic": false,
+        "Start": {
+          "Line": 14,
+          "Column": 5,
+          "Index": 225
+        },
+        "End": {
+          "Line": 14,
+          "Column": 13,
+          "Index": 233
+        }
+      },
+      "Name": {
+        "Name": "print",
+        "Start": {
+          "Line": 14,
+          "Column": 15,
+          "Index": 235
+        },
+        "End": {
+          "Line": 14,
+          "Column": 20,
+          "Index": 240
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": {
+          "Name": "str",
+          "Start": {
+            "Line": 14,
+            "Column": 26,
+            "Index": 246
+          },
+          "End": {
+            "Line": 14,
+            "Column": 29,
+            "Index": 249
+          }
+        },
+        "Start": {
+          "Line": 14,
+          "Column": 20,
+          "Index": 240
+        },
+        "End": {
+          "Line": 14,
+          "Column": 29,
+          "Index": 249
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "Kind": 2,
+              "Value": "Point",
+              "Start": {
+                "Line": 15,
+                "Column": 12,
+                "Index": 264
+              },
+              "End": {
+                "Line": 15,
+                "Column": 19,
+                "Index": 271
+              }
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 15,
+              "Column": 5,
+              "Index": 257
+            },
+            "End": {
+              "Line": 15,
+              "Column": 20,
+              "Index": 272
+            }
+          }
+        ],
+        "Start": {
+          "Line": 14,
+          "Column": 30,
+          "Index": 250
+        },
+        "End": {
+          "Line": 16,
+          "Column": 2,
+          "Index": 275
+        }
+      },
+      "Start": {
+        "Line": 14,
+        "Column": 1,
+        "Index": 221
+      },
+      "End": {
+        "Line": 16,
+        "Column": 2,
+        "Index": 275
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "pt",
+            "Start": {
+              "Line": 19,
+              "Column": 5,
+              "Index": 339
+            },
+            "End": {
+              "Line": 19,
+              "Column": 7,
+              "Index": 341
+            }
+          },
+          "Type": null,
+          "Value": {
+            "X": {
+              "Type": null,
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "x",
+                    "Start": {
+                      "Line": 19,
+                      "Column": 13,
+                      "Index": 347
+                    },
+                    "End": {
+                      "Line": 19,
+                      "Column": 14,
+                      "Index": 348
+                    }
+                  },
+                  "Value": {
+                    "Kind": 1,
+                    "Value": "1.0",
+                    "Start": {
+                      "Line": 19,
+                      "Column": 17,
+                      "Index": 351
+                    },
+                    "End": {
+                      "Line": 19,
+                      "Column": 20,
+                      "Index": 354
+                    }
+                  },
+                  "Start": {
+                    "Line": 19,
+                    "Column": 11,
+                    "Index": 345
+                  },
+                  "End": {
+                    "Line": 19,
+                    "Column": 20,
+                    "Index": 354
+                  }
+                },
+                {
+                  "Key": {
+                    "Name": "y",
+                    "Start": {
+                      "Line": 19,
+                      "Column": 23,
+                      "Index": 357
+                    },
+                    "End": {
+                      "Line": 19,
+                      "Column": 24,
+                      "Index": 358
+                    }
+                  },
+                  "Value": {
+                    "Kind": 1,
+                    "Value": "2.0",
+                    "Start": {
+                      "Line": 19,
+                      "Column": 27,
+                      "Index": 361
+                    },
+                    "End": {
+                      "Line": 19,
+                      "Column": 30,
+                      "Index": 364
+                    }
+                  },
+                  "Start": {
+                    "Line": 19,
+                    "Column": 11,
+                    "Index": 345
+                  },
+                  "End": {
+                    "Line": 19,
+                    "Column": 30,
+                    "Index": 364
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 19,
+                "Column": 11,
+                "Index": 345
+              },
+              "End": {
+                "Line": 19,
+                "Column": 31,
+                "Index": 365
+              }
+            },
+            "Type": {
+              "Name": "Point",
+              "Start": {
+                "Line": 19,
+                "Column": 35,
+                "Index": 369
+              },
+              "End": {
+                "Line": 19,
+                "Column": 40,
+                "Index": 374
+              }
+            },
+            "Start": {
+              "Line": 19,
+              "Column": 11,
+              "Index": 345
+            },
+            "End": {
+              "Line": 19,
+              "Column": 40,
+              "Index": 374
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 19,
+        "Column": 1,
+        "Index": 335
+      },
+      "End": {
+        "Line": 19,
+        "Column": 41,
+        "Index": 375
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "printable",
+            "Start": {
+              "Line": 20,
+              "Column": 5,
+              "Index": 381
+            },
+            "End": {
+              "Line": 20,
+              "Column": 14,
+              "Index": 390
+            }
+          },
+          "Type": {
+            "Name": "Printable",
+            "Start": {
+              "Line": 20,
+              "Column": 16,
+              "Index": 392
+            },
+            "End": {
+              "Line": 20,
+              "Column": 25,
+              "Index": 401
+            }
+          },
+          "Value": {
+            "Name": "pt",
+            "Start": {
+              "Line": 20,
+              "Column": 28,
+              "Index": 404
+            },
+            "End": {
+              "Line": 20,
+              "Column": 30,
+              "Index": 406
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 20,
+        "Column": 1,
+        "Index": 377
+      },
+      "End": {
+        "Line": 20,
+        "Column": 31,
+        "Index": 407
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

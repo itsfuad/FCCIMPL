@@ -8,6 +8,7 @@ import (
 	"compiler/internal/source"
 	"compiler/internal/types"
 	"fmt"
+	"strings"
 )
 
 // Checker performs type checking and validation (Pass 3 / Phase 5)
@@ -708,6 +709,25 @@ func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 		return &semantics.Invalid{}
 	}
 
+	// Handle method access on interface types
+	interfaceType := c.getInterfaceType(baseType)
+	if interfaceType != nil {
+		if methodType, ok := interfaceType.Methods[expr.Sel.Name]; ok {
+			return methodType
+		}
+
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError(
+				fmt.Sprintf("interface '%s' has no method '%s'",
+					c.typeString(baseType),
+					expr.Sel.Name)).
+				WithCode(diagnostics.ErrMethodNotFound).
+				WithPrimaryLabel(c.currentFile, expr.Sel.Loc(),
+					fmt.Sprintf("'%s' not found", expr.Sel.Name)),
+		)
+		return &semantics.Invalid{}
+	}
+
 	return nil
 }
 
@@ -1188,6 +1208,12 @@ func (c *Checker) isCastable(from, to semantics.Type) bool {
 		return c.isAssignable(toArray.ElementType, fromArray.ElementType)
 	}
 
+	// Allow casting to interface if type implements it
+	toInterface := c.getInterfaceType(to)
+	if toInterface != nil {
+		return c.implementsInterface(from, toInterface)
+	}
+
 	return false
 }
 
@@ -1200,6 +1226,44 @@ func (c *Checker) isNumericType(typeName types.TYPE_NAME) bool {
 		return true
 	}
 	return false
+}
+
+// reportInterfaceNotImplemented reports detailed error about missing interface implementation
+func (c *Checker) reportInterfaceNotImplemented(implType, ifaceType semantics.Type, iface *semantics.InterfaceType) {
+	// Get methods from the implementing type
+	var typeMethods map[string]*semantics.FunctionType
+	if userType, ok := implType.(*semantics.UserType); ok {
+		typeMethods = userType.Methods
+	}
+
+	// Find missing or incompatible methods
+	var missingMethods []string
+	var incompatibleMethods []string
+
+	for methodName, ifaceMethod := range iface.Methods {
+		typeMethod, exists := typeMethods[methodName]
+		if !exists {
+			missingMethods = append(missingMethods, methodName)
+		} else if !c.methodSignaturesMatch(typeMethod, ifaceMethod) {
+			incompatibleMethods = append(incompatibleMethods, methodName)
+		}
+	}
+
+	// Build error message
+	msg := fmt.Sprintf("type '%s' does not implement interface '%s'",
+		c.typeString(implType),
+		c.typeString(ifaceType))
+
+	if len(missingMethods) > 0 {
+		msg += fmt.Sprintf("\n  missing methods: %s", strings.Join(missingMethods, ", "))
+	}
+	if len(incompatibleMethods) > 0 {
+		msg += fmt.Sprintf("\n  incompatible method signatures: %s", strings.Join(incompatibleMethods, ", "))
+	}
+
+	// Don't add diagnostic here - just let the assignment error be reported
+	// This is just for debugging
+	_ = msg
 }
 
 // isAssignable checks if a value of type 'from' can be assigned to type 'to'
@@ -1249,6 +1313,13 @@ func (c *Checker) isAssignable(to, from semantics.Type) bool {
 	// Handle user-defined types and structural compatibility
 	toUser, toIsUser := to.(*semantics.UserType)
 	fromUser, fromIsUser := from.(*semantics.UserType)
+
+	// Check if 'to' is an interface type - if so, check implementation
+	if toIsUser {
+		if toInterface := c.getInterfaceType(toUser); toInterface != nil {
+			return c.implementsInterface(from, toInterface)
+		}
+	}
 
 	// Named type to named type - must be exact match or underlying compatible
 	if toIsUser && fromIsUser {
@@ -1319,6 +1390,30 @@ func (c *Checker) isAssignable(to, from semantics.Type) bool {
 		return toPrim.TypeName == fromPrim.TypeName
 	}
 
+	// Check interface implementation
+	toInterface := c.getInterfaceType(to)
+	if toInterface != nil {
+		// Interface to interface assignment
+		fromInterface := c.getInterfaceType(from)
+		if fromInterface != nil {
+			// Check if from interface is a subset of to interface
+			// (from has all methods that to requires)
+			for methodName, toMethod := range toInterface.Methods {
+				fromMethod, exists := fromInterface.Methods[methodName]
+				if !exists {
+					return false
+				}
+				if !c.methodSignaturesMatch(fromMethod, toMethod) {
+					return false
+				}
+			}
+			return true
+		}
+
+		// Any type can be assigned to interface if it implements it
+		return c.implementsInterface(from, toInterface)
+	}
+
 	return false
 }
 
@@ -1368,6 +1463,87 @@ func (c *Checker) areStructsCompatible(to, from *semantics.StructType) bool {
 	}
 
 	return true
+}
+
+// implementsInterface checks if a type implements an interface
+func (c *Checker) implementsInterface(typ semantics.Type, iface *semantics.InterfaceType) bool {
+	// Empty interface is implemented by all types
+	if len(iface.Methods) == 0 {
+		return true
+	}
+
+	// Get methods from the type
+	var typeMethods map[string]*semantics.FunctionType
+
+	if userType, ok := typ.(*semantics.UserType); ok {
+		typeMethods = userType.Methods
+	} else {
+		// Non-user types don't have methods
+		return false
+	}
+
+	// Check that all interface methods are implemented
+	for methodName, ifaceMethod := range iface.Methods {
+		typeMethod, exists := typeMethods[methodName]
+		if !exists {
+			return false
+		}
+
+		// Check method signatures match
+		if !c.methodSignaturesMatch(typeMethod, ifaceMethod) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// getInterfaceType unwraps a type to get the underlying InterfaceType
+func (c *Checker) getInterfaceType(typ semantics.Type) *semantics.InterfaceType {
+	if iface, ok := typ.(*semantics.InterfaceType); ok {
+		return iface
+	}
+	if userType, ok := typ.(*semantics.UserType); ok {
+		if iface, ok := userType.Definition.(*semantics.InterfaceType); ok {
+			return iface
+		}
+	}
+	return nil
+}
+
+// methodSignaturesMatch checks if two method signatures are compatible
+func (c *Checker) methodSignaturesMatch(impl, iface *semantics.FunctionType) bool {
+	// Check parameter count
+	if len(impl.Parameters) != len(iface.Parameters) {
+		return false
+	}
+
+	// Check each parameter type
+	for i := range impl.Parameters {
+		implParam := impl.Parameters[i]
+		ifaceParam := iface.Parameters[i]
+
+		// Parameter types must match exactly (contravariance not supported yet)
+		if implParam.Type.String() != ifaceParam.Type.String() {
+			return false
+		}
+
+		// Variadic must match
+		if implParam.IsVariadic != ifaceParam.IsVariadic {
+			return false
+		}
+	}
+
+	// Check return type
+	if impl.ReturnType == nil && iface.ReturnType == nil {
+		return true
+	}
+	if impl.ReturnType == nil || iface.ReturnType == nil {
+		return false
+	}
+
+	// Return types must match (covariance not supported yet)
+	return impl.ReturnType.String() == iface.ReturnType.String()
 }
 
 // typeString returns a human-readable string for a type

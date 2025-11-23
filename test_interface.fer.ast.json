@@ -1,0 +1,1910 @@
+{
+  "FullPath": "E:\\Dev\\FCCIMPL\\test_interface.fer",
+  "ImportPath": "",
+  "Alias": "",
+  "Nodes": [
+    {
+      "Name": {
+        "Name": "Any",
+        "Start": {
+          "Line": 4,
+          "Column": 6,
+          "Index": 91
+        },
+        "End": {
+          "Line": 4,
+          "Column": 9,
+          "Index": 94
+        }
+      },
+      "Type": {
+        "Methods": [],
+        "Start": {
+          "Line": 4,
+          "Column": 10,
+          "Index": 95
+        },
+        "End": {
+          "Line": 4,
+          "Column": 22,
+          "Index": 107
+        }
+      },
+      "Start": {
+        "Line": 4,
+        "Column": 1,
+        "Index": 86
+      },
+      "End": {
+        "Line": 4,
+        "Column": 23,
+        "Index": 108
+      }
+    },
+    {
+      "Name": {
+        "Name": "Shape",
+        "Start": {
+          "Line": 7,
+          "Column": 6,
+          "Index": 147
+        },
+        "End": {
+          "Line": 7,
+          "Column": 11,
+          "Index": 152
+        }
+      },
+      "Type": {
+        "Methods": [
+          {
+            "Name": {
+              "Name": "area",
+              "Start": {
+                "Line": 8,
+                "Column": 5,
+                "Index": 170
+              },
+              "End": {
+                "Line": 8,
+                "Column": 9,
+                "Index": 174
+              }
+            },
+            "Type": {
+              "Params": null,
+              "Result": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 8,
+                  "Column": 15,
+                  "Index": 180
+                },
+                "End": {
+                  "Line": 8,
+                  "Column": 18,
+                  "Index": 183
+                }
+              },
+              "Start": {
+                "Line": 8,
+                "Column": 9,
+                "Index": 174
+              },
+              "End": {
+                "Line": 8,
+                "Column": 18,
+                "Index": 183
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 8,
+              "Column": 5,
+              "Index": 170
+            },
+            "End": {
+              "Line": 8,
+              "Column": 18,
+              "Index": 183
+            }
+          },
+          {
+            "Name": {
+              "Name": "perimeter",
+              "Start": {
+                "Line": 9,
+                "Column": 5,
+                "Index": 190
+              },
+              "End": {
+                "Line": 9,
+                "Column": 14,
+                "Index": 199
+              }
+            },
+            "Type": {
+              "Params": null,
+              "Result": {
+                "Name": "f64",
+                "Start": {
+                  "Line": 9,
+                  "Column": 20,
+                  "Index": 205
+                },
+                "End": {
+                  "Line": 9,
+                  "Column": 23,
+                  "Index": 208
+                }
+              },
+              "Start": {
+                "Line": 9,
+                "Column": 14,
+                "Index": 199
+              },
+              "End": {
+                "Line": 9,
+                "Column": 23,
+                "Index": 208
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 9,
+              "Column": 5,
+              "Index": 190
+            },
+            "End": {
+              "Line": 9,
+              "Column": 23,
+              "Index": 208
+            }
+          }
+        ],
+        "Start": {
+          "Line": 7,
+          "Column": 12,
+          "Index": 153
+        },
+        "End": {
+          "Line": 10,
+          "Column": 2,
+          "Index": 211
+        }
+      },
+      "Start": {
+        "Line": 7,
+        "Column": 1,
+        "Index": 142
+      },
+      "End": {
+        "Line": 10,
+        "Column": 3,
+        "Index": 212
+      }
+    },
+    {
+      "Name": {
+        "Name": "Rectangle",
+        "Start": {
+          "Line": 13,
+          "Column": 6,
+          "Index": 255
+        },
+        "End": {
+          "Line": 13,
+          "Column": 15,
+          "Index": 264
+        }
+      },
+      "Type": {
+        "Fields": [
+          {
+            "Name": {
+              "Name": "width",
+              "Start": {
+                "Line": 14,
+                "Column": 6,
+                "Index": 280
+              },
+              "End": {
+                "Line": 14,
+                "Column": 11,
+                "Index": 285
+              }
+            },
+            "Type": {
+              "Name": "f64",
+              "Start": {
+                "Line": 14,
+                "Column": 13,
+                "Index": 287
+              },
+              "End": {
+                "Line": 14,
+                "Column": 16,
+                "Index": 290
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          },
+          {
+            "Name": {
+              "Name": "height",
+              "Start": {
+                "Line": 15,
+                "Column": 6,
+                "Index": 298
+              },
+              "End": {
+                "Line": 15,
+                "Column": 12,
+                "Index": 304
+              }
+            },
+            "Type": {
+              "Name": "f64",
+              "Start": {
+                "Line": 15,
+                "Column": 14,
+                "Index": 306
+              },
+              "End": {
+                "Line": 15,
+                "Column": 17,
+                "Index": 309
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 13,
+          "Column": 16,
+          "Index": 265
+        },
+        "End": {
+          "Line": 16,
+          "Column": 2,
+          "Index": 312
+        }
+      },
+      "Start": {
+        "Line": 13,
+        "Column": 1,
+        "Index": 250
+      },
+      "End": {
+        "Line": 16,
+        "Column": 3,
+        "Index": 313
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "r",
+          "Start": {
+            "Line": 18,
+            "Column": 5,
+            "Index": 321
+          },
+          "End": {
+            "Line": 18,
+            "Column": 6,
+            "Index": 322
+          }
+        },
+        "Type": {
+          "Name": "Rectangle",
+          "Start": {
+            "Line": 18,
+            "Column": 8,
+            "Index": 324
+          },
+          "End": {
+            "Line": 18,
+            "Column": 17,
+            "Index": 333
+          }
+        },
+        "Value": null,
+        "IsVariadic": false,
+        "Start": {
+          "Line": 18,
+          "Column": 5,
+          "Index": 321
+        },
+        "End": {
+          "Line": 18,
+          "Column": 17,
+          "Index": 333
+        }
+      },
+      "Name": {
+        "Name": "area",
+        "Start": {
+          "Line": 18,
+          "Column": 19,
+          "Index": 335
+        },
+        "End": {
+          "Line": 18,
+          "Column": 23,
+          "Index": 339
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 18,
+            "Column": 29,
+            "Index": 345
+          },
+          "End": {
+            "Line": 18,
+            "Column": 32,
+            "Index": 348
+          }
+        },
+        "Start": {
+          "Line": 18,
+          "Column": 23,
+          "Index": 339
+        },
+        "End": {
+          "Line": 18,
+          "Column": 32,
+          "Index": 348
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "X": {
+                "X": {
+                  "Name": "r",
+                  "Start": {
+                    "Line": 19,
+                    "Column": 12,
+                    "Index": 363
+                  },
+                  "End": {
+                    "Line": 19,
+                    "Column": 13,
+                    "Index": 364
+                  }
+                },
+                "Sel": {
+                  "Name": "width",
+                  "Start": {
+                    "Line": 19,
+                    "Column": 14,
+                    "Index": 365
+                  },
+                  "End": {
+                    "Line": 19,
+                    "Column": 19,
+                    "Index": 370
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Op": {
+                "Kind": "*",
+                "Value": "*",
+                "Start": {
+                  "Line": 19,
+                  "Column": 20,
+                  "Index": 371
+                },
+                "End": {
+                  "Line": 19,
+                  "Column": 21,
+                  "Index": 372
+                }
+              },
+              "Y": {
+                "X": {
+                  "Name": "r",
+                  "Start": {
+                    "Line": 19,
+                    "Column": 22,
+                    "Index": 373
+                  },
+                  "End": {
+                    "Line": 19,
+                    "Column": 23,
+                    "Index": 374
+                  }
+                },
+                "Sel": {
+                  "Name": "height",
+                  "Start": {
+                    "Line": 19,
+                    "Column": 24,
+                    "Index": 375
+                  },
+                  "End": {
+                    "Line": 19,
+                    "Column": 30,
+                    "Index": 381
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Start": null,
+              "End": null
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 19,
+              "Column": 5,
+              "Index": 356
+            },
+            "End": {
+              "Line": 19,
+              "Column": 31,
+              "Index": 382
+            }
+          }
+        ],
+        "Start": {
+          "Line": 18,
+          "Column": 33,
+          "Index": 349
+        },
+        "End": {
+          "Line": 20,
+          "Column": 2,
+          "Index": 385
+        }
+      },
+      "Start": {
+        "Line": 18,
+        "Column": 1,
+        "Index": 317
+      },
+      "End": {
+        "Line": 20,
+        "Column": 2,
+        "Index": 385
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "r",
+          "Start": {
+            "Line": 22,
+            "Column": 5,
+            "Index": 393
+          },
+          "End": {
+            "Line": 22,
+            "Column": 6,
+            "Index": 394
+          }
+        },
+        "Type": {
+          "Name": "Rectangle",
+          "Start": {
+            "Line": 22,
+            "Column": 8,
+            "Index": 396
+          },
+          "End": {
+            "Line": 22,
+            "Column": 17,
+            "Index": 405
+          }
+        },
+        "Value": null,
+        "IsVariadic": false,
+        "Start": {
+          "Line": 22,
+          "Column": 5,
+          "Index": 393
+        },
+        "End": {
+          "Line": 22,
+          "Column": 17,
+          "Index": 405
+        }
+      },
+      "Name": {
+        "Name": "perimeter",
+        "Start": {
+          "Line": 22,
+          "Column": 19,
+          "Index": 407
+        },
+        "End": {
+          "Line": 22,
+          "Column": 28,
+          "Index": 416
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 22,
+            "Column": 34,
+            "Index": 422
+          },
+          "End": {
+            "Line": 22,
+            "Column": 37,
+            "Index": 425
+          }
+        },
+        "Start": {
+          "Line": 22,
+          "Column": 28,
+          "Index": 416
+        },
+        "End": {
+          "Line": 22,
+          "Column": 37,
+          "Index": 425
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "X": {
+                "Kind": 1,
+                "Value": "2.0",
+                "Start": {
+                  "Line": 23,
+                  "Column": 12,
+                  "Index": 440
+                },
+                "End": {
+                  "Line": 23,
+                  "Column": 15,
+                  "Index": 443
+                }
+              },
+              "Op": {
+                "Kind": "*",
+                "Value": "*",
+                "Start": {
+                  "Line": 23,
+                  "Column": 16,
+                  "Index": 444
+                },
+                "End": {
+                  "Line": 23,
+                  "Column": 17,
+                  "Index": 445
+                }
+              },
+              "Y": {
+                "X": {
+                  "X": {
+                    "Name": "r",
+                    "Start": {
+                      "Line": 23,
+                      "Column": 19,
+                      "Index": 447
+                    },
+                    "End": {
+                      "Line": 23,
+                      "Column": 20,
+                      "Index": 448
+                    }
+                  },
+                  "Sel": {
+                    "Name": "width",
+                    "Start": {
+                      "Line": 23,
+                      "Column": 21,
+                      "Index": 449
+                    },
+                    "End": {
+                      "Line": 23,
+                      "Column": 26,
+                      "Index": 454
+                    }
+                  },
+                  "Start": null,
+                  "End": null
+                },
+                "Op": {
+                  "Kind": "+",
+                  "Value": "+",
+                  "Start": {
+                    "Line": 23,
+                    "Column": 27,
+                    "Index": 455
+                  },
+                  "End": {
+                    "Line": 23,
+                    "Column": 28,
+                    "Index": 456
+                  }
+                },
+                "Y": {
+                  "X": {
+                    "Name": "r",
+                    "Start": {
+                      "Line": 23,
+                      "Column": 29,
+                      "Index": 457
+                    },
+                    "End": {
+                      "Line": 23,
+                      "Column": 30,
+                      "Index": 458
+                    }
+                  },
+                  "Sel": {
+                    "Name": "height",
+                    "Start": {
+                      "Line": 23,
+                      "Column": 31,
+                      "Index": 459
+                    },
+                    "End": {
+                      "Line": 23,
+                      "Column": 37,
+                      "Index": 465
+                    }
+                  },
+                  "Start": null,
+                  "End": null
+                },
+                "Start": null,
+                "End": null
+              },
+              "Start": null,
+              "End": null
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 23,
+              "Column": 5,
+              "Index": 433
+            },
+            "End": {
+              "Line": 23,
+              "Column": 39,
+              "Index": 467
+            }
+          }
+        ],
+        "Start": {
+          "Line": 22,
+          "Column": 38,
+          "Index": 426
+        },
+        "End": {
+          "Line": 24,
+          "Column": 2,
+          "Index": 470
+        }
+      },
+      "Start": {
+        "Line": 22,
+        "Column": 1,
+        "Index": 389
+      },
+      "End": {
+        "Line": 24,
+        "Column": 2,
+        "Index": 470
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "rect",
+            "Start": {
+              "Line": 27,
+              "Column": 5,
+              "Index": 519
+            },
+            "End": {
+              "Line": 27,
+              "Column": 9,
+              "Index": 523
+            }
+          },
+          "Type": null,
+          "Value": {
+            "X": {
+              "Type": null,
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "width",
+                    "Start": {
+                      "Line": 27,
+                      "Column": 15,
+                      "Index": 529
+                    },
+                    "End": {
+                      "Line": 27,
+                      "Column": 20,
+                      "Index": 534
+                    }
+                  },
+                  "Value": {
+                    "Kind": 1,
+                    "Value": "10.0",
+                    "Start": {
+                      "Line": 27,
+                      "Column": 23,
+                      "Index": 537
+                    },
+                    "End": {
+                      "Line": 27,
+                      "Column": 27,
+                      "Index": 541
+                    }
+                  },
+                  "Start": {
+                    "Line": 27,
+                    "Column": 13,
+                    "Index": 527
+                  },
+                  "End": {
+                    "Line": 27,
+                    "Column": 27,
+                    "Index": 541
+                  }
+                },
+                {
+                  "Key": {
+                    "Name": "height",
+                    "Start": {
+                      "Line": 27,
+                      "Column": 30,
+                      "Index": 544
+                    },
+                    "End": {
+                      "Line": 27,
+                      "Column": 36,
+                      "Index": 550
+                    }
+                  },
+                  "Value": {
+                    "Kind": 1,
+                    "Value": "5.0",
+                    "Start": {
+                      "Line": 27,
+                      "Column": 39,
+                      "Index": 553
+                    },
+                    "End": {
+                      "Line": 27,
+                      "Column": 42,
+                      "Index": 556
+                    }
+                  },
+                  "Start": {
+                    "Line": 27,
+                    "Column": 13,
+                    "Index": 527
+                  },
+                  "End": {
+                    "Line": 27,
+                    "Column": 42,
+                    "Index": 556
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 27,
+                "Column": 13,
+                "Index": 527
+              },
+              "End": {
+                "Line": 27,
+                "Column": 43,
+                "Index": 557
+              }
+            },
+            "Type": {
+              "Name": "Rectangle",
+              "Start": {
+                "Line": 27,
+                "Column": 47,
+                "Index": 561
+              },
+              "End": {
+                "Line": 27,
+                "Column": 56,
+                "Index": 570
+              }
+            },
+            "Start": {
+              "Line": 27,
+              "Column": 13,
+              "Index": 527
+            },
+            "End": {
+              "Line": 27,
+              "Column": 56,
+              "Index": 570
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 27,
+        "Column": 1,
+        "Index": 515
+      },
+      "End": {
+        "Line": 27,
+        "Column": 57,
+        "Index": 571
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "shape",
+            "Start": {
+              "Line": 28,
+              "Column": 5,
+              "Index": 577
+            },
+            "End": {
+              "Line": 28,
+              "Column": 10,
+              "Index": 582
+            }
+          },
+          "Type": {
+            "Name": "Shape",
+            "Start": {
+              "Line": 28,
+              "Column": 12,
+              "Index": 584
+            },
+            "End": {
+              "Line": 28,
+              "Column": 17,
+              "Index": 589
+            }
+          },
+          "Value": {
+            "Name": "rect",
+            "Start": {
+              "Line": 28,
+              "Column": 20,
+              "Index": 592
+            },
+            "End": {
+              "Line": 28,
+              "Column": 24,
+              "Index": 596
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 28,
+        "Column": 1,
+        "Index": 573
+      },
+      "End": {
+        "Line": 28,
+        "Column": 25,
+        "Index": 597
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "anyInt",
+            "Start": {
+              "Line": 31,
+              "Column": 5,
+              "Index": 646
+            },
+            "End": {
+              "Line": 31,
+              "Column": 11,
+              "Index": 652
+            }
+          },
+          "Type": {
+            "Name": "Any",
+            "Start": {
+              "Line": 31,
+              "Column": 13,
+              "Index": 654
+            },
+            "End": {
+              "Line": 31,
+              "Column": 16,
+              "Index": 657
+            }
+          },
+          "Value": {
+            "Kind": 0,
+            "Value": "42",
+            "Start": {
+              "Line": 31,
+              "Column": 19,
+              "Index": 660
+            },
+            "End": {
+              "Line": 31,
+              "Column": 21,
+              "Index": 662
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 31,
+        "Column": 1,
+        "Index": 642
+      },
+      "End": {
+        "Line": 31,
+        "Column": 22,
+        "Index": 663
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "anyStr",
+            "Start": {
+              "Line": 32,
+              "Column": 5,
+              "Index": 669
+            },
+            "End": {
+              "Line": 32,
+              "Column": 11,
+              "Index": 675
+            }
+          },
+          "Type": {
+            "Name": "Any",
+            "Start": {
+              "Line": 32,
+              "Column": 13,
+              "Index": 677
+            },
+            "End": {
+              "Line": 32,
+              "Column": 16,
+              "Index": 680
+            }
+          },
+          "Value": {
+            "Kind": 2,
+            "Value": "hello",
+            "Start": {
+              "Line": 32,
+              "Column": 19,
+              "Index": 683
+            },
+            "End": {
+              "Line": 32,
+              "Column": 26,
+              "Index": 690
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 32,
+        "Column": 1,
+        "Index": 665
+      },
+      "End": {
+        "Line": 32,
+        "Column": 27,
+        "Index": 691
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "anyStruct",
+            "Start": {
+              "Line": 33,
+              "Column": 5,
+              "Index": 697
+            },
+            "End": {
+              "Line": 33,
+              "Column": 14,
+              "Index": 706
+            }
+          },
+          "Type": {
+            "Name": "Any",
+            "Start": {
+              "Line": 33,
+              "Column": 16,
+              "Index": 708
+            },
+            "End": {
+              "Line": 33,
+              "Column": 19,
+              "Index": 711
+            }
+          },
+          "Value": {
+            "Name": "rect",
+            "Start": {
+              "Line": 33,
+              "Column": 22,
+              "Index": 714
+            },
+            "End": {
+              "Line": 33,
+              "Column": 26,
+              "Index": 718
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 33,
+        "Column": 1,
+        "Index": 693
+      },
+      "End": {
+        "Line": 33,
+        "Column": 27,
+        "Index": 719
+      }
+    },
+    {
+      "Name": {
+        "Name": "acceptShape",
+        "Start": {
+          "Line": 37,
+          "Column": 4,
+          "Index": 833
+        },
+        "End": {
+          "Line": 37,
+          "Column": 15,
+          "Index": 844
+        }
+      },
+      "Type": {
+        "Params": [
+          {
+            "Name": {
+              "Name": "s",
+              "Start": {
+                "Line": 37,
+                "Column": 16,
+                "Index": 845
+              },
+              "End": {
+                "Line": 37,
+                "Column": 17,
+                "Index": 846
+              }
+            },
+            "Type": {
+              "Name": "Shape",
+              "Start": {
+                "Line": 37,
+                "Column": 19,
+                "Index": 848
+              },
+              "End": {
+                "Line": 37,
+                "Column": 24,
+                "Index": 853
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": {
+              "Line": 37,
+              "Column": 16,
+              "Index": 845
+            },
+            "End": {
+              "Line": 37,
+              "Column": 24,
+              "Index": 853
+            }
+          }
+        ],
+        "Result": null,
+        "Start": {
+          "Line": 37,
+          "Column": 15,
+          "Index": 844
+        },
+        "End": {
+          "Line": 37,
+          "Column": 25,
+          "Index": 854
+        }
+      },
+      "Body": {
+        "Nodes": [],
+        "Start": {
+          "Line": 37,
+          "Column": 26,
+          "Index": 855
+        },
+        "End": {
+          "Line": 39,
+          "Column": 2,
+          "Index": 925
+        }
+      },
+      "Start": {
+        "Line": 37,
+        "Column": 1,
+        "Index": 830
+      },
+      "End": {
+        "Line": 39,
+        "Column": 2,
+        "Index": 925
+      }
+    },
+    {
+      "X": {
+        "Fun": {
+          "Name": "acceptShape",
+          "Start": {
+            "Line": 41,
+            "Column": 1,
+            "Index": 929
+          },
+          "End": {
+            "Line": 41,
+            "Column": 12,
+            "Index": 940
+          }
+        },
+        "Args": [
+          {
+            "Name": "rect",
+            "Start": {
+              "Line": 41,
+              "Column": 13,
+              "Index": 941
+            },
+            "End": {
+              "Line": 41,
+              "Column": 17,
+              "Index": 945
+            }
+          }
+        ],
+        "Catch": null,
+        "Start": {
+          "Line": 41,
+          "Column": 1,
+          "Index": 929
+        },
+        "End": {
+          "Line": 41,
+          "Column": 18,
+          "Index": 946
+        }
+      },
+      "Start": {
+        "Line": 41,
+        "Column": 1,
+        "Index": 929
+      },
+      "End": {
+        "Line": 41,
+        "Column": 19,
+        "Index": 947
+      }
+    },
+    {
+      "Name": {
+        "Name": "Circle",
+        "Start": {
+          "Line": 44,
+          "Column": 6,
+          "Index": 1006
+        },
+        "End": {
+          "Line": 44,
+          "Column": 12,
+          "Index": 1012
+        }
+      },
+      "Type": {
+        "Fields": [
+          {
+            "Name": {
+              "Name": "radius",
+              "Start": {
+                "Line": 45,
+                "Column": 6,
+                "Index": 1028
+              },
+              "End": {
+                "Line": 45,
+                "Column": 12,
+                "Index": 1034
+              }
+            },
+            "Type": {
+              "Name": "f64",
+              "Start": {
+                "Line": 45,
+                "Column": 14,
+                "Index": 1036
+              },
+              "End": {
+                "Line": 45,
+                "Column": 17,
+                "Index": 1039
+              }
+            },
+            "Value": null,
+            "IsVariadic": false,
+            "Start": null,
+            "End": null
+          }
+        ],
+        "Start": {
+          "Line": 44,
+          "Column": 13,
+          "Index": 1013
+        },
+        "End": {
+          "Line": 46,
+          "Column": 2,
+          "Index": 1042
+        }
+      },
+      "Start": {
+        "Line": 44,
+        "Column": 1,
+        "Index": 1001
+      },
+      "End": {
+        "Line": 46,
+        "Column": 3,
+        "Index": 1043
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "c",
+          "Start": {
+            "Line": 48,
+            "Column": 5,
+            "Index": 1051
+          },
+          "End": {
+            "Line": 48,
+            "Column": 6,
+            "Index": 1052
+          }
+        },
+        "Type": {
+          "Name": "Circle",
+          "Start": {
+            "Line": 48,
+            "Column": 8,
+            "Index": 1054
+          },
+          "End": {
+            "Line": 48,
+            "Column": 14,
+            "Index": 1060
+          }
+        },
+        "Value": null,
+        "IsVariadic": false,
+        "Start": {
+          "Line": 48,
+          "Column": 5,
+          "Index": 1051
+        },
+        "End": {
+          "Line": 48,
+          "Column": 14,
+          "Index": 1060
+        }
+      },
+      "Name": {
+        "Name": "area",
+        "Start": {
+          "Line": 48,
+          "Column": 16,
+          "Index": 1062
+        },
+        "End": {
+          "Line": 48,
+          "Column": 20,
+          "Index": 1066
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 48,
+            "Column": 26,
+            "Index": 1072
+          },
+          "End": {
+            "Line": 48,
+            "Column": 29,
+            "Index": 1075
+          }
+        },
+        "Start": {
+          "Line": 48,
+          "Column": 20,
+          "Index": 1066
+        },
+        "End": {
+          "Line": 48,
+          "Column": 29,
+          "Index": 1075
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "X": {
+                "X": {
+                  "Kind": 1,
+                  "Value": "3.14159",
+                  "Start": {
+                    "Line": 49,
+                    "Column": 12,
+                    "Index": 1090
+                  },
+                  "End": {
+                    "Line": 49,
+                    "Column": 19,
+                    "Index": 1097
+                  }
+                },
+                "Op": {
+                  "Kind": "*",
+                  "Value": "*",
+                  "Start": {
+                    "Line": 49,
+                    "Column": 20,
+                    "Index": 1098
+                  },
+                  "End": {
+                    "Line": 49,
+                    "Column": 21,
+                    "Index": 1099
+                  }
+                },
+                "Y": {
+                  "X": {
+                    "Name": "c",
+                    "Start": {
+                      "Line": 49,
+                      "Column": 22,
+                      "Index": 1100
+                    },
+                    "End": {
+                      "Line": 49,
+                      "Column": 23,
+                      "Index": 1101
+                    }
+                  },
+                  "Sel": {
+                    "Name": "radius",
+                    "Start": {
+                      "Line": 49,
+                      "Column": 24,
+                      "Index": 1102
+                    },
+                    "End": {
+                      "Line": 49,
+                      "Column": 30,
+                      "Index": 1108
+                    }
+                  },
+                  "Start": null,
+                  "End": null
+                },
+                "Start": null,
+                "End": null
+              },
+              "Op": {
+                "Kind": "*",
+                "Value": "*",
+                "Start": {
+                  "Line": 49,
+                  "Column": 31,
+                  "Index": 1109
+                },
+                "End": {
+                  "Line": 49,
+                  "Column": 32,
+                  "Index": 1110
+                }
+              },
+              "Y": {
+                "X": {
+                  "Name": "c",
+                  "Start": {
+                    "Line": 49,
+                    "Column": 33,
+                    "Index": 1111
+                  },
+                  "End": {
+                    "Line": 49,
+                    "Column": 34,
+                    "Index": 1112
+                  }
+                },
+                "Sel": {
+                  "Name": "radius",
+                  "Start": {
+                    "Line": 49,
+                    "Column": 35,
+                    "Index": 1113
+                  },
+                  "End": {
+                    "Line": 49,
+                    "Column": 41,
+                    "Index": 1119
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Start": null,
+              "End": null
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 49,
+              "Column": 5,
+              "Index": 1083
+            },
+            "End": {
+              "Line": 49,
+              "Column": 42,
+              "Index": 1120
+            }
+          }
+        ],
+        "Start": {
+          "Line": 48,
+          "Column": 30,
+          "Index": 1076
+        },
+        "End": {
+          "Line": 50,
+          "Column": 2,
+          "Index": 1123
+        }
+      },
+      "Start": {
+        "Line": 48,
+        "Column": 1,
+        "Index": 1047
+      },
+      "End": {
+        "Line": 50,
+        "Column": 2,
+        "Index": 1123
+      }
+    },
+    {
+      "Receiver": {
+        "Name": {
+          "Name": "c",
+          "Start": {
+            "Line": 52,
+            "Column": 5,
+            "Index": 1131
+          },
+          "End": {
+            "Line": 52,
+            "Column": 6,
+            "Index": 1132
+          }
+        },
+        "Type": {
+          "Name": "Circle",
+          "Start": {
+            "Line": 52,
+            "Column": 8,
+            "Index": 1134
+          },
+          "End": {
+            "Line": 52,
+            "Column": 14,
+            "Index": 1140
+          }
+        },
+        "Value": null,
+        "IsVariadic": false,
+        "Start": {
+          "Line": 52,
+          "Column": 5,
+          "Index": 1131
+        },
+        "End": {
+          "Line": 52,
+          "Column": 14,
+          "Index": 1140
+        }
+      },
+      "Name": {
+        "Name": "perimeter",
+        "Start": {
+          "Line": 52,
+          "Column": 16,
+          "Index": 1142
+        },
+        "End": {
+          "Line": 52,
+          "Column": 25,
+          "Index": 1151
+        }
+      },
+      "Type": {
+        "Params": null,
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 52,
+            "Column": 31,
+            "Index": 1157
+          },
+          "End": {
+            "Line": 52,
+            "Column": 34,
+            "Index": 1160
+          }
+        },
+        "Start": {
+          "Line": 52,
+          "Column": 25,
+          "Index": 1151
+        },
+        "End": {
+          "Line": 52,
+          "Column": 34,
+          "Index": 1160
+        }
+      },
+      "Body": {
+        "Nodes": [
+          {
+            "Result": {
+              "X": {
+                "X": {
+                  "Kind": 1,
+                  "Value": "2.0",
+                  "Start": {
+                    "Line": 53,
+                    "Column": 12,
+                    "Index": 1175
+                  },
+                  "End": {
+                    "Line": 53,
+                    "Column": 15,
+                    "Index": 1178
+                  }
+                },
+                "Op": {
+                  "Kind": "*",
+                  "Value": "*",
+                  "Start": {
+                    "Line": 53,
+                    "Column": 16,
+                    "Index": 1179
+                  },
+                  "End": {
+                    "Line": 53,
+                    "Column": 17,
+                    "Index": 1180
+                  }
+                },
+                "Y": {
+                  "Kind": 1,
+                  "Value": "3.14159",
+                  "Start": {
+                    "Line": 53,
+                    "Column": 18,
+                    "Index": 1181
+                  },
+                  "End": {
+                    "Line": 53,
+                    "Column": 25,
+                    "Index": 1188
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Op": {
+                "Kind": "*",
+                "Value": "*",
+                "Start": {
+                  "Line": 53,
+                  "Column": 26,
+                  "Index": 1189
+                },
+                "End": {
+                  "Line": 53,
+                  "Column": 27,
+                  "Index": 1190
+                }
+              },
+              "Y": {
+                "X": {
+                  "Name": "c",
+                  "Start": {
+                    "Line": 53,
+                    "Column": 28,
+                    "Index": 1191
+                  },
+                  "End": {
+                    "Line": 53,
+                    "Column": 29,
+                    "Index": 1192
+                  }
+                },
+                "Sel": {
+                  "Name": "radius",
+                  "Start": {
+                    "Line": 53,
+                    "Column": 30,
+                    "Index": 1193
+                  },
+                  "End": {
+                    "Line": 53,
+                    "Column": 36,
+                    "Index": 1199
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Start": null,
+              "End": null
+            },
+            "IsError": false,
+            "Start": {
+              "Line": 53,
+              "Column": 5,
+              "Index": 1168
+            },
+            "End": {
+              "Line": 53,
+              "Column": 37,
+              "Index": 1200
+            }
+          }
+        ],
+        "Start": {
+          "Line": 52,
+          "Column": 35,
+          "Index": 1161
+        },
+        "End": {
+          "Line": 54,
+          "Column": 2,
+          "Index": 1203
+        }
+      },
+      "Start": {
+        "Line": 52,
+        "Column": 1,
+        "Index": 1127
+      },
+      "End": {
+        "Line": 54,
+        "Column": 2,
+        "Index": 1203
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "circle",
+            "Start": {
+              "Line": 56,
+              "Column": 5,
+              "Index": 1211
+            },
+            "End": {
+              "Line": 56,
+              "Column": 11,
+              "Index": 1217
+            }
+          },
+          "Type": null,
+          "Value": {
+            "X": {
+              "Type": null,
+              "Elts": [
+                {
+                  "Key": {
+                    "Name": "radius",
+                    "Start": {
+                      "Line": 56,
+                      "Column": 17,
+                      "Index": 1223
+                    },
+                    "End": {
+                      "Line": 56,
+                      "Column": 23,
+                      "Index": 1229
+                    }
+                  },
+                  "Value": {
+                    "Kind": 1,
+                    "Value": "5.0",
+                    "Start": {
+                      "Line": 56,
+                      "Column": 26,
+                      "Index": 1232
+                    },
+                    "End": {
+                      "Line": 56,
+                      "Column": 29,
+                      "Index": 1235
+                    }
+                  },
+                  "Start": {
+                    "Line": 56,
+                    "Column": 15,
+                    "Index": 1221
+                  },
+                  "End": {
+                    "Line": 56,
+                    "Column": 29,
+                    "Index": 1235
+                  }
+                }
+              ],
+              "Start": {
+                "Line": 56,
+                "Column": 15,
+                "Index": 1221
+              },
+              "End": {
+                "Line": 56,
+                "Column": 30,
+                "Index": 1236
+              }
+            },
+            "Type": {
+              "Name": "Circle",
+              "Start": {
+                "Line": 56,
+                "Column": 34,
+                "Index": 1240
+              },
+              "End": {
+                "Line": 56,
+                "Column": 40,
+                "Index": 1246
+              }
+            },
+            "Start": {
+              "Line": 56,
+              "Column": 15,
+              "Index": 1221
+            },
+            "End": {
+              "Line": 56,
+              "Column": 40,
+              "Index": 1246
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 56,
+        "Column": 1,
+        "Index": 1207
+      },
+      "End": {
+        "Line": 56,
+        "Column": 41,
+        "Index": 1247
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "shape2",
+            "Start": {
+              "Line": 57,
+              "Column": 5,
+              "Index": 1253
+            },
+            "End": {
+              "Line": 57,
+              "Column": 11,
+              "Index": 1259
+            }
+          },
+          "Type": {
+            "Name": "Shape",
+            "Start": {
+              "Line": 57,
+              "Column": 13,
+              "Index": 1261
+            },
+            "End": {
+              "Line": 57,
+              "Column": 18,
+              "Index": 1266
+            }
+          },
+          "Value": {
+            "Name": "circle",
+            "Start": {
+              "Line": 57,
+              "Column": 21,
+              "Index": 1269
+            },
+            "End": {
+              "Line": 57,
+              "Column": 27,
+              "Index": 1275
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 57,
+        "Column": 1,
+        "Index": 1249
+      },
+      "End": {
+        "Line": 57,
+        "Column": 28,
+        "Index": 1276
+      }
+    }
+  ],
+  "Start": null,
+  "End": null
+}

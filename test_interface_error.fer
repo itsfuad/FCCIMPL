@@ -1,0 +1,20 @@
+// Test interface implementation errors
+
+type Printable interface {
+    print() -> str,
+    format() -> str
+};
+
+type Point struct {
+    .x: f64,
+    .y: f64
+};
+
+// Point only implements print(), not format()
+fn (p: Point) print() -> str {
+    return "Point";
+}
+
+// This should fail - Point doesn't implement format()
+let pt := {.x = 1.0, .y = 2.0} as Point;
+let printable: Printable = pt;

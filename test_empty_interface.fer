@@ -1,0 +1,12 @@
+// Simple interface test
+
+type Empty interface {};
+
+type Point struct {
+    .x: i32,
+    .y: i32
+};
+
+// Test 1: Empty interface accepts all types
+let anyInt: Empty = 42;
+let anyStruct: Empty = {.x = 10, .y = 20} as Point;

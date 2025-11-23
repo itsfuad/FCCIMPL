@@ -1,0 +1,63 @@
+// Test comprehensive interface functionality
+
+// Empty interface - accepts all types
+type Any interface {};
+
+// Interface with methods
+type Shape interface {
+    area() -> f64,
+    perimeter() -> f64
+};
+
+type Drawable interface {
+    draw() -> str
+};
+
+// Struct implementing Shape
+type Rectangle struct {
+    .width: f64,
+    .height: f64
+};
+
+fn (r: Rectangle) area() -> f64 {
+    return r.width * r.height;
+}
+
+fn (r: Rectangle) perimeter() -> f64 {
+    return 2.0 * (r.width + r.height);
+}
+
+// Struct implementing both Shape and Drawable
+type Circle struct {
+    .radius: f64
+};
+
+fn (c: Circle) area() -> f64 {
+    return 3.14159 * c.radius * c.radius;
+}
+
+fn (c: Circle) perimeter() -> f64 {
+    return 2.0 * 3.14159 * c.radius;
+}
+
+fn (c: Circle) draw() -> str {
+    return "Drawing circle";
+}
+
+// Test empty interface
+let anyInt: Any = 42;
+let anyStr: Any = "hello";
+let rect := {.width = 10.0, .height = 5.0} as Rectangle;
+let anyRect: Any = rect;
+
+// Test interface assignment
+let shape1: Shape = rect;
+let circle := {.radius = 3.0} as Circle;
+let shape2: Shape = circle;
+
+// Test method calls through interface
+// Note: Method calls through interface variables may require additional implementation
+// For now, we just test that the assignment works
+
+// Test multiple interface implementation
+let drawable: Drawable = circle;

@@ -1,0 +1,17 @@
+// Test interface method signature mismatch
+
+type Calculator interface {
+    add(a: i32, b: i32) -> i32
+};
+
+type SimpleCalc struct {
+    .dummy: i32
+};
+
+// Wrong signature - takes f64 instead of i32
+fn (c: SimpleCalc) add(a: f64, b: f64) -> i32 {
+    return 0;
+}
+
+let calc := {.dummy = 1} as SimpleCalc;
+let calculator: Calculator = calc;

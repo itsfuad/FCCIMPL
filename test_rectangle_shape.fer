@@ -1,0 +1,26 @@
+// Test original Rectangle/Shape example
+
+type Shape interface {
+    area() -> f64,
+    perimeter() -> f64
+};
+
+type Rectangle struct {
+    .width: f64,
+    .height: f64
+};
+
+fn (r: Rectangle) area() -> f64 {
+    return r.width * r.height;
+}
+
+fn (r: Rectangle) perimeter() -> f64 {
+    return 2.0 * (r.width + r.height);
+}
+
+let rect := {.width = 10.0, .height = 5.0} as Rectangle;
+let shape: Shape = rect;
+
+// Direct method call
+let a := rect.area();
+let p := rect.perimeter();
