@@ -9,6 +9,12 @@ import (
 	"sync"
 )
 
+const (
+	compileFailedMsg = "\nCompilation failed with %d error(s)"
+	andWarningMsg   = " and %d warning(s)"
+	compileSuccessWithWarning = "\nCompilation succeeded with %d warning(s)\n" 
+)
+
 // DiagnosticBag collects diagnostics during compilation
 type DiagnosticBag struct {
 	diagnostics []*Diagnostic
@@ -123,13 +129,13 @@ func (db *DiagnosticBag) EmitAllToStringWithCache(sourceLines []string) string {
 	// Print summary to buffer
 	if errorCount > 0 || warnCount > 0 {
 		if errorCount > 0 {
-			fmt.Fprintf(&buf, "\nCompilation failed with %d error(s)", errorCount)
+			fmt.Fprintf(&buf, compileFailedMsg, errorCount)
 			if warnCount > 0 {
-				fmt.Fprintf(&buf, " and %d warning(s)", warnCount)
+				fmt.Fprintf(&buf, andWarningMsg, warnCount)
 			}
 			fmt.Fprintln(&buf)
 		} else if warnCount > 0 {
-			fmt.Fprintf(&buf, "\nCompilation succeeded with %d warning(s)\n", warnCount)
+			fmt.Fprintf(&buf, compileSuccessWithWarning, warnCount)
 		}
 	}
 
@@ -172,13 +178,13 @@ func (db *DiagnosticBag) printSummary() {
 	defer db.mu.Unlock()
 
 	if db.errorCount > 0 {
-		fmt.Fprintf(os.Stderr, "\nCompilation failed with %d error(s)", db.errorCount)
+		fmt.Fprintf(os.Stderr, compileFailedMsg, db.errorCount)
 		if db.warnCount > 0 {
-			fmt.Fprintf(os.Stderr, " and %d warning(s)", db.warnCount)
+			fmt.Fprintf(os.Stderr, andWarningMsg, db.warnCount)
 		}
 		fmt.Fprintln(os.Stderr)
 	} else if db.warnCount > 0 {
-		fmt.Fprintf(os.Stderr, "\nCompilation succeeded with %d warning(s)\n", db.warnCount)
+		fmt.Fprintf(os.Stderr, compileSuccessWithWarning, db.warnCount)
 	}
 }
 
@@ -187,13 +193,13 @@ func (db *DiagnosticBag) printSummaryToWriter(w io.Writer) {
 	defer db.mu.Unlock()
 
 	if db.errorCount > 0 {
-		fmt.Fprintf(w, "\nCompilation failed with %d error(s)", db.errorCount)
+		fmt.Fprintf(w, compileFailedMsg, db.errorCount)
 		if db.warnCount > 0 {
-			fmt.Fprintf(w, " and %d warning(s)", db.warnCount)
+			fmt.Fprintf(w, andWarningMsg, db.warnCount)
 		}
 		fmt.Fprintln(w)
 	} else if db.warnCount > 0 {
-		fmt.Fprintf(w, "\nCompilation succeeded with %d warning(s)\n", db.warnCount)
+		fmt.Fprintf(w, compileSuccessWithWarning, db.warnCount)
 	}
 }
 

@@ -3,13 +3,12 @@
 package main
 
 import (
-	"compiler/internal/context"
-	"compiler/internal/semantics/checker"
-	"compiler/internal/semantics/collector"
-	"compiler/internal/semantics/resolver"
 	"fmt"
 	"strings"
+
 	"syscall/js"
+	"compiler/internal/context"
+	"compiler/internal/cmd"
 )
 
 // compileCode compiles Ferret code and returns the result
@@ -24,11 +23,6 @@ func compileCode(code string, debug bool) (string, error) {
 		}
 	}()
 
-	// Register semantic phase runners
-	context.CollectorRun = collector.Run
-	context.ResolverRun = resolver.Run
-	context.CheckerRun = checker.Run
-
 	// Create compiler options
 	options := &context.CompilerOptions{
 		Debug: debug,
@@ -40,34 +34,16 @@ func compileCode(code string, debug bool) (string, error) {
 	// WASM WORKAROUND: Directly add the code as a "virtual file"
 	// instead of using the file system
 	virtualFilePath := "main.fer"
-	file := ctx.AddFile(virtualFilePath, code)
 
-	// Manually run the compilation phases without file system I/O
-	// Phase 1: Lex
-	if err := ctx.LexFile(file); err != nil {
-		return "", fmt.Errorf("lexer failed: %v", err)
+	ctx.AddFile(virtualFilePath, code)
+
+	if err := cmd.RunLexAndParsePhase(ctx); err != nil {
+		return "", fmt.Errorf("lex/parse failed: %v", err)
 	}
 
-	// Phase 2: Parse
-	if err := ctx.ParseFile(file); err != nil {
-		return "", fmt.Errorf("parser failed: %v", err)
-	}
-
-	// Phase 3: Collector
-	ctx.InitializeSemantics(file)
-	if context.CollectorRun != nil {
-		context.CollectorRun(ctx)
-	}
-
-	// Phase 4: Resolver
-	if context.ResolverRun != nil {
-		context.ResolverRun(ctx)
-	}
-
-	// Phase 5: Checker
-	if context.CheckerRun != nil {
-		context.CheckerRun(ctx)
-	}
+	cmd.RunCollectorPhase(ctx)
+	cmd.RunResolverPhase(ctx)
+	cmd.RunCheckerPhase(ctx)
 
 	// Check for errors
 	var err error

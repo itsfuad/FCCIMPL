@@ -14,6 +14,7 @@ import (
 
 const (
 	STR_MULTIPLIER = "%*d | "
+	LINE_POS = "  --> %s:%d:%d\n"
 )
 
 // SourceCache caches source file contents for error reporting
@@ -133,10 +134,11 @@ func (e *Emitter) Emit(filepath string, diag *Diagnostic) {
 			}
 		} else if primaryCount > 1 {
 			// Multiple primary labels - print warning
-			colors.BOLD_RED.Fprintln(e.writer, "INTERNAL COMPILER ERROR: Multiple primary labels in diagnostic!")
+			labels := []string{}
 			for _, label := range diag.Labels {
-				e.printLabel(filepath, label, diag.Severity)
+				labels = append(labels, fmt.Sprintf("%v", label))
 			}
+			panic("INTERNAL COMPILER ERROR: Multiple primary labels in diagnostic!: " + strings.Join(labels, ", "))
 		} else {
 			// Exactly one primary label - use Rust-style rendering
 			if len(secondaryLabels) == 0 {
@@ -209,7 +211,7 @@ func (e *Emitter) printLabel(filepath string, label Label, severity Severity) {
 	}
 
 	// Print location header
-	colors.BLUE.Fprintf(e.writer, "  --> %s:%d:%d\n", filepath, start.Line, start.Column)
+	colors.BLUE.Fprintf(e.writer, LINE_POS, filepath, start.Line, start.Column)
 
 	// Print line number gutter width
 	lineNumWidth := len(fmt.Sprintf("%d", start.Line))
@@ -452,7 +454,7 @@ func (e *Emitter) printCompactDualLabel(filepath string, primary Label, secondar
 	}
 
 	// Print location header (point to rightmost/inline label)
-	colors.BLUE.Fprintf(e.writer, "  --> %s:%d:%d\n", filepath, line, rightStart.Column)
+	colors.BLUE.Fprintf(e.writer, LINE_POS, filepath, line, rightStart.Column)
 
 	lineNumWidth := len(fmt.Sprintf("%d", line))
 
@@ -578,7 +580,7 @@ func (e *Emitter) printRoutedLabels(filepath string, primary Label, secondaries 
 	primaryCol := primary.Location.Start.Column
 
 	// Print location header
-	colors.BLUE.Fprintf(e.writer, "  --> %s:%d:%d\n", filepath, primaryLine, primaryCol)
+	colors.BLUE.Fprintf(e.writer, LINE_POS, filepath, primaryLine, primaryCol)
 
 	// Collect all line numbers we need to show
 	lineNumbers := []int{primaryLine}

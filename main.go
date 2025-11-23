@@ -3,21 +3,16 @@
 package main
 
 import (
-	"compiler/internal/context"
-	"compiler/internal/semantics/checker"
-	"compiler/internal/semantics/collector"
-	"compiler/internal/semantics/resolver"
 	"flag"
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"compiler/internal/cmd"
+	"compiler/internal/context"
 )
 
 func main() {
-	// Register semantic phase runners
-	context.CollectorRun = collector.Run
-	context.ResolverRun = resolver.Run
-	context.CheckerRun = checker.Run
 
 	// Parse command-line flags
 	debugFlag := flag.Bool("debug", false, "Enable debug output")
@@ -40,7 +35,7 @@ func main() {
 	ctx := context.New(options)
 
 	// Run compilation pipeline
-	if err := ctx.Compile(filename); err != nil {
+	if err := cmd.Compile(filename, ctx); err != nil {
 		ctx.EmitDiagnostics()
 		fmt.Fprintf(os.Stderr, "\nCompilation failed: %v\n", err)
 		os.Exit(1)
