@@ -32,13 +32,12 @@ let anyInt: Any = 42;
 let anyStr: Any = "hello";
 let anyStruct: Any = rect;
 
-// 6. Function accepting interface
-// Note: Method calls through interface variables not yet implemented
-fn acceptShape(s: Shape) {
-    // Cannot call s.area() yet - would require dynamic dispatch
+// 6. Function accepting interface with method calls
+fn printArea(s: Shape) -> f64 {
+    return s.area();
 }
 
-acceptShape(rect);
+let area := printArea(rect);
 
 // 7. Multiple types implementing same interface
 type Circle struct {

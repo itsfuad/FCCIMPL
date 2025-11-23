@@ -138,7 +138,9 @@ This is crucial because:
 
 ## Error Messages
 
-When a type doesn't implement an interface, you get a clear error:
+When a type doesn't implement an interface, you get detailed error messages showing exactly what's wrong:
+
+### Missing Methods
 
 ```
 error[T0001]: cannot assign value of type Point to symbol of type Printable
@@ -146,9 +148,45 @@ error[T0001]: cannot assign value of type Point to symbol of type Printable
    |
 19 | let pt := {.x = 1.0, .y = 2.0} as Point;
 20 | let printable: Printable = pt;
-   |     ---------              ~~ expression has type Point
+   |     ---------              ~~ type Point does not implement interface Printable
    |     |
    |     -- symbol has type Printable
+   |
+  = note: missing method(s): format
+  = help: implement the missing method(s) on type Point
+```
+
+### Signature Mismatch
+
+```
+error[T0001]: cannot assign value of type SimpleCalc to symbol of type Calculator
+  --> test.fer:17:30
+   |
+16 | let calc := {.dummy = 1} as SimpleCalc;
+17 | let calculator: Calculator = calc;
+   |     ----------               ~~~~ type SimpleCalc does not implement interface Calculator
+   |     |
+   |     -- symbol has type Calculator
+   |
+  = note: method 'add': parameter 1: expected type i32, found f64
+  = help: fix the method signature(s) to match the interface requirements
+```
+
+### Multiple Errors
+
+```
+error[T0001]: cannot assign value of type PartialType to symbol of type FullInterface
+  --> test.fer:22:27
+   |
+21 | let pt := {.value = 42} as PartialType;
+22 | let full: FullInterface = pt;
+   |     ----                  ~~ type PartialType does not implement interface FullInterface
+   |     |
+   |     -- symbol has type FullInterface
+   |
+  = note: missing method(s): method3, method1
+  = note: method 'method2': parameter 1: expected type i32, found f64
+  = help: implement the missing method(s) on type PartialType
 ```
 
 ## Examples
@@ -201,7 +239,39 @@ let calc := {.dummy = 1} as SimpleCalc;
 let calculator: Calculator = calc;  // ERROR - signature mismatch
 ```
 
-### Example 4: Missing Method (Error)
+### Example 4: Interface Method Calls
+
+```ferret
+type Shape interface {
+    area() -> f64,
+    perimeter() -> f64
+};
+
+type Rectangle struct {
+    .width: f64,
+    .height: f64
+};
+
+fn (r: Rectangle) area() -> f64 {
+    return r.width * r.height;
+}
+
+fn (r: Rectangle) perimeter() -> f64 {
+    return 2.0 * (r.width + r.height);
+}
+
+// Function accepting interface parameter
+fn printShapeInfo(s: Shape) -> f64 {
+    let a := s.area();        // Call method through interface
+    let p := s.perimeter();   // Call method through interface
+    return a + p;
+}
+
+let rect := {.width = 10.0, .height = 5.0} as Rectangle;
+let result := printShapeInfo(rect);  // OK - Rectangle implements Shape
+```
+
+### Example 5: Missing Method (Error)
 
 ```ferret
 type Printable interface {
@@ -224,19 +294,32 @@ let printable: Printable = pt;  // ERROR - missing format() method
 
 Run the provided test files to verify interface functionality:
 
-- `test_empty_interface.fer` - Empty interface accepts all types
-- `test_interface_complete.fer` - Comprehensive interface tests
-- `test_interface_error.fer` - Missing method detection
-- `test_interface_signature_error.fer` - Signature mismatch detection
-- `test_rectangle_shape.fer` - Classic shape example
+- `test_empty_interface.fer` - Empty interface accepts all types ✅
+- `test_interface_complete.fer` - Comprehensive interface tests ✅
+- `test_interface.fer` - Interface method calls ✅
+- `test_rectangle_shape.fer` - Classic shape example ✅
+- `test_interface_error.fer` - Missing method detection ❌ (expected error)
+- `test_interface_signature_error.fer` - Signature mismatch detection ❌ (expected error)
+- `test_interface_multiple_errors.fer` - Multiple errors at once ❌ (expected error)
 
-All tests should pass (or fail with expected errors for error tests).
+All positive tests pass, and error tests show detailed, helpful error messages.
+
+## Implemented Features
+
+✅ **Interface type definitions** - Define contracts with method signatures
+✅ **Empty interfaces** - Accept all types (similar to `interface{}` in Go)
+✅ **Implicit implementation** - Types automatically implement interfaces by having matching methods
+✅ **Method signature validation** - Parameter types, return types, and variadic status must match
+✅ **Multiple interface implementation** - A type can implement multiple interfaces
+✅ **Interface as parameter/return types** - Use interfaces in function signatures
+✅ **Interface method calls** - Call methods through interface variables
+✅ **Detailed error messages** - Shows missing methods and signature mismatches with helpful context
+✅ **Compile-time checking** - All interface validation happens during type checking
 
 ## Future Enhancements
 
 Potential future improvements:
-1. **Method calls through interface variables** - Currently only assignment is supported
-2. **Covariance/Contravariance** - Allow compatible return/parameter types
-3. **Interface embedding** - Interfaces that extend other interfaces
-4. **Type assertions** - Runtime type checking for interface values
-5. **Better error messages** - Show which methods are missing or have wrong signatures
+1. **Covariance/Contravariance** - Allow compatible return/parameter types
+2. **Interface embedding** - Interfaces that extend other interfaces
+3. **Type assertions** - Runtime type checking for interface values
+4. **Generic interfaces** - Parameterized interface definitions

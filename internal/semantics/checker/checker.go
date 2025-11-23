@@ -681,6 +681,25 @@ func (c *Checker) checkSelectorExpr(expr *ast.SelectorExpr) semantics.Type {
 
 	// Handle method access on user-defined types
 	if userType, ok := baseType.(*semantics.UserType); ok {
+		// Check if this is an interface type
+		if interfaceType := c.getInterfaceType(userType); interfaceType != nil {
+			if methodType, ok := interfaceType.Methods[expr.Sel.Name]; ok {
+				return methodType
+			}
+
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("interface '%s' has no method '%s'",
+						c.typeString(baseType),
+						expr.Sel.Name)).
+					WithCode(diagnostics.ErrMethodNotFound).
+					WithPrimaryLabel(c.currentFile, expr.Sel.Loc(),
+						fmt.Sprintf("'%s' not found", expr.Sel.Name)),
+			)
+			return &semantics.Invalid{}
+		}
+
+		// Not an interface, check for struct fields and methods
 		// First check if the underlying definition has this field
 		if userType.Definition != nil {
 			if structType, ok := userType.Definition.(*semantics.StructType); ok {
@@ -1465,11 +1484,24 @@ func (c *Checker) areStructsCompatible(to, from *semantics.StructType) bool {
 	return true
 }
 
+// InterfaceCheckResult holds the result of interface implementation checking
+type InterfaceCheckResult struct {
+	Implements        bool
+	MissingMethods    []string
+	MismatchedMethods map[string]string // method name -> reason
+}
+
 // implementsInterface checks if a type implements an interface
 func (c *Checker) implementsInterface(typ semantics.Type, iface *semantics.InterfaceType) bool {
+	result := c.checkInterfaceImplementation(typ, iface)
+	return result.Implements
+}
+
+// checkInterfaceImplementation checks if a type implements an interface and returns detailed results
+func (c *Checker) checkInterfaceImplementation(typ semantics.Type, iface *semantics.InterfaceType) InterfaceCheckResult {
 	// Empty interface is implemented by all types
 	if len(iface.Methods) == 0 {
-		return true
+		return InterfaceCheckResult{Implements: true}
 	}
 
 	// Get methods from the type
@@ -1478,24 +1510,40 @@ func (c *Checker) implementsInterface(typ semantics.Type, iface *semantics.Inter
 	if userType, ok := typ.(*semantics.UserType); ok {
 		typeMethods = userType.Methods
 	} else {
-		// Non-user types don't have methods
-		return false
+		// Non-user types don't have methods - all methods are missing
+		missing := make([]string, 0, len(iface.Methods))
+		for methodName := range iface.Methods {
+			missing = append(missing, methodName)
+		}
+		return InterfaceCheckResult{
+			Implements:     false,
+			MissingMethods: missing,
+		}
 	}
+
+	var missingMethods []string
+	mismatchedMethods := make(map[string]string)
 
 	// Check that all interface methods are implemented
 	for methodName, ifaceMethod := range iface.Methods {
 		typeMethod, exists := typeMethods[methodName]
 		if !exists {
-			return false
+			missingMethods = append(missingMethods, methodName)
+			continue
 		}
 
 		// Check method signatures match
-		if !c.methodSignaturesMatch(typeMethod, ifaceMethod) {
-			return false
+		if reason := c.methodSignatureMismatch(typeMethod, ifaceMethod); reason != "" {
+			mismatchedMethods[methodName] = reason
 		}
 	}
 
-	return true
+	implements := len(missingMethods) == 0 && len(mismatchedMethods) == 0
+	return InterfaceCheckResult{
+		Implements:        implements,
+		MissingMethods:    missingMethods,
+		MismatchedMethods: mismatchedMethods,
+	}
 }
 
 // getInterfaceType unwraps a type to get the underlying InterfaceType
@@ -1513,9 +1561,14 @@ func (c *Checker) getInterfaceType(typ semantics.Type) *semantics.InterfaceType 
 
 // methodSignaturesMatch checks if two method signatures are compatible
 func (c *Checker) methodSignaturesMatch(impl, iface *semantics.FunctionType) bool {
+	return c.methodSignatureMismatch(impl, iface) == ""
+}
+
+// methodSignatureMismatch returns a description of why signatures don't match, or empty string if they match
+func (c *Checker) methodSignatureMismatch(impl, iface *semantics.FunctionType) string {
 	// Check parameter count
 	if len(impl.Parameters) != len(iface.Parameters) {
-		return false
+		return fmt.Sprintf("expected %d parameter(s), found %d", len(iface.Parameters), len(impl.Parameters))
 	}
 
 	// Check each parameter type
@@ -1525,25 +1578,32 @@ func (c *Checker) methodSignaturesMatch(impl, iface *semantics.FunctionType) boo
 
 		// Parameter types must match exactly (contravariance not supported yet)
 		if implParam.Type.String() != ifaceParam.Type.String() {
-			return false
+			return fmt.Sprintf("parameter %d: expected type %s, found %s", i+1, ifaceParam.Type.String(), implParam.Type.String())
 		}
 
 		// Variadic must match
 		if implParam.IsVariadic != ifaceParam.IsVariadic {
-			return false
+			return fmt.Sprintf("parameter %d: variadic mismatch", i+1)
 		}
 	}
 
 	// Check return type
 	if impl.ReturnType == nil && iface.ReturnType == nil {
-		return true
+		return ""
 	}
-	if impl.ReturnType == nil || iface.ReturnType == nil {
-		return false
+	if impl.ReturnType == nil {
+		return fmt.Sprintf("expected return type %s, found none", iface.ReturnType.String())
+	}
+	if iface.ReturnType == nil {
+		return fmt.Sprintf("expected no return type, found %s", impl.ReturnType.String())
 	}
 
 	// Return types must match (covariance not supported yet)
-	return impl.ReturnType.String() == iface.ReturnType.String()
+	if impl.ReturnType.String() != iface.ReturnType.String() {
+		return fmt.Sprintf("expected return type %s, found %s", iface.ReturnType.String(), impl.ReturnType.String())
+	}
+
+	return ""
 }
 
 // typeString returns a human-readable string for a type
@@ -1559,6 +1619,41 @@ func (c *Checker) reportAssignmentError(expectedType, actualType semantics.Type,
 	mainMessage := fmt.Sprintf("cannot assign value of type %s to symbol of type %s",
 		c.typeString(actualType),
 		c.typeString(expectedType))
+
+	// Check if it's an interface implementation issue
+	if expectedInterface := c.getInterfaceType(expectedType); expectedInterface != nil {
+		result := c.checkInterfaceImplementation(actualType, expectedInterface)
+		if !result.Implements {
+			// Build detailed error message for interface non-implementation
+			diag := diagnostics.NewError(mainMessage).
+				WithCode(diagnostics.ErrTypeMismatch).
+				WithPrimaryLabel(c.currentFile, valueLoc,
+					fmt.Sprintf("type %s does not implement interface %s", c.typeString(actualType), c.typeString(expectedType))).
+				WithSecondaryLabel(c.currentFile, declLoc,
+					fmt.Sprintf("symbol has type %s", c.typeString(expectedType)))
+
+			if len(result.MissingMethods) > 0 {
+				methodList := strings.Join(result.MissingMethods, ", ")
+				diag = diag.WithNote(fmt.Sprintf("missing method(s): %s", methodList))
+			}
+
+			if len(result.MismatchedMethods) > 0 {
+				for methodName, reason := range result.MismatchedMethods {
+					diag = diag.WithNote(fmt.Sprintf("method '%s': %s", methodName, reason))
+				}
+			}
+
+			// Provide helpful suggestion
+			if len(result.MissingMethods) > 0 {
+				diag = diag.WithHelp(fmt.Sprintf("implement the missing method(s) on type %s", c.typeString(actualType)))
+			} else if len(result.MismatchedMethods) > 0 {
+				diag = diag.WithHelp("fix the method signature(s) to match the interface requirements")
+			}
+
+			c.ctx.Diagnostics.Add(diag)
+			return
+		}
+	}
 
 	// Check if it's an optional type mismatch and provide helpful note
 	var note string

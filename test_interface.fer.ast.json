@@ -1085,16 +1085,16 @@
     },
     {
       "Name": {
-        "Name": "acceptShape",
+        "Name": "printArea",
         "Start": {
-          "Line": 37,
+          "Line": 36,
           "Column": 4,
-          "Index": 833
+          "Index": 780
         },
         "End": {
-          "Line": 37,
-          "Column": 15,
-          "Index": 844
+          "Line": 36,
+          "Column": 13,
+          "Index": 789
         }
       },
       "Type": {
@@ -1103,144 +1103,232 @@
             "Name": {
               "Name": "s",
               "Start": {
-                "Line": 37,
-                "Column": 16,
-                "Index": 845
+                "Line": 36,
+                "Column": 14,
+                "Index": 790
               },
               "End": {
-                "Line": 37,
-                "Column": 17,
-                "Index": 846
+                "Line": 36,
+                "Column": 15,
+                "Index": 791
               }
             },
             "Type": {
               "Name": "Shape",
               "Start": {
-                "Line": 37,
-                "Column": 19,
-                "Index": 848
+                "Line": 36,
+                "Column": 17,
+                "Index": 793
               },
               "End": {
-                "Line": 37,
-                "Column": 24,
-                "Index": 853
+                "Line": 36,
+                "Column": 22,
+                "Index": 798
               }
             },
             "Value": null,
             "IsVariadic": false,
             "Start": {
-              "Line": 37,
-              "Column": 16,
-              "Index": 845
+              "Line": 36,
+              "Column": 14,
+              "Index": 790
             },
             "End": {
-              "Line": 37,
-              "Column": 24,
-              "Index": 853
+              "Line": 36,
+              "Column": 22,
+              "Index": 798
             }
           }
         ],
-        "Result": null,
+        "Result": {
+          "Name": "f64",
+          "Start": {
+            "Line": 36,
+            "Column": 27,
+            "Index": 803
+          },
+          "End": {
+            "Line": 36,
+            "Column": 30,
+            "Index": 806
+          }
+        },
         "Start": {
-          "Line": 37,
-          "Column": 15,
-          "Index": 844
+          "Line": 36,
+          "Column": 13,
+          "Index": 789
         },
         "End": {
-          "Line": 37,
-          "Column": 25,
-          "Index": 854
+          "Line": 36,
+          "Column": 30,
+          "Index": 806
         }
       },
       "Body": {
-        "Nodes": [],
-        "Start": {
-          "Line": 37,
-          "Column": 26,
-          "Index": 855
-        },
-        "End": {
-          "Line": 39,
-          "Column": 2,
-          "Index": 925
-        }
-      },
-      "Start": {
-        "Line": 37,
-        "Column": 1,
-        "Index": 830
-      },
-      "End": {
-        "Line": 39,
-        "Column": 2,
-        "Index": 925
-      }
-    },
-    {
-      "X": {
-        "Fun": {
-          "Name": "acceptShape",
-          "Start": {
-            "Line": 41,
-            "Column": 1,
-            "Index": 929
-          },
-          "End": {
-            "Line": 41,
-            "Column": 12,
-            "Index": 940
-          }
-        },
-        "Args": [
+        "Nodes": [
           {
-            "Name": "rect",
+            "Result": {
+              "Fun": {
+                "X": {
+                  "Name": "s",
+                  "Start": {
+                    "Line": 37,
+                    "Column": 12,
+                    "Index": 821
+                  },
+                  "End": {
+                    "Line": 37,
+                    "Column": 13,
+                    "Index": 822
+                  }
+                },
+                "Sel": {
+                  "Name": "area",
+                  "Start": {
+                    "Line": 37,
+                    "Column": 14,
+                    "Index": 823
+                  },
+                  "End": {
+                    "Line": 37,
+                    "Column": 18,
+                    "Index": 827
+                  }
+                },
+                "Start": null,
+                "End": null
+              },
+              "Args": [],
+              "Catch": null,
+              "Start": {
+                "Line": 37,
+                "Column": 14,
+                "Index": 823
+              },
+              "End": {
+                "Line": 37,
+                "Column": 20,
+                "Index": 829
+              }
+            },
+            "IsError": false,
             "Start": {
-              "Line": 41,
-              "Column": 13,
-              "Index": 941
+              "Line": 37,
+              "Column": 5,
+              "Index": 814
             },
             "End": {
-              "Line": 41,
-              "Column": 17,
-              "Index": 945
+              "Line": 37,
+              "Column": 21,
+              "Index": 830
             }
           }
         ],
-        "Catch": null,
         "Start": {
-          "Line": 41,
-          "Column": 1,
-          "Index": 929
+          "Line": 36,
+          "Column": 31,
+          "Index": 807
         },
         "End": {
-          "Line": 41,
-          "Column": 18,
-          "Index": 946
+          "Line": 38,
+          "Column": 2,
+          "Index": 833
         }
       },
       "Start": {
-        "Line": 41,
+        "Line": 36,
         "Column": 1,
-        "Index": 929
+        "Index": 777
       },
       "End": {
-        "Line": 41,
-        "Column": 19,
-        "Index": 947
+        "Line": 38,
+        "Column": 2,
+        "Index": 833
+      }
+    },
+    {
+      "Decls": [
+        {
+          "Name": {
+            "Name": "area",
+            "Start": {
+              "Line": 40,
+              "Column": 5,
+              "Index": 841
+            },
+            "End": {
+              "Line": 40,
+              "Column": 9,
+              "Index": 845
+            }
+          },
+          "Type": null,
+          "Value": {
+            "Fun": {
+              "Name": "printArea",
+              "Start": {
+                "Line": 40,
+                "Column": 13,
+                "Index": 849
+              },
+              "End": {
+                "Line": 40,
+                "Column": 22,
+                "Index": 858
+              }
+            },
+            "Args": [
+              {
+                "Name": "rect",
+                "Start": {
+                  "Line": 40,
+                  "Column": 23,
+                  "Index": 859
+                },
+                "End": {
+                  "Line": 40,
+                  "Column": 27,
+                  "Index": 863
+                }
+              }
+            ],
+            "Catch": null,
+            "Start": {
+              "Line": 40,
+              "Column": 13,
+              "Index": 849
+            },
+            "End": {
+              "Line": 40,
+              "Column": 28,
+              "Index": 864
+            }
+          }
+        }
+      ],
+      "Start": {
+        "Line": 40,
+        "Column": 1,
+        "Index": 837
+      },
+      "End": {
+        "Line": 40,
+        "Column": 29,
+        "Index": 865
       }
     },
     {
       "Name": {
         "Name": "Circle",
         "Start": {
-          "Line": 44,
+          "Line": 43,
           "Column": 6,
-          "Index": 1006
+          "Index": 924
         },
         "End": {
-          "Line": 44,
+          "Line": 43,
           "Column": 12,
-          "Index": 1012
+          "Index": 930
         }
       },
       "Type": {
@@ -1249,27 +1337,27 @@
             "Name": {
               "Name": "radius",
               "Start": {
-                "Line": 45,
+                "Line": 44,
                 "Column": 6,
-                "Index": 1028
+                "Index": 946
               },
               "End": {
-                "Line": 45,
+                "Line": 44,
                 "Column": 12,
-                "Index": 1034
+                "Index": 952
               }
             },
             "Type": {
               "Name": "f64",
               "Start": {
-                "Line": 45,
+                "Line": 44,
                 "Column": 14,
-                "Index": 1036
+                "Index": 954
               },
               "End": {
-                "Line": 45,
+                "Line": 44,
                 "Column": 17,
-                "Index": 1039
+                "Index": 957
               }
             },
             "Value": null,
@@ -1279,25 +1367,25 @@
           }
         ],
         "Start": {
-          "Line": 44,
+          "Line": 43,
           "Column": 13,
-          "Index": 1013
+          "Index": 931
         },
         "End": {
-          "Line": 46,
+          "Line": 45,
           "Column": 2,
-          "Index": 1042
+          "Index": 960
         }
       },
       "Start": {
-        "Line": 44,
+        "Line": 43,
         "Column": 1,
-        "Index": 1001
+        "Index": 919
       },
       "End": {
-        "Line": 46,
+        "Line": 45,
         "Column": 3,
-        "Index": 1043
+        "Index": 961
       }
     },
     {
@@ -1305,53 +1393,53 @@
         "Name": {
           "Name": "c",
           "Start": {
-            "Line": 48,
+            "Line": 47,
             "Column": 5,
-            "Index": 1051
+            "Index": 969
           },
           "End": {
-            "Line": 48,
+            "Line": 47,
             "Column": 6,
-            "Index": 1052
+            "Index": 970
           }
         },
         "Type": {
           "Name": "Circle",
           "Start": {
-            "Line": 48,
+            "Line": 47,
             "Column": 8,
-            "Index": 1054
+            "Index": 972
           },
           "End": {
-            "Line": 48,
+            "Line": 47,
             "Column": 14,
-            "Index": 1060
+            "Index": 978
           }
         },
         "Value": null,
         "IsVariadic": false,
         "Start": {
-          "Line": 48,
+          "Line": 47,
           "Column": 5,
-          "Index": 1051
+          "Index": 969
         },
         "End": {
-          "Line": 48,
+          "Line": 47,
           "Column": 14,
-          "Index": 1060
+          "Index": 978
         }
       },
       "Name": {
         "Name": "area",
         "Start": {
-          "Line": 48,
+          "Line": 47,
           "Column": 16,
-          "Index": 1062
+          "Index": 980
         },
         "End": {
-          "Line": 48,
+          "Line": 47,
           "Column": 20,
-          "Index": 1066
+          "Index": 984
         }
       },
       "Type": {
@@ -1359,25 +1447,25 @@
         "Result": {
           "Name": "f64",
           "Start": {
-            "Line": 48,
+            "Line": 47,
             "Column": 26,
-            "Index": 1072
+            "Index": 990
           },
           "End": {
-            "Line": 48,
+            "Line": 47,
             "Column": 29,
-            "Index": 1075
+            "Index": 993
           }
         },
         "Start": {
-          "Line": 48,
+          "Line": 47,
           "Column": 20,
-          "Index": 1066
+          "Index": 984
         },
         "End": {
-          "Line": 48,
+          "Line": 47,
           "Column": 29,
-          "Index": 1075
+          "Index": 993
         }
       },
       "Body": {
@@ -1389,55 +1477,55 @@
                   "Kind": 1,
                   "Value": "3.14159",
                   "Start": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 12,
-                    "Index": 1090
+                    "Index": 1008
                   },
                   "End": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 19,
-                    "Index": 1097
+                    "Index": 1015
                   }
                 },
                 "Op": {
                   "Kind": "*",
                   "Value": "*",
                   "Start": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 20,
-                    "Index": 1098
+                    "Index": 1016
                   },
                   "End": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 21,
-                    "Index": 1099
+                    "Index": 1017
                   }
                 },
                 "Y": {
                   "X": {
                     "Name": "c",
                     "Start": {
-                      "Line": 49,
+                      "Line": 48,
                       "Column": 22,
-                      "Index": 1100
+                      "Index": 1018
                     },
                     "End": {
-                      "Line": 49,
+                      "Line": 48,
                       "Column": 23,
-                      "Index": 1101
+                      "Index": 1019
                     }
                   },
                   "Sel": {
                     "Name": "radius",
                     "Start": {
-                      "Line": 49,
+                      "Line": 48,
                       "Column": 24,
-                      "Index": 1102
+                      "Index": 1020
                     },
                     "End": {
-                      "Line": 49,
+                      "Line": 48,
                       "Column": 30,
-                      "Index": 1108
+                      "Index": 1026
                     }
                   },
                   "Start": null,
@@ -1450,41 +1538,41 @@
                 "Kind": "*",
                 "Value": "*",
                 "Start": {
-                  "Line": 49,
+                  "Line": 48,
                   "Column": 31,
-                  "Index": 1109
+                  "Index": 1027
                 },
                 "End": {
-                  "Line": 49,
+                  "Line": 48,
                   "Column": 32,
-                  "Index": 1110
+                  "Index": 1028
                 }
               },
               "Y": {
                 "X": {
                   "Name": "c",
                   "Start": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 33,
-                    "Index": 1111
+                    "Index": 1029
                   },
                   "End": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 34,
-                    "Index": 1112
+                    "Index": 1030
                   }
                 },
                 "Sel": {
                   "Name": "radius",
                   "Start": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 35,
-                    "Index": 1113
+                    "Index": 1031
                   },
                   "End": {
-                    "Line": 49,
+                    "Line": 48,
                     "Column": 41,
-                    "Index": 1119
+                    "Index": 1037
                   }
                 },
                 "Start": null,
@@ -1495,37 +1583,37 @@
             },
             "IsError": false,
             "Start": {
-              "Line": 49,
+              "Line": 48,
               "Column": 5,
-              "Index": 1083
+              "Index": 1001
             },
             "End": {
-              "Line": 49,
+              "Line": 48,
               "Column": 42,
-              "Index": 1120
+              "Index": 1038
             }
           }
         ],
         "Start": {
-          "Line": 48,
+          "Line": 47,
           "Column": 30,
-          "Index": 1076
+          "Index": 994
         },
         "End": {
-          "Line": 50,
+          "Line": 49,
           "Column": 2,
-          "Index": 1123
+          "Index": 1041
         }
       },
       "Start": {
-        "Line": 48,
+        "Line": 47,
         "Column": 1,
-        "Index": 1047
+        "Index": 965
       },
       "End": {
-        "Line": 50,
+        "Line": 49,
         "Column": 2,
-        "Index": 1123
+        "Index": 1041
       }
     },
     {
@@ -1533,53 +1621,53 @@
         "Name": {
           "Name": "c",
           "Start": {
-            "Line": 52,
+            "Line": 51,
             "Column": 5,
-            "Index": 1131
+            "Index": 1049
           },
           "End": {
-            "Line": 52,
+            "Line": 51,
             "Column": 6,
-            "Index": 1132
+            "Index": 1050
           }
         },
         "Type": {
           "Name": "Circle",
           "Start": {
-            "Line": 52,
+            "Line": 51,
             "Column": 8,
-            "Index": 1134
+            "Index": 1052
           },
           "End": {
-            "Line": 52,
+            "Line": 51,
             "Column": 14,
-            "Index": 1140
+            "Index": 1058
           }
         },
         "Value": null,
         "IsVariadic": false,
         "Start": {
-          "Line": 52,
+          "Line": 51,
           "Column": 5,
-          "Index": 1131
+          "Index": 1049
         },
         "End": {
-          "Line": 52,
+          "Line": 51,
           "Column": 14,
-          "Index": 1140
+          "Index": 1058
         }
       },
       "Name": {
         "Name": "perimeter",
         "Start": {
-          "Line": 52,
+          "Line": 51,
           "Column": 16,
-          "Index": 1142
+          "Index": 1060
         },
         "End": {
-          "Line": 52,
+          "Line": 51,
           "Column": 25,
-          "Index": 1151
+          "Index": 1069
         }
       },
       "Type": {
@@ -1587,25 +1675,25 @@
         "Result": {
           "Name": "f64",
           "Start": {
-            "Line": 52,
+            "Line": 51,
             "Column": 31,
-            "Index": 1157
+            "Index": 1075
           },
           "End": {
-            "Line": 52,
+            "Line": 51,
             "Column": 34,
-            "Index": 1160
+            "Index": 1078
           }
         },
         "Start": {
-          "Line": 52,
+          "Line": 51,
           "Column": 25,
-          "Index": 1151
+          "Index": 1069
         },
         "End": {
-          "Line": 52,
+          "Line": 51,
           "Column": 34,
-          "Index": 1160
+          "Index": 1078
         }
       },
       "Body": {
@@ -1617,42 +1705,42 @@
                   "Kind": 1,
                   "Value": "2.0",
                   "Start": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 12,
-                    "Index": 1175
+                    "Index": 1093
                   },
                   "End": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 15,
-                    "Index": 1178
+                    "Index": 1096
                   }
                 },
                 "Op": {
                   "Kind": "*",
                   "Value": "*",
                   "Start": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 16,
-                    "Index": 1179
+                    "Index": 1097
                   },
                   "End": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 17,
-                    "Index": 1180
+                    "Index": 1098
                   }
                 },
                 "Y": {
                   "Kind": 1,
                   "Value": "3.14159",
                   "Start": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 18,
-                    "Index": 1181
+                    "Index": 1099
                   },
                   "End": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 25,
-                    "Index": 1188
+                    "Index": 1106
                   }
                 },
                 "Start": null,
@@ -1662,41 +1750,41 @@
                 "Kind": "*",
                 "Value": "*",
                 "Start": {
-                  "Line": 53,
+                  "Line": 52,
                   "Column": 26,
-                  "Index": 1189
+                  "Index": 1107
                 },
                 "End": {
-                  "Line": 53,
+                  "Line": 52,
                   "Column": 27,
-                  "Index": 1190
+                  "Index": 1108
                 }
               },
               "Y": {
                 "X": {
                   "Name": "c",
                   "Start": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 28,
-                    "Index": 1191
+                    "Index": 1109
                   },
                   "End": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 29,
-                    "Index": 1192
+                    "Index": 1110
                   }
                 },
                 "Sel": {
                   "Name": "radius",
                   "Start": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 30,
-                    "Index": 1193
+                    "Index": 1111
                   },
                   "End": {
-                    "Line": 53,
+                    "Line": 52,
                     "Column": 36,
-                    "Index": 1199
+                    "Index": 1117
                   }
                 },
                 "Start": null,
@@ -1707,37 +1795,37 @@
             },
             "IsError": false,
             "Start": {
-              "Line": 53,
+              "Line": 52,
               "Column": 5,
-              "Index": 1168
+              "Index": 1086
             },
             "End": {
-              "Line": 53,
+              "Line": 52,
               "Column": 37,
-              "Index": 1200
+              "Index": 1118
             }
           }
         ],
         "Start": {
-          "Line": 52,
+          "Line": 51,
           "Column": 35,
-          "Index": 1161
+          "Index": 1079
         },
         "End": {
-          "Line": 54,
+          "Line": 53,
           "Column": 2,
-          "Index": 1203
+          "Index": 1121
         }
       },
       "Start": {
-        "Line": 52,
+        "Line": 51,
         "Column": 1,
-        "Index": 1127
+        "Index": 1045
       },
       "End": {
-        "Line": 54,
+        "Line": 53,
         "Column": 2,
-        "Index": 1203
+        "Index": 1121
       }
     },
     {
@@ -1746,14 +1834,14 @@
           "Name": {
             "Name": "circle",
             "Start": {
-              "Line": 56,
+              "Line": 55,
               "Column": 5,
-              "Index": 1211
+              "Index": 1129
             },
             "End": {
-              "Line": 56,
+              "Line": 55,
               "Column": 11,
-              "Index": 1217
+              "Index": 1135
             }
           },
           "Type": null,
@@ -1765,88 +1853,88 @@
                   "Key": {
                     "Name": "radius",
                     "Start": {
-                      "Line": 56,
+                      "Line": 55,
                       "Column": 17,
-                      "Index": 1223
+                      "Index": 1141
                     },
                     "End": {
-                      "Line": 56,
+                      "Line": 55,
                       "Column": 23,
-                      "Index": 1229
+                      "Index": 1147
                     }
                   },
                   "Value": {
                     "Kind": 1,
                     "Value": "5.0",
                     "Start": {
-                      "Line": 56,
+                      "Line": 55,
                       "Column": 26,
-                      "Index": 1232
+                      "Index": 1150
                     },
                     "End": {
-                      "Line": 56,
+                      "Line": 55,
                       "Column": 29,
-                      "Index": 1235
+                      "Index": 1153
                     }
                   },
                   "Start": {
-                    "Line": 56,
+                    "Line": 55,
                     "Column": 15,
-                    "Index": 1221
+                    "Index": 1139
                   },
                   "End": {
-                    "Line": 56,
+                    "Line": 55,
                     "Column": 29,
-                    "Index": 1235
+                    "Index": 1153
                   }
                 }
               ],
               "Start": {
-                "Line": 56,
+                "Line": 55,
                 "Column": 15,
-                "Index": 1221
+                "Index": 1139
               },
               "End": {
-                "Line": 56,
+                "Line": 55,
                 "Column": 30,
-                "Index": 1236
+                "Index": 1154
               }
             },
             "Type": {
               "Name": "Circle",
               "Start": {
-                "Line": 56,
+                "Line": 55,
                 "Column": 34,
-                "Index": 1240
+                "Index": 1158
               },
               "End": {
-                "Line": 56,
+                "Line": 55,
                 "Column": 40,
-                "Index": 1246
+                "Index": 1164
               }
             },
             "Start": {
-              "Line": 56,
+              "Line": 55,
               "Column": 15,
-              "Index": 1221
+              "Index": 1139
             },
             "End": {
-              "Line": 56,
+              "Line": 55,
               "Column": 40,
-              "Index": 1246
+              "Index": 1164
             }
           }
         }
       ],
       "Start": {
-        "Line": 56,
+        "Line": 55,
         "Column": 1,
-        "Index": 1207
+        "Index": 1125
       },
       "End": {
-        "Line": 56,
+        "Line": 55,
         "Column": 41,
-        "Index": 1247
+        "Index": 1165
       }
     },
     {
@@ -1855,53 +1943,53 @@
           "Name": {
             "Name": "shape2",
             "Start": {
-              "Line": 57,
+              "Line": 56,
               "Column": 5,
-              "Index": 1253
+              "Index": 1171
             },
             "End": {
-              "Line": 57,
+              "Line": 56,
               "Column": 11,
-              "Index": 1259
+              "Index": 1177
             }
           },
           "Type": {
             "Name": "Shape",
             "Start": {
-              "Line": 57,
+              "Line": 56,
               "Column": 13,
-              "Index": 1261
+              "Index": 1179
             },
             "End": {
-              "Line": 57,
+              "Line": 56,
               "Column": 18,
-              "Index": 1266
+              "Index": 1184
             }
           },
           "Value": {
             "Name": "circle",
             "Start": {
-              "Line": 57,
+              "Line": 56,
               "Column": 21,
-              "Index": 1269
+              "Index": 1187
             },
             "End": {
-              "Line": 57,
+              "Line": 56,
               "Column": 27,
-              "Index": 1275
+              "Index": 1193
             }
           }
         }
       ],
       "Start": {
-        "Line": 57,
+        "Line": 56,
         "Column": 1,
-        "Index": 1249
+        "Index": 1167
       },
       "End": {
-        "Line": 57,
+        "Line": 56,
         "Column": 28,
-        "Index": 1276
+        "Index": 1194
       }
     }
   ],

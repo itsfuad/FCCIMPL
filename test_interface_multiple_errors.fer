@@ -1,0 +1,22 @@
+// Test multiple interface implementation errors
+
+type FullInterface interface {
+    method1() -> str,
+    method2(x: i32) -> f64,
+    method3() -> bool
+};
+
+type PartialType struct {
+    .value: i32
+};
+
+// Only implements method2, but with wrong signature (f64 instead of i32)
+fn (p: PartialType) method2(x: f64) -> f64 {
+    return x * 2.0;
+}
+
+// Missing: method1, method3
+// Wrong signature: method2
+
+let pt := {.value = 42} as PartialType;
+let full: FullInterface = pt;
