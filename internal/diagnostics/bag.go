@@ -172,13 +172,13 @@ func (db *DiagnosticBag) printSummary() {
 	defer db.mu.Unlock()
 
 	if db.errorCount > 0 {
-		fmt.Fprintf(os.Stdout, "\nCompilation failed with %d error(s)", db.errorCount)
+		fmt.Fprintf(os.Stderr, "\nCompilation failed with %d error(s)", db.errorCount)
 		if db.warnCount > 0 {
-			fmt.Fprintf(os.Stdout, " and %d warning(s)", db.warnCount)
+			fmt.Fprintf(os.Stderr, " and %d warning(s)", db.warnCount)
 		}
-		fmt.Println()
+		fmt.Fprintln(os.Stderr)
 	} else if db.warnCount > 0 {
-		fmt.Fprintf(os.Stdout, "\nCompilation succeeded with %d warning(s)\n", db.warnCount)
+		fmt.Fprintf(os.Stderr, "\nCompilation succeeded with %d warning(s)\n", db.warnCount)
 	}
 }
 

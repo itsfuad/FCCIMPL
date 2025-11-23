@@ -357,9 +357,9 @@ func (ctx *CompilerContext) EmitDiagnostics() {
 // through ctx.Diagnostics. Returns error only for fatal compilation failures.
 func (ctx *CompilerContext) Compile(entryPoint string) error {
 	if ctx.Options.Debug {
-		fmt.Println("╔════════════════════════════════════════╗")
-		fmt.Println("║    FERRET COMPILER - BUILD PIPELINE    ║")
-		fmt.Println("╚════════════════════════════════════════╝")
+		fmt.Fprintln(os.Stderr, "╔════════════════════════════════════════╗")
+		fmt.Fprintln(os.Stderr, "║    FERRET COMPILER - BUILD PIPELINE    ║")
+		fmt.Fprintln(os.Stderr, "╚════════════════════════════════════════╝")
 	}
 
 	// Phase 0: File Discovery
@@ -378,21 +378,21 @@ func (ctx *CompilerContext) Compile(entryPoint string) error {
 	// Phase 3: Collector
 	// Walks ASTs and builds symbol tables for each module
 	if ctx.Options.Debug {
-		fmt.Printf("\n[Phase 3] Declaration Collection\n")
+		fmt.Fprintf(os.Stderr, "\n[Phase 3] Declaration Collection\n")
 	}
 	ctx.RunCollectorPhase()
 
 	// Phase 4: Resolver
 	// Resolves all symbol references and import dependencies
 	if ctx.Options.Debug {
-		fmt.Printf("\n[Phase 4] Type Resolution\n")
+		fmt.Fprintf(os.Stderr, "\n[Phase 4] Type Resolution\n")
 	}
 	ctx.RunResolverPhase()
 
 	// Phase 5: Type Checker
 	// Validates type correctness of all expressions
 	if ctx.Options.Debug {
-		fmt.Printf("\n[Phase 5] Type Checking\n")
+		fmt.Fprintf(os.Stderr, "\n[Phase 5] Type Checking\n")
 	}
 	ctx.RunCheckerPhase()
 
@@ -413,7 +413,7 @@ func (ctx *CompilerContext) Compile(entryPoint string) error {
 // Uses breadth-first traversal with concurrent file processing
 func (ctx *CompilerContext) BuildDependencyGraph(entryPoint string) error {
 	if ctx.Options.Debug {
-		fmt.Printf("\n[Phase 0] File Discovery (Parallel)\n")
+		fmt.Fprintf(os.Stderr, "\n[Phase 0] File Discovery (Parallel)\n")
 	}
 
 	absPath, err := filepath.Abs(entryPoint)
@@ -474,9 +474,9 @@ func (ctx *CompilerContext) BuildDependencyGraph(entryPoint string) error {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("  Discovered %d file(s)\n", len(ctx.Files))
+		fmt.Fprintf(os.Stderr, "  Discovered %d file(s)\n", len(ctx.Files))
 		if len(ctx.Graph.Dependencies) > 0 {
-			fmt.Printf("  Dependency edges: %d\n", ctx.countDependencyEdges())
+			fmt.Fprintf(os.Stderr, "  Dependency edges: %d\n", ctx.countDependencyEdges())
 		}
 	}
 
@@ -513,7 +513,7 @@ func (ctx *CompilerContext) discoverFile(filePath string) ([]string, error) {
 		}
 		ctx.FileOrder = append(ctx.FileOrder, filePath)
 		if ctx.Options.Debug {
-			fmt.Printf("  %s\n", filepath.Base(filePath))
+			fmt.Fprintf(os.Stderr, "  %s\n", filepath.Base(filePath))
 		}
 	} else {
 		alreadyExists = true
@@ -615,7 +615,7 @@ func (ctx *CompilerContext) resolveImportPath(importPath, currentFile string) st
 // RunLexAndParsePhase tokenizes and parses all files in parallel
 func (ctx *CompilerContext) RunLexAndParsePhase() error {
 	if ctx.Options.Debug {
-		fmt.Printf("\n[Phase 1 & 2] Lex + Parse (Parallel)\n")
+		fmt.Fprintf(os.Stderr, "\n[Phase 1 & 2] Lex + Parse (Parallel)\n")
 	}
 
 	files := ctx.GetAllFiles()
@@ -654,7 +654,7 @@ func (ctx *CompilerContext) RunLexAndParsePhase() error {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("  ✓ Processed %d file(s)\n", len(files))
+		fmt.Fprintf(os.Stderr, "  ✓ Processed %d file(s)\n", len(files))
 	}
 
 	return nil
@@ -673,7 +673,7 @@ func (ctx *CompilerContext) RunCollectorPhase() {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("  ✓ Collected symbols from %d file(s)\n", len(ctx.GetAllFiles()))
+		fmt.Fprintf(os.Stderr, "  ✓ Collected symbols from %d file(s)\n", len(ctx.GetAllFiles()))
 	}
 }
 
@@ -685,7 +685,7 @@ func (ctx *CompilerContext) RunResolverPhase() {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("  ✓ Resolved types for %d file(s)\n", len(ctx.GetAllFiles()))
+		fmt.Fprintf(os.Stderr, "  ✓ Resolved types for %d file(s)\n", len(ctx.GetAllFiles()))
 	}
 }
 
@@ -697,14 +697,14 @@ func (ctx *CompilerContext) RunCheckerPhase() {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("  ✓ Type checked %d file(s)\n", len(ctx.GetAllFiles()))
+		fmt.Fprintf(os.Stderr, "  ✓ Type checked %d file(s)\n", len(ctx.GetAllFiles()))
 	}
 }
 
 // RunLexerPhase tokenizes all registered source files (sequential fallback)
 func (ctx *CompilerContext) RunLexerPhase() error {
 	if ctx.Options.Debug {
-		fmt.Printf("\n[Phase 1] Lexer\n")
+		fmt.Fprintf(os.Stderr, "\n[Phase 1] Lexer\n")
 	}
 
 	// Process each file in order
@@ -715,7 +715,7 @@ func (ctx *CompilerContext) RunLexerPhase() error {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("  ✓ Tokenization complete\n")
+		fmt.Fprintf(os.Stderr, "  ✓ Tokenization complete\n")
 	}
 
 	return nil
@@ -723,7 +723,7 @@ func (ctx *CompilerContext) RunLexerPhase() error {
 // This is the lexer phase worker - it's stateless and operates on the context
 func (ctx *CompilerContext) lexFile(file *SourceFile) error {
 	if ctx.Options.Debug {
-		fmt.Printf("  Tokenizing %s (%d bytes)\n", file.Path, len(file.Content))
+		fmt.Fprintf(os.Stderr, "  Tokenizing %s (%d bytes)\n", file.Path, len(file.Content))
 	}
 
 	// Use the existing tokenizer implementation
@@ -743,7 +743,7 @@ func (ctx *CompilerContext) lexFile(file *SourceFile) error {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("    Generated %d tokens\n", len(tokens))
+		fmt.Fprintf(os.Stderr, "    Generated %d tokens\n", len(tokens))
 	}
 
 	return nil
@@ -752,7 +752,7 @@ func (ctx *CompilerContext) lexFile(file *SourceFile) error {
 // RunParserPhase parses all tokenized files into ASTs
 func (ctx *CompilerContext) RunParserPhase() error {
 	if ctx.Options.Debug {
-		fmt.Printf("\n[Phase 2] Parser\n")
+		fmt.Fprintf(os.Stderr, "\n[Phase 2] Parser\n")
 	}
 
 	// Process each file in order
@@ -763,7 +763,7 @@ func (ctx *CompilerContext) RunParserPhase() error {
 	}
 
 	if ctx.Options.Debug {
-		fmt.Printf("  ✓ Parsing complete\n")
+		fmt.Fprintf(os.Stderr, "  ✓ Parsing complete\n")
 	}
 
 	return nil
@@ -773,7 +773,7 @@ func (ctx *CompilerContext) RunParserPhase() error {
 // This is the parser phase worker - it's stateless and operates on the context
 func (ctx *CompilerContext) parseFile(file *SourceFile) error {
 	if ctx.Options.Debug {
-		fmt.Printf("  Parsing %s (%d tokens)\n", file.Path, len(file.Tokens))
+		fmt.Fprintf(os.Stderr, "  Parsing %s (%d tokens)\n", file.Path, len(file.Tokens))
 	}
 
 	// Call the parser with tokens and diagnostics
@@ -783,7 +783,7 @@ func (ctx *CompilerContext) parseFile(file *SourceFile) error {
 
 	if ctx.Options.Debug {
 		if file.AST != nil {
-			fmt.Printf("    Generated %d top-level declarations\n", len(file.AST.Nodes))
+			fmt.Fprintf(os.Stderr, "    Generated %d top-level declarations\n", len(file.AST.Nodes))
 		}
 	}
 

@@ -148,7 +148,7 @@ func main() {
 	js.Global().Set("ferretCompile", js.FuncOf(ferretCompileJS))
 
 	// Set version info that JavaScript can check
-	js.Global().Set("ferretWasmVersion", "v5.0-production")
+	js.Global().Set("ferretWasmVersion", "v0.0.2-production")
 
 	// Log ready message
 	fmt.Println("✅ Ferret WASM Compiler Ready")

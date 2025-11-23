@@ -84,7 +84,7 @@ type labelContext struct {
 func NewEmitter() *Emitter {
 	return &Emitter{
 		cache:  NewSourceCache(),
-		writer: os.Stdout,
+		writer: os.Stderr, // Diagnostics should go to stderr for proper CLI behavior
 	}
 }
 
