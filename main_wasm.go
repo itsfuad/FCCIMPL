@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	"syscall/js"
-	"compiler/internal/context"
 	"compiler/internal/cmd"
+	"compiler/internal/context"
+	"syscall/js"
 )
 
 // compileCode compiles Ferret code and returns the result
@@ -124,10 +124,10 @@ func main() {
 	js.Global().Set("ferretCompile", js.FuncOf(ferretCompileJS))
 
 	// Set version info that JavaScript can check
-	js.Global().Set("ferretWasmVersion", "v0.0.2-production")
+	js.Global().Set("ferretWasmVersion", "v0.0.3-production")
 
 	// Log ready message
-	fmt.Println("✅ Ferret WASM Compiler Ready")
+	fmt.Println("Ferret WASM Compiler Ready")
 
 	// Keep the program running
 	<-c

@@ -151,7 +151,7 @@ async function initWasm() {
     if (typeof window.ferretCompile === 'function') {
       wasmReady = true;
       const version = window.ferretWasmVersion || 'unknown';
-      console.log('✅ Ferret WASM compiler loaded successfully!');
+      console.log('Ferret WASM compiler loaded successfully!');
       console.log('📌 WASM Version:', version);
       
       // Update status to ready
@@ -163,7 +163,7 @@ async function initWasm() {
       throw new Error('ferretCompile function not found after WASM initialization');
     }
   } catch (error) {
-    console.error('❌ Failed to load WASM:', error);
+    console.error('Failed to load WASM:', error);
     console.error('Error details:', (error as Error).stack);
     wasmReady = false;
     
@@ -175,7 +175,7 @@ async function initWasm() {
     status.setAttribute('data-status', 'error');
     statusText.textContent = 'Error';
     const errorMessage = error instanceof Error ? error.message : String(error);
-    output.innerHTML = `<p style="color: #ef4444;">❌ Failed to load compiler: ${escapeHtml(errorMessage)}</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Please refresh the page to try again.</p>`;
+    output.innerHTML = `<p style="color: #ef4444;">Failed to load compiler: ${escapeHtml(errorMessage)}</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Please refresh the page to try again.</p>`;
   }
 }
 
@@ -440,11 +440,11 @@ monaco.languages.register({ id: 'ferret' });
     
     // Check if ferretCompile function is available
     if (typeof window.ferretCompile !== 'function') {
-      console.error('❌ ferretCompile function not available');
+      console.error('ferretCompile function not available');
       console.log('window.ferretCompile:', window.ferretCompile);
       status.setAttribute('data-status', 'error');
       statusText.textContent = 'Error';
-      output.innerHTML = '<p style="color: #ef4444;">❌ Compiler function not available. Please check console and refresh the page.</p>';
+      output.innerHTML = '<p style="color: #ef4444;">Compiler function not available. Please check console and refresh the page.</p>';
       return;
     }
     
@@ -463,13 +463,13 @@ monaco.languages.register({ id: 'ferret' });
       //console.log('📊 Compilation result:', result);
       
       if (result.success) {
-        //console.log('✅ Compilation successful');
+        //console.log('Compilation successful');
         status.setAttribute('data-status', 'success');
         statusText.textContent = 'Success';
         // Output is already HTML-formatted from the compiler
         output.innerHTML = `<pre>${result.output || 'Program executed successfully'}</pre>`;
       } else {
-        //console.error('❌ Compilation failed:', result.error);
+        //console.error('Compilation failed:', result.error);
         status.setAttribute('data-status', 'error');
         statusText.textContent = 'Error';
         // Error is already HTML-formatted from the compiler
@@ -496,7 +496,7 @@ monaco.languages.register({ id: 'ferret' });
         
         // If restart successful, try compilation again
         if (wasmReady && typeof window.ferretCompile === 'function') {
-          console.log('✅ WASM restarted successfully, retrying compilation...');
+          console.log('WASM restarted successfully, retrying compilation...');
           status.setAttribute('data-status', 'running');
           statusText.textContent = 'Running...';
           output.innerHTML = '<p class="output-info">⏳ Retrying compilation...</p>';
@@ -513,22 +513,22 @@ monaco.languages.register({ id: 'ferret' });
               output.innerHTML = `<pre>${retryResult.error}</pre>`;
             }
           } catch (retryError) {
-            console.error('❌ Retry compilation also failed:', retryError);
+            console.error('Retry compilation also failed:', retryError);
             status.setAttribute('data-status', 'error');
             statusText.textContent = 'Error';
-            output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Error: ${escapeHtml((retryError as Error).message || String(retryError))}</p>`;
+            output.innerHTML = `<p style="color: #ef4444;">Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Error: ${escapeHtml((retryError as Error).message || String(retryError))}</p>`;
           }
         } else {
           // Restart failed
           status.setAttribute('data-status', 'error');
           statusText.textContent = 'Error';
-          output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and could not be restarted. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Original error: ${escapeHtml((error as Error).message || String(error))}</p>`;
+          output.innerHTML = `<p style="color: #ef4444;">Compiler crashed and could not be restarted. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Original error: ${escapeHtml((error as Error).message || String(error))}</p>`;
         }
       } catch (restartError) {
-        console.error('❌ WASM restart failed:', restartError);
+        console.error('WASM restart failed:', restartError);
         status.setAttribute('data-status', 'error');
         statusText.textContent = 'Error';
-        output.innerHTML = `<p style="color: #ef4444;">❌ Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Restart error: ${escapeHtml((restartError as Error).message || String(restartError))}</p>`;
+        output.innerHTML = `<p style="color: #ef4444;">Compiler crashed and restart failed. Please refresh the page.</p><p style="color: #6b7280; font-size: 0.75rem; margin-top: 0.5rem;">Restart error: ${escapeHtml((restartError as Error).message || String(restartError))}</p>`;
       }
     } finally {
       runBtn.disabled = false;

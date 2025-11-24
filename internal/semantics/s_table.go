@@ -4,13 +4,27 @@ import (
 	"fmt"
 )
 
-type SYMBOL_TABLE_SCOPENAME string
+// ScopeKind identifies what kind of scope this symbol table represents
+type ScopeKind int
 
 const (
-	SYMBOL_TABLE_GLOBAL   SYMBOL_TABLE_SCOPENAME = "global"
-	SYMBOL_TABLE_FUNCTION SYMBOL_TABLE_SCOPENAME = "function"
-	SYMBOL_TABLE_BLOCK    SYMBOL_TABLE_SCOPENAME = "block"
+	ScopeModule ScopeKind = iota
+	ScopeFunction
+	ScopeBlock
 )
+
+func (sk ScopeKind) String() string {
+	switch sk {
+	case ScopeModule:
+		return "module"
+	case ScopeFunction:
+		return "function"
+	case ScopeBlock:
+		return "block"
+	default:
+		return "unknown"
+	}
+}
 
 // SymbolTable manages scoped symbols (variables, constants, etc.)
 type SymbolTable struct {
@@ -19,22 +33,27 @@ type SymbolTable struct {
 	Imports map[string]*SymbolTable // alias -> imported module's symbol table
 	// Track import paths to detect duplicate imports of same module
 	ImportPaths map[string]string // alias -> import path
-	ScopeName   SYMBOL_TABLE_SCOPENAME
+	ScopeKind   ScopeKind
+	ReturnType  Type // only meaningful for ScopeFunction
 }
 
 func NewSymbolTable(parent *SymbolTable) *SymbolTable {
+	scopeKind := ScopeModule
+	if parent != nil {
+		scopeKind = ScopeBlock // default for child scopes
+	}
 	return &SymbolTable{
 		Symbols:     make(map[string]*Symbol),
 		Parent:      parent,
 		Imports:     make(map[string]*SymbolTable),
 		ImportPaths: make(map[string]string),
-		ScopeName:   SYMBOL_TABLE_GLOBAL,
+		ScopeKind:   scopeKind,
 	}
 }
 
 func (st *SymbolTable) IsInFunctionScope() bool {
 	//recursively check if this symbol table is a function scope
-	if st.ScopeName == SYMBOL_TABLE_FUNCTION {
+	if st.ScopeKind == ScopeFunction {
 		return true
 	}
 	if st.Parent != nil {

@@ -205,7 +205,7 @@ func (c *Collector) collectFuncDecl(decl *ast.FuncDecl) {
 	// This will contain parameters and local variables
 	if sym.SelfScope == nil {
 		sym.SelfScope = semantics.NewSymbolTable(c.currentScope)
-		sym.SelfScope.ScopeName = semantics.SYMBOL_TABLE_FUNCTION
+		sym.SelfScope.ScopeKind = semantics.ScopeFunction
 	}
 
 	// Collect parameters in function scope
@@ -241,7 +241,7 @@ func (c *Collector) collectMethodDecl(decl *ast.MethodDecl) {
 	// Create a new scope for the method body
 	if sym.SelfScope == nil {
 		sym.SelfScope = semantics.NewSymbolTable(c.currentScope)
-		sym.SelfScope.ScopeName = semantics.SYMBOL_TABLE_FUNCTION
+		sym.SelfScope.ScopeKind = semantics.ScopeFunction
 	}
 
 	// Collect receiver as a parameter
@@ -310,7 +310,7 @@ func (c *Collector) collectBlock(block *ast.Block) {
 	// Create a new child scope for this block
 	prevScope := c.currentScope
 	blockScope := semantics.NewSymbolTable(c.currentScope)
-	blockScope.ScopeName = semantics.SYMBOL_TABLE_BLOCK
+	blockScope.ScopeKind = semantics.ScopeBlock
 	c.currentScope = blockScope
 
 	// Store the scope in the AST node metadata (we'll use a map for this)
