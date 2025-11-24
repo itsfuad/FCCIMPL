@@ -85,7 +85,6 @@ function initMagneticButtons() {
       const deltaY = (y - centerY) / centerY;
       
       const moveX = deltaX * 5;
-      const moveY = deltaY * 5;
       
       button.style.transform = `translate(${moveX}px)`;
     });
@@ -94,11 +93,6 @@ function initMagneticButtons() {
       button.style.transform = '';
     });
   });
-}
-
-// Cursor trail effect removed (not needed)
-function initCursorTrail() {
-  return;
 }
 
 // Add ripple effect on click
