@@ -302,6 +302,12 @@ func (r *Resolver) resolveFuncType(sym *semantics.Symbol) {
 
 	sym.Type = funcType
 
+	// Mark function scope and attach return type for control flow analysis
+	if sym.SelfScope != nil {
+		sym.SelfScope.ScopeKind = semantics.ScopeFunction
+		sym.SelfScope.ReturnType = funcType.ReturnType
+	}
+
 	// Resolve types for parameters in function scope
 	if sym.SelfScope != nil {
 		prevScope := r.currentScope

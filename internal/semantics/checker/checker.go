@@ -15,10 +15,9 @@ import (
 // Checker performs type checking and validation (Pass 3 / Phase 5)
 // Validates type compatibility, infers types, checks assignments
 type Checker struct {
-	ctx               *context.CompilerContext
-	currentScope      *semantics.SymbolTable
-	currentFile       string
-	currentReturnType semantics.Type
+	ctx          *context.CompilerContext
+	currentScope *semantics.SymbolTable
+	currentFile  string
 }
 
 // New creates a new type checker
@@ -55,6 +54,17 @@ func (c *Checker) checkModule(module *ast.Module) {
 	for _, node := range module.Nodes {
 		c.checkNode(node)
 	}
+}
+
+// enclosingReturnType returns the return type of the nearest enclosing function scope,
+// or nil if not inside a function.
+func (c *Checker) enclosingReturnType() semantics.Type {
+	for sc := c.currentScope; sc != nil; sc = sc.Parent {
+		if sc.ScopeKind == semantics.ScopeFunction {
+			return sc.ReturnType
+		}
+	}
+	return nil
 }
 
 // checkNode type-checks a single AST node
@@ -231,13 +241,11 @@ func (c *Checker) checkFuncDecl(decl *ast.FuncDecl) semantics.Type {
 
 	prevScope := c.currentScope
 	c.currentScope = sym.SelfScope
-	c.currentReturnType = funcType.ReturnType
 
 	if decl.Body != nil {
 		c.checkFunctionReturns(decl, funcType)
 	}
 
-	c.currentReturnType = nil
 	c.currentScope = prevScope
 
 	return sym.Type
@@ -481,25 +489,27 @@ func (c *Checker) checkReturnStmt(stmt *ast.ReturnStmt) semantics.Type {
 		returnType = c.checkExpr(stmt.Result)
 	}
 
-	if c.currentReturnType != nil {
+	expected := c.enclosingReturnType()
+
+	if expected != nil {
 		if returnType == nil {
 			c.ctx.Diagnostics.Add(
 				diagnostics.NewError(
-					fmt.Sprintf("missing return value, expected type %s", c.typeString(c.currentReturnType)),
+					fmt.Sprintf("missing return value, expected type %s", c.typeString(expected)),
 				).
 					WithCode(diagnostics.ErrInvalidReturn).
 					WithPrimaryLabel(c.currentFile, stmt.Loc(), "return value required"),
 			)
-		} else if !c.isAssignable(c.currentReturnType, returnType) {
+		} else if !c.isAssignable(expected, returnType) {
 			c.ctx.Diagnostics.Add(
 				diagnostics.NewError(
 					fmt.Sprintf("cannot return %s in function with return type %s",
-						c.typeString(returnType), c.typeString(c.currentReturnType)),
+						c.typeString(returnType), c.typeString(expected)),
 				).
 					WithCode(diagnostics.ErrTypeMismatch).
 					WithPrimaryLabel(c.currentFile, stmt.Result.Loc(),
 						fmt.Sprintf("type %s", c.typeString(returnType))).
-					WithHelp(fmt.Sprintf("expected type %s", c.typeString(c.currentReturnType))),
+					WithHelp(fmt.Sprintf("expected type %s", c.typeString(expected))),
 			)
 		}
 	} else if returnType != nil {

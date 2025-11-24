@@ -2340,42 +2340,42 @@
               "X": {
                 "Name": "s",
                 "Start": {
-                  "Line": 52,
+                  "Line": 53,
                   "Column": 8,
-                  "Index": 984
+                  "Index": 1001
                 },
                 "End": {
-                  "Line": 52,
+                  "Line": 53,
                   "Column": 9,
-                  "Index": 985
+                  "Index": 1002
                 }
               },
               "Op": {
                 "Kind": "\u003e",
                 "Value": "\u003e",
                 "Start": {
-                  "Line": 52,
+                  "Line": 53,
                   "Column": 10,
-                  "Index": 986
+                  "Index": 1003
                 },
                 "End": {
-                  "Line": 52,
+                  "Line": 53,
                   "Column": 11,
-                  "Index": 987
+                  "Index": 1004
                 }
               },
               "Y": {
                 "Kind": 0,
                 "Value": "10",
                 "Start": {
-                  "Line": 52,
+                  "Line": 53,
                   "Column": 12,
-                  "Index": 988
+                  "Index": 1005
                 },
                 "End": {
-                  "Line": 52,
+                  "Line": 53,
                   "Column": 14,
-                  "Index": 990
+                  "Index": 1007
                 }
               },
               "Start": null,
@@ -2388,38 +2388,38 @@
                     "Kind": 2,
                     "Value": "large shape",
                     "Start": {
-                      "Line": 53,
+                      "Line": 54,
                       "Column": 16,
-                      "Index": 1008
+                      "Index": 1025
                     },
                     "End": {
-                      "Line": 53,
+                      "Line": 54,
                       "Column": 29,
-                      "Index": 1021
+                      "Index": 1038
                     }
                   },
                   "IsError": false,
                   "Start": {
-                    "Line": 53,
+                    "Line": 54,
                     "Column": 9,
-                    "Index": 1001
+                    "Index": 1018
                   },
                   "End": {
-                    "Line": 53,
+                    "Line": 54,
                     "Column": 30,
-                    "Index": 1022
+                    "Index": 1039
                   }
                 }
               ],
               "Start": {
-                "Line": 52,
+                "Line": 53,
                 "Column": 15,
-                "Index": 991
+                "Index": 1008
               },
               "End": {
-                "Line": 54,
+                "Line": 55,
                 "Column": 6,
-                "Index": 1028
+                "Index": 1045
               }
             },
             "Else": {
@@ -2429,42 +2429,42 @@
                     "X": {
                       "Name": "s",
                       "Start": {
-                        "Line": 56,
+                        "Line": 57,
                         "Column": 12,
-                        "Index": 1079
+                        "Index": 1096
                       },
                       "End": {
-                        "Line": 56,
+                        "Line": 57,
                         "Column": 13,
-                        "Index": 1080
+                        "Index": 1097
                       }
                     },
                     "Op": {
                       "Kind": "==",
                       "Value": "==",
                       "Start": {
-                        "Line": 56,
+                        "Line": 57,
                         "Column": 14,
-                        "Index": 1081
+                        "Index": 1098
                       },
                       "End": {
-                        "Line": 56,
+                        "Line": 57,
                         "Column": 16,
-                        "Index": 1083
+                        "Index": 1100
                       }
                     },
                     "Y": {
                       "Kind": 0,
                       "Value": "10",
                       "Start": {
-                        "Line": 56,
+                        "Line": 57,
                         "Column": 17,
-                        "Index": 1084
+                        "Index": 1101
                       },
                       "End": {
-                        "Line": 56,
+                        "Line": 57,
                         "Column": 19,
-                        "Index": 1086
+                        "Index": 1103
                       }
                     },
                     "Start": null,
@@ -2477,112 +2477,85 @@
                           "Kind": 2,
                           "Value": "medium shape",
                           "Start": {
-                            "Line": 57,
+                            "Line": 58,
                             "Column": 20,
-                            "Index": 1108
+                            "Index": 1125
                           },
                           "End": {
-                            "Line": 57,
+                            "Line": 58,
                             "Column": 34,
-                            "Index": 1122
+                            "Index": 1139
                           }
                         },
                         "IsError": false,
                         "Start": {
-                          "Line": 57,
+                          "Line": 58,
                           "Column": 13,
-                          "Index": 1101
+                          "Index": 1118
                         },
                         "End": {
-                          "Line": 57,
+                          "Line": 58,
                           "Column": 35,
-                          "Index": 1123
+                          "Index": 1140
                         }
                       }
                     ],
                     "Start": {
-                      "Line": 56,
+                      "Line": 57,
                       "Column": 20,
-                      "Index": 1087
+                      "Index": 1104
                     },
                     "End": {
-                      "Line": 58,
+                      "Line": 59,
                       "Column": 10,
-                      "Index": 1133
+                      "Index": 1150
                     }
                   },
                   "Else": {
                     "Nodes": [],
                     "Start": {
-                      "Line": 58,
+                      "Line": 59,
                       "Column": 16,
-                      "Index": 1139
+                      "Index": 1156
                     },
                     "End": {
-                      "Line": 60,
+                      "Line": 61,
                       "Column": 10,
-                      "Index": 1186
+                      "Index": 1203
                     }
                   },
                   "Start": {
-                    "Line": 56,
+                    "Line": 57,
                     "Column": 9,
-                    "Index": 1076
+                    "Index": 1093
                   },
                   "End": {
-                    "Line": 60,
+                    "Line": 61,
                     "Column": 10,
-                    "Index": 1186
-                  }
-                },
-                {
-                  "Result": {
-                    "Kind": 2,
-                    "Value": "small shape",
-                    "Start": {
-                      "Line": 61,
-                      "Column": 16,
-                      "Index": 1202
-                    },
-                    "End": {
-                      "Line": 61,
-                      "Column": 29,
-                      "Index": 1215
-                    }
-                  },
-                  "IsError": false,
-                  "Start": {
-                    "Line": 61,
-                    "Column": 9,
-                    "Index": 1195
-                  },
-                  "End": {
-                    "Line": 61,
-                    "Column": 30,
-                    "Index": 1216
+                    "Index": 1203
                   }
                 }
               ],
               "Start": {
-                "Line": 54,
+                "Line": 55,
                 "Column": 12,
-                "Index": 1034
+                "Index": 1051
               },
               "End": {
-                "Line": 62,
+                "Line": 63,
                 "Column": 6,
-                "Index": 1222
+                "Index": 1241
               }
             },
             "Start": {
-              "Line": 52,
+              "Line": 53,
               "Column": 5,
-              "Index": 981
+              "Index": 998
             },
             "End": {
-              "Line": 62,
+              "Line": 63,
               "Column": 6,
-              "Index": 1222
+              "Index": 1241
             }
           }
         ],
@@ -2592,9 +2565,9 @@
           "Index": 942
         },
         "End": {
-          "Line": 65,
+          "Line": 66,
           "Column": 2,
-          "Index": 1243
+          "Index": 1262
         }
       },
       "Start": {
@@ -2603,9 +2576,9 @@
         "Index": 907
       },
       "End": {
-        "Line": 65,
+        "Line": 66,
         "Column": 2,
-        "Index": 1243
+        "Index": 1262
       }
     },
     {
@@ -2613,52 +2586,52 @@
         "Fun": {
           "Name": "printShapeInfo",
           "Start": {
-            "Line": 67,
+            "Line": 68,
             "Column": 1,
-            "Index": 1245
+            "Index": 1264
           },
           "End": {
-            "Line": 67,
+            "Line": 68,
             "Column": 15,
-            "Index": 1259
+            "Index": 1278
           }
         },
         "Args": [
           {
             "Name": "rect",
             "Start": {
-              "Line": 67,
+              "Line": 68,
               "Column": 16,
-              "Index": 1260
+              "Index": 1279
             },
             "End": {
-              "Line": 67,
+              "Line": 68,
               "Column": 20,
-              "Index": 1264
+              "Index": 1283
             }
           }
         ],
         "Catch": null,
         "Start": {
-          "Line": 67,
+          "Line": 68,
           "Column": 1,
-          "Index": 1245
+          "Index": 1264
         },
         "End": {
-          "Line": 67,
+          "Line": 68,
           "Column": 21,
-          "Index": 1265
+          "Index": 1284
         }
       },
       "Start": {
-        "Line": 67,
+        "Line": 68,
         "Column": 1,
-        "Index": 1245
+        "Index": 1264
       },
       "End": {
-        "Line": 67,
+        "Line": 68,
         "Column": 22,
-        "Index": 1266
+        "Index": 1285
       }
     },
     {
@@ -2666,52 +2639,52 @@
         "Fun": {
           "Name": "printShapeInfo",
           "Start": {
-            "Line": 68,
+            "Line": 69,
             "Column": 1,
-            "Index": 1267
+            "Index": 1286
           },
           "End": {
-            "Line": 68,
+            "Line": 69,
             "Column": 15,
-            "Index": 1281
+            "Index": 1300
           }
         },
         "Args": [
           {
             "Name": "circle",
             "Start": {
-              "Line": 68,
+              "Line": 69,
               "Column": 16,
-              "Index": 1282
+              "Index": 1301
             },
             "End": {
-              "Line": 68,
+              "Line": 69,
               "Column": 22,
-              "Index": 1288
+              "Index": 1307
             }
           }
         ],
         "Catch": null,
         "Start": {
-          "Line": 68,
+          "Line": 69,
           "Column": 1,
-          "Index": 1267
+          "Index": 1286
         },
         "End": {
-          "Line": 68,
+          "Line": 69,
           "Column": 23,
-          "Index": 1289
+          "Index": 1308
         }
       },
       "Start": {
-        "Line": 68,
+        "Line": 69,
         "Column": 1,
-        "Index": 1267
+        "Index": 1286
       },
       "End": {
-        "Line": 68,
+        "Line": 69,
         "Column": 24,
-        "Index": 1290
+        "Index": 1309
       }
     }
   ],
