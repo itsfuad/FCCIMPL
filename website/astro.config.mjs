@@ -1,7 +1,10 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import ferretGrammar from './syntax/fer.tmLanguage.json';
+import ferretGrammarJson from './syntax/fer.tmLanguage.json';
+
+// Cast to any to avoid type errors with the complex grammar structure
+const ferretGrammar = /** @type {any} */ (ferretGrammarJson);
 
 // https://astro.build/config
 export default defineConfig({

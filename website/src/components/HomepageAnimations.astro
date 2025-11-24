@@ -27,11 +27,11 @@ function initScrollAnimations() {
 
 // Mouse position tracking for interactive background
 function initMouseTracking() {
-  const modernLayout = document.querySelector('.modern-layout');
+  const modernLayout = document.querySelector('.modern-layout') as HTMLElement;
   
   if (!modernLayout) return;
   
-  let rafId = null;
+  let rafId: number | null = null;
   let isOverContent = false;
   
   // Track mouse over the entire document
@@ -70,10 +70,10 @@ function initParallax() {
 
 // Add magnetic effect to action buttons
 function initMagneticButtons() {
-  const buttons = document.querySelectorAll('.hero .action, .path-link');
+  const buttons = document.querySelectorAll('.hero .action, .path-link') as NodeListOf<HTMLElement>;
   
   buttons.forEach(button => {
-    button.addEventListener('mousemove', (e) => {
+    button.addEventListener('mousemove', (e: MouseEvent) => {
       const rect = button.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -103,7 +103,7 @@ function initCursorTrail() {
 
 // Add ripple effect on click
 function initRippleEffect() {
-  const clickableElements = document.querySelectorAll('.path-link, .hero .action, .feature-item');
+  const clickableElements = document.querySelectorAll('.path-link, .hero .action, .feature-item') as NodeListOf<HTMLElement>;
   
   clickableElements.forEach(element => {
     element.addEventListener('click', function(e) {
