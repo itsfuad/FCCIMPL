@@ -54,7 +54,7 @@ let price := 19.99;  // Inferred as f64
 
 ### String Type
 
-Strings store text—anything from single letters to entire paragraphs. In Ferret, strings are represented by the `str` type.
+Strings store text - anything from single letters to entire paragraphs. In Ferret, strings are represented by the `str` type.
 
 You create strings by wrapping text in double quotes `"`.
 
@@ -117,7 +117,7 @@ let names: []str = ["Alice", "Bob", "Charlie"];
 let scores := [95, 87, 92];  // Inferred as []i32
 ```
 
-Notice the `[]` before the type—this means "an array of" that type.
+Notice the `[]` before the type - this means "an array of" that type.
 
 **Fixed-size arrays** have a set number of elements:
 
@@ -161,7 +161,7 @@ This is much safer than many other languages where missing values can cause cras
 
 Sometimes you want to give a type a more meaningful name for your specific use case. Type aliases let you create a new name for an existing type.
 
-Think of it like giving someone a nickname—the person is the same, but the name helps clarify their role in a specific context.
+Think of it like giving someone a nickname - the person is the same, but the name helps clarify their role in a specific context.
 
 ```ferret
 type UserId = i64;
@@ -175,32 +175,9 @@ let miles: Distance = 42.5;
 
 This makes your code more readable. When you see `UserId`, you immediately know it's an ID for a user, not just any random number. The underlying type is still `i64`, but the name gives it meaning.
 
-## Type Inference
-
-Here's some good news: you don't always have to write out the type! When you use the `:=` operator (remember the walrus from the Variables lesson?), Ferret is smart enough to figure out the type from the value you provide.
-
-```ferret
-let number := 42;        // Ferret knows this is i32
-let text := "Hello";     // Ferret knows this is str
-let flag := true;        // Ferret knows this is bool
-let decimal := 3.14;     // Ferret knows this is f64
-let items := [1, 2, 3];  // Ferret knows this is []i32
-```
-
-Type inference makes your code cleaner and faster to write, while still keeping all the safety benefits of having types.
-
-You can always write the type explicitly if you want to be more specific:
-
-```ferret
-let small_number: i32 = 42;     // Explicitly i32
-let big_number: i64 = 42;       // Explicitly i64
-let precise: f64 = 3.14;        // Explicitly f64
-let rough: f32 = 3.14;          // Explicitly f32
-```
-
 ## Type Conversion
 
-Sometimes you need to convert a value from one type to another. Ferret requires you to do this explicitly—it won't do it automatically behind your back.
+Sometimes you need to convert a value from one type to another. Ferret requires you to do this explicitly - it won't do it automatically behind your back.
 
 ### Casting Between Number Types
 
@@ -217,37 +194,12 @@ let pi: f64 = 3.14159;
 let rounded: i32 = pi as i32;     // Becomes 3 (decimal part removed)
 ```
 
-**Warning:** Converting from floating-point to integer drops the decimal part—it doesn't round!
+:::caution
+Converting from floating-point to integer drops the decimal part - it doesn't round!
+:::
 
 ### Converting To and From Strings
-
-Numbers can be turned into strings using `.to_string()`:
-
-```ferret
-let num: i32 = 42;
-let text: str = num.to_string();  // "42"
-
-let price: f64 = 19.99;
-let label: str = price.to_string();  // "19.99"
-```
-
-Converting strings to numbers returns an optional type because the conversion might fail:
-
-```ferret
-let valid: i32? = "123".parse_int();    // Some(123)
-let invalid: i32? = "hello".parse_int(); // none (can't parse)
-
-// Always check before using the result
-let text := "456";
-let maybe_num := text.parse_int();
-
-if maybe_num != none {
-    let num: i32 = maybe_num;
-    print("Got number: " + num.to_string());
-} else {
-    print("Failed to parse number");
-}
-```
+There is no built-in way to convert between strings and other types yet. This is done via standard library functions which will be covered later.
 
 ## Summary
 
@@ -264,6 +216,6 @@ You've learned about Ferret's type system! Here's what we covered:
 
 Now that you know about types, you're ready to learn what you can do with them:
 
-* [Learn about Operators](/operators) — Do math, compare values, and more
-* [Explore Optional Types in depth](/optionals) — Master safe handling of missing values
-* [Understand Structs](/structs) — Create your own custom types
+* [Learn about Operators](/operators)  -  Do math, compare values, and more
+* [Explore Optional Types in depth](/optionals)  -  Master safe handling of missing values
+* [Understand Structs](/structs)  -  Create your own custom types

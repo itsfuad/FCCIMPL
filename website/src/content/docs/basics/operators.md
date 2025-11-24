@@ -3,13 +3,13 @@ title: Operators
 description: Learn about operators in Ferret
 ---
 
-Operators are special symbols that tell Ferret to perform specific operations on values. Think of them as the verbs of programming—they let you add, compare, combine, and transform data.
+Operators are special symbols that tell Ferret to perform specific operations on values. Think of them as the verbs of programming - they let you add, compare, combine, and transform data.
 
 In this guide, you'll learn all the operators Ferret provides and how to use them.
 
 ## Arithmetic Operators
 
-These operators perform math operations on numbers—just like a calculator!
+These operators perform math operations on numbers - just like a calculator!
 
 | Operator | Name           | Example   | Result | What it does                 |
 |----------|----------------|-----------|--------|------------------------------|
@@ -154,7 +154,7 @@ let safe := x != 0 and 10 / x > 1;
 // let unsafe := 10 / x > 1 and x != 0;
 ```
 
-This is called "short-circuit evaluation"—if the first part of `and` is false, Ferret doesn't bother checking the second part because the result will be false anyway.
+This is called "short-circuit evaluation" - if the first part of `and` is false, Ferret doesn't bother checking the second part because the result will be false anyway.
 
 ## Assignment Operators
 
@@ -302,14 +302,14 @@ let shifted_left := a << 1;  // 0b10100 (20)
 let shifted_right := a >> 1; // 0b101 (5)
 ```
 
-Don't worry if this seems complex—most of the time you won't need bitwise operators. They're mainly used for:
+Don't worry if this seems complex - most of the time you won't need bitwise operators. They're mainly used for:
 - Working with hardware or network protocols
 - Storing multiple flags efficiently
 - Performance-critical code
 
 ## Operator Precedence
 
-When you have multiple operators in one expression, Ferret follows specific rules about which one to do first. This is called "operator precedence" or "order of operations"—just like in math class!
+When you have multiple operators in one expression, Ferret follows specific rules about which one to do first. This is called "operator precedence" or "order of operations" - just like in math class!
 
 Here's the order from highest priority (done first) to lowest (done last):
 
@@ -369,6 +369,6 @@ You've learned about all the operators in Ferret! Here's what we covered:
 
 Now that you know how to work with values using operators, you're ready to control the flow of your programs:
 
-* [Learn about If Statements](/if-statements) — Make decisions in your code
-* [Explore Loops](/loops) — Repeat actions efficiently
-* [Understand Optional Types](/optionals) — Master safe handling of missing values
+* [Learn about If Statements](/if-statements)  -  Make decisions in your code
+* [Explore Loops](/loops)  -  Repeat actions efficiently
+* [Understand Optional Types](/optionals)  -  Master safe handling of missing values

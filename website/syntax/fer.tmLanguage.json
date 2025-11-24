@@ -1,6 +1,6 @@
 {
-    "name": "Ferret Language Support",
-    "scopeName": "source.fer",
+    "displayName": "Ferret",
+    "name": "ferret",
     "patterns": [
         {
             "comment": "import statements",
@@ -957,5 +957,6 @@
                 }
             ]
         }
-    }
+    },
+    "scopeName": "source.fer"
 }

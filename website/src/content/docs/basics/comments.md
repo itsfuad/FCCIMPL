@@ -5,7 +5,7 @@ description: Learn how to write comments in Ferret
 
 Comments are notes you write in your code for yourself and other programmers. They explain **why** you wrote the code a certain way, not just **what** the code does.
 
-The Ferret compiler completely ignores comments—they're purely for humans!
+The Ferret compiler completely ignores comments - they're purely for humans!
 
 ## Why Use Comments?
 
@@ -80,11 +80,11 @@ fn add(a: i32, b: i32) -> i32 {
 }
 ```
 
-You don't need to write documentation comments for everything—save them for public functions and important types that others (or future you) will need to understand.
+You don't need to write documentation comments for everything - save them for public functions and important types that others (or future you) will need to understand.
 
 ## Best Practices
 
-### ✅ Do Write Comments That Explain "Why"
+### Do Write Comments That Explain "Why"
 
 Good comments explain your reasoning, not what the code obviously does:
 
@@ -98,7 +98,7 @@ let retry_delay := base_delay * (2 ** attempt_count);
 let retry_delay := base_delay * (2 ** attempt_count);
 ```
 
-### ✅ Do Comment Complex Logic
+### Do Comment Complex Logic
 
 If something took you a while to figure out, it'll confuse others too:
 
@@ -108,9 +108,9 @@ If something took you a while to figure out, it'll confuse others too:
 let local_time := utc_time + timezone_offset + (is_daylight_saving ? 3600 : 0);
 ```
 
-### ✅ Do Update Comments When You Update Code
+### Do Update Comments When You Update Code
 
-Outdated comments are worse than no comments—they mislead people:
+Outdated comments are worse than no comments - they mislead people:
 
 ```ferret
 // Bad: Comment doesn't match the code anymore
@@ -122,7 +122,7 @@ let discount := price * 0.15;  // This gives 15%, not 10%!
 let discount := price * 0.15;
 ```
 
-### ❌ Don't State the Obvious
+### Don't State the Obvious
 
 Avoid comments that just repeat what the code clearly shows:
 
@@ -131,7 +131,7 @@ Avoid comments that just repeat what the code clearly shows:
 let x := 5;  // Set x to 5
 let total := 0;  // Initialize total to zero
 
-// Good: No comment needed—the code is self-explanatory
+// Good: No comment needed - the code is self-explanatory
 let retry_count := 5;
 let sum := 0;
 ```
@@ -146,7 +146,7 @@ let x := 3;  // Number of retries
 let max_retries := 3;
 ```
 
-### ❌ Don't Leave Commented-Out Code
+### Don't Leave Commented-Out Code
 
 Delete old code instead of commenting it out. Version control systems (like Git) keep your history:
 
@@ -160,7 +160,7 @@ let new_price := price * 0.15 * 1.08;
 let new_price := price * 0.15 * 1.08;
 ```
 
-### ❌ Don't Use Comments as a Substitute for Clear Code
+### Don't Use Comments as a Substitute for Clear Code
 
 If your code needs extensive comments to be understood, consider rewriting it to be clearer:
 
@@ -200,6 +200,6 @@ Comments are a powerful tool when used right:
 
 Now that you know how to document your code, continue learning:
 
-* [Learn about Variables & Constants](/variables) — Store and name values
-* [Explore Data Types](/types) — Understand what kinds of data you can work with
-* [Master Operators](/operators) — Perform operations on your data
+* [Learn about Variables & Constants](/variables)  -  Store and name values
+* [Explore Data Types](/types)  -  Understand what kinds of data you can work with
+* [Master Operators](/operators)  -  Perform operations on your data

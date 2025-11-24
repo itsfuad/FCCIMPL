@@ -73,7 +73,7 @@ if condition {
 }
 ```
 
-**Exactly one** of these blocks will run—never both, never neither.
+**Exactly one** of these blocks will run - never both, never neither.
 
 More examples:
 
@@ -140,7 +140,7 @@ if time_of_day < 12 {
 }
 ```
 
-You can have as many `else if` blocks as you need. The final `else` is optional—if you leave it out and all conditions are false, nothing happens:
+You can have as many `else if` blocks as you need. The final `else` is optional - if you leave it out and all conditions are false, nothing happens:
 
 ```ferret
 let age := 15;
@@ -174,7 +174,7 @@ let maybe_value: i32? = 42;
 if maybe_value != none {
     // Inside here, maybe_value is treated as i32 (not i32?)
     // because Ferret knows it's not none
-    let doubled: i32 = maybe_value * 2;  // ✅ Works!
+    let doubled: i32 = maybe_value * 2;  // Works!
     print(doubled);  // Prints: 84
 } else {
     // Inside here, maybe_value is known to be none
@@ -264,6 +264,6 @@ You've learned how to make decisions in your code:
 
 Now that you can make decisions, learn how to repeat actions:
 
-* [Learn about Loops](/loops) — Repeat code efficiently
-* [Explore When Expressions](/when) — Advanced pattern matching
-* [Understand Optional Types](/optionals) — Master safe value handling
+* [Learn about Loops](/loops)  -  Repeat code efficiently
+* [Explore When Expressions](/when)  -  Advanced pattern matching
+* [Understand Optional Types](/optionals)  -  Master safe value handling

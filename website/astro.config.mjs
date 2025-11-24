@@ -1,20 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
-import fs from 'node:fs';
-
-// Load Ferret TextMate grammar
-const ferretGrammar = JSON.parse(fs.readFileSync('./src/syntax/fer.tmLanguage.json', 'utf-8'));
-// Override the name to match what we use in code blocks
-ferretGrammar.name = 'ferret';
+import ferretGrammar from './syntax/fer.tmLanguage.json';
 
 // https://astro.build/config
 export default defineConfig({
     output: 'static',
-    experimental: {
-        clientPrerender: true,
-    },
-
     trailingSlash: 'ignore',
     integrations: [
         starlight({
@@ -41,7 +32,7 @@ export default defineConfig({
             },
             // Use a single theme for both code snippets and playground for visual consistency.
             expressiveCode: {
-                themes: ['one-dark-pro'], // Change this to your preferred built-in Shiki theme
+                themes: ['one-dark-pro', 'one-light'], // Change this to your preferred built-in Shiki theme
                 shiki: {
                     langs: [ferretGrammar],
                 },

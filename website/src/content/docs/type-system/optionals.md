@@ -25,11 +25,11 @@ let x: i32? = 10;
 
 if x != none {
     // Inside this block, x is narrowed to i32 (not i32?)
-    let doubled: i32 = x * 2;  // ✅ OK
+    let doubled: i32 = x * 2;  // OK
 } else {
     // Inside this block, x is narrowed to none
-    let value: i32? = x;  // ✅ OK - can assign none to optional
-    let num: i32 = x;     // ❌ ERROR - cannot assign none to i32
+    let value: i32? = x;  // OK - can assign none to optional
+    let num: i32 = x;     // ERROR - cannot assign none to i32
 }
 ```
 
@@ -76,7 +76,7 @@ You can assign a value to an optional type (automatic wrapping):
 
 ```ferret
 let num: i32 = 42;
-let optNum: i32? = num;  // ✅ OK - wrapped automatically
+let optNum: i32? = num;  // OK - wrapped automatically
 ```
 
 ### Unwrapping (T? → T)
@@ -84,7 +84,7 @@ You cannot directly assign an optional to a non-optional:
 
 ```ferret
 let optNum: i32? = 42;
-let num: i32 = optNum;  // ❌ ERROR - must unwrap first
+let num: i32 = optNum;  // ERROR - must unwrap first
 ```
 
 Instead, use type narrowing or the elvis operator:
@@ -92,19 +92,19 @@ Instead, use type narrowing or the elvis operator:
 ```ferret
 // Option 1: Type narrowing
 if optNum != none {
-    let num: i32 = optNum;  // ✅ OK
+    let num: i32 = optNum;  // OK
 }
 
 // Option 2: Elvis operator
-let num: i32 = optNum ?: 0;  // ✅ OK
+let num: i32 = optNum ?: 0;  // OK
 ```
 
 ### None Assignment
 `none` can only be assigned to optional types:
 
 ```ferret
-let opt: i32? = none;  // ✅ OK
-let num: i32 = none;   // ❌ ERROR
+let opt: i32? = none;  // OK
+let num: i32 = none;   // ERROR
 ```
 
 ## Functions with Optional Return Types
@@ -129,12 +129,12 @@ if maybeUser != none {
 
 ## Best Practices
 
-### ✅ Do
+### Do
 - Use optional types for values that might be absent
 - Use type narrowing to safely access optional values
 - Use elvis operator for simple default values
 
-### ❌ Don't
+### Don't
 - Don't use optional types unnecessarily
 - Don't try to use optional values without checking for none first
 - Don't chain too many elvis operators (readability)
