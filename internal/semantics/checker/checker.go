@@ -15,9 +15,10 @@ import (
 // Checker performs type checking and validation (Pass 3 / Phase 5)
 // Validates type compatibility, infers types, checks assignments
 type Checker struct {
-	ctx          *context.CompilerContext
-	currentScope *semantics.SymbolTable
-	currentFile  string
+	ctx               *context.CompilerContext
+	currentScope      *semantics.SymbolTable
+	currentFile       string
+	currentReturnType semantics.Type
 }
 
 // New creates a new type checker
@@ -75,8 +76,16 @@ func (c *Checker) checkNode(node ast.Node) semantics.Type {
 		return c.checkBlock(n)
 	case *ast.IfStmt:
 		return c.checkIfStmt(n)
+	case *ast.ForStmt:
+		return c.checkForStmt(n)
+	case *ast.WhileStmt:
+		return c.checkWhileStmt(n)
 	case *ast.ReturnStmt:
 		return c.checkReturnStmt(n)
+	case *ast.BreakStmt:
+		return nil
+	case *ast.ContinueStmt:
+		return nil
 	case *ast.ExprStmt:
 		return c.checkExpr(n.X)
 	// Add more node types as needed
@@ -210,20 +219,25 @@ func (c *Checker) checkAssignStmt(stmt *ast.AssignStmt) semantics.Type {
 
 // checkFuncDecl checks a function declaration
 func (c *Checker) checkFuncDecl(decl *ast.FuncDecl) semantics.Type {
-	// Get function symbol
 	sym, ok := c.currentScope.Lookup(decl.Name.Name)
 	if !ok || sym.SelfScope == nil {
 		return nil
 	}
 
-	// Check function body in function scope
-	prevScope := c.currentScope
-	c.currentScope = sym.SelfScope
-
-	if decl.Body != nil {
-		c.checkBlock(decl.Body)
+	funcType, ok := sym.Type.(*semantics.FunctionType)
+	if !ok {
+		return sym.Type
 	}
 
+	prevScope := c.currentScope
+	c.currentScope = sym.SelfScope
+	c.currentReturnType = funcType.ReturnType
+
+	if decl.Body != nil {
+		c.checkFunctionReturns(decl, funcType)
+	}
+
+	c.currentReturnType = nil
 	c.currentScope = prevScope
 
 	return sym.Type
@@ -291,6 +305,34 @@ func (c *Checker) checkIfStmt(stmt *ast.IfStmt) semantics.Type {
 		}
 	}
 
+	return nil
+}
+
+// checkForStmt checks a for loop statement
+func (c *Checker) checkForStmt(stmt *ast.ForStmt) semantics.Type {
+	if stmt.Init != nil {
+		c.checkNode(stmt.Init)
+	}
+	if stmt.Cond != nil {
+		c.checkExpr(stmt.Cond)
+	}
+	if stmt.Post != nil {
+		c.checkNode(stmt.Post)
+	}
+	if stmt.Body != nil {
+		c.checkBlock(stmt.Body)
+	}
+	return nil
+}
+
+// checkWhileStmt checks a while loop statement
+func (c *Checker) checkWhileStmt(stmt *ast.WhileStmt) semantics.Type {
+	if stmt.Cond != nil {
+		c.checkExpr(stmt.Cond)
+	}
+	if stmt.Body != nil {
+		c.checkBlock(stmt.Body)
+	}
 	return nil
 }
 
@@ -434,10 +476,41 @@ func (c *Checker) applyNarrowingsInScope(scope *semantics.SymbolTable, narrowing
 
 // checkReturnStmt checks a return statement
 func (c *Checker) checkReturnStmt(stmt *ast.ReturnStmt) semantics.Type {
+	var returnType semantics.Type
 	if stmt.Result != nil {
-		return c.checkExpr(stmt.Result)
+		returnType = c.checkExpr(stmt.Result)
 	}
-	return nil
+
+	if c.currentReturnType != nil {
+		if returnType == nil {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("missing return value, expected type %s", c.typeString(c.currentReturnType)),
+				).
+					WithCode(diagnostics.ErrInvalidReturn).
+					WithPrimaryLabel(c.currentFile, stmt.Loc(), "return value required"),
+			)
+		} else if !c.isAssignable(c.currentReturnType, returnType) {
+			c.ctx.Diagnostics.Add(
+				diagnostics.NewError(
+					fmt.Sprintf("cannot return %s in function with return type %s",
+						c.typeString(returnType), c.typeString(c.currentReturnType)),
+				).
+					WithCode(diagnostics.ErrTypeMismatch).
+					WithPrimaryLabel(c.currentFile, stmt.Result.Loc(),
+						fmt.Sprintf("type %s", c.typeString(returnType))).
+					WithHelp(fmt.Sprintf("expected type %s", c.typeString(c.currentReturnType))),
+			)
+		}
+	} else if returnType != nil {
+		c.ctx.Diagnostics.Add(
+			diagnostics.NewError("cannot return a value in function with no return type").
+				WithCode(diagnostics.ErrInvalidReturn).
+				WithPrimaryLabel(c.currentFile, stmt.Loc(), "unexpected return value"),
+		)
+	}
+
+	return returnType
 }
 
 // checkExpr checks an expression and returns its type

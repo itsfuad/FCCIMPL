@@ -1,0 +1,79 @@
+// Test 1: Missing return in function with return type
+fn noReturn() -> i32 {
+    let x := 5;
+}
+
+// Test 2: Not all paths return (if without else)
+fn incompleteReturn(x: i32) -> i32 {
+    if x > 0 {
+        return x;
+    }
+}
+
+// Test 3: All paths return (if with else, both return)
+fn completeReturn(x: i32) -> i32 {
+    if x > 0 {
+        return x;
+    } else {
+        return -x;
+    }
+}
+
+// Test 4: Unreachable code after return
+fn unreachableAfterReturn() -> i32 {
+    return 42;
+    let x := 10; // Should warn: unreachable
+}
+
+// Test 5: Early return with else branch also returning
+fn earlyReturnComplete(x: i32) -> str {
+    if x < 0 {
+        return "negative";
+    } else {
+        if x > 0 {
+            return "positive";
+        } else {
+            return "zero";
+        }
+    }
+}
+
+// Test 6: Nested conditions with incomplete returns
+fn nestedIncomplete(x: i32, y: i32) -> i32 {
+    if x > 0 {
+        if y > 0 {
+            return x + y;
+        }
+        // Missing return here for outer if
+    }
+    // Missing final return
+}
+
+// Test 7: Return wrong type
+fn wrongReturnType() -> str {
+    return 123; // Should error: i32 instead of str
+}
+
+// Test 8: Multiple returns with one wrong type
+fn mixedReturnTypes(x: bool) -> i32 {
+    if x {
+        return 42;
+    } else {
+        return "wrong"; // Should error
+    }
+}
+
+// Test 9: Function with no explicit return type
+fn noReturnType() {
+    let x := 10;
+}
+
+// Test 10: Empty return in void function
+fn voidFunction() {
+    return;
+}
+
+// Test 11: Return value in void function (should error)
+fn returnValueInVoid() {
+    return 42;
+}

@@ -46,9 +46,24 @@ let rect := {.width = 10.0, .height = 5.0} as Rectangle;
 let circle := {.radius = 3.0} as Circle;
 
 fn printShapeInfo(s: Shape) -> str {
-    return "Area: " + s.area().to_str() + ", Perimeter: " + s.perimeter().to_str();
+    let s := 10;
+    //s = "2";
+
+    if s > 10 {
+        return "large shape";
+    } else {
+        //return "small shape";
+        if s == 10 {
+            return "medium shape";
+        } else {
+            //return "small shape";
+        }
+        return "small shape";
+    }
+
+    //return "s";
 }
 
 printShapeInfo(rect);
 printShapeInfo(circle);
-printShapeInfo(2);
+//printShapeInfo(2);

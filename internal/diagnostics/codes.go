@@ -39,6 +39,8 @@ const (
 	ErrInvalidReturn           = "T0015"
 	ErrMissingReturn           = "T0016"
 	ErrConstantReassignment    = "T0017"
+	ErrInvalidBreak            = "T0018"
+	ErrInvalidContinue         = "T0019"
 
 	// Module/Import errors (M prefix)
 	ErrModuleNotFound    = "M0001"
@@ -50,4 +52,7 @@ const (
 	// Style/Info codes (S prefix)
 	InfoTrailingComma        = "S0001"
 	InfoUnnecessarySemicolon = "S0002"
+
+	// Warnings (W prefix)
+	WarnUnreachableCode = "W0001"
 )

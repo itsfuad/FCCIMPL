@@ -41,6 +41,8 @@
   --sl-color-bg-badge: var(--sl-badge-tip-bg) !important;
   --sl-color-border-badge: var(--sl-badge-tip-border) !important;
   --sl-color-text-badge: var(--sl-badge-tip-text) !important;
+
+  --sl-nav-height: 3.71rem !important;
 }
 
 :root[data-theme='dark'] {
@@ -56,8 +58,6 @@
   --sl-color-accent: var(--accent-color);
   --sl-color-accent-high: var(--accent-color);
   --sl-color-text-accent: var(--accent-color);
-
-  --sl-nav-height: 3.71rem !important;
 
   --neutral: rgba(126, 126, 126, 0.164);
   --neutral-hover: rgba(148, 148, 148, 0.344);
@@ -109,6 +109,10 @@ main:has(.hero), main:has(.hero) .content-panel {
 mobile-starlight-toc {
   display: block;
   margin-bottom: 4rem !important;
+}
+
+pre:has(code) {
+  border-radius: 10px;
 }
 
 /* Hero section with gradient and pattern - Full Width */
@@ -166,7 +170,8 @@ footer:not(.custom-footer) .pagination-links {
   padding-top: 1.5rem;
   display: flex;
   flex-direction: row;
-  border-top: 2px solid #24292e;
+  justify-content: space-between;
+  border-top: 2px solid var(--border);
 }
 
 .sl-link-button {
@@ -180,6 +185,7 @@ footer:not(.custom-footer) .pagination-links {
   box-shadow: none;
   padding: 0;
   width: max-content;
+  max-width: max-content;
 }
 
 .pagination-links a svg {
