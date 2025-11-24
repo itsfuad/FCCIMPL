@@ -14,7 +14,7 @@ import (
 
 const (
 	STR_MULTIPLIER = "%*d | "
-	LINE_POS = "  --> %s:%d:%d\n"
+	LINE_POS       = "  --> %s:%d:%d\n"
 )
 
 // SourceCache caches source file contents for error reporting
@@ -331,12 +331,23 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 		return
 	}
 
-	colors.BLUE.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.startLine)
+	// Check if there's content before the label on the start line
+	hasContentBefore := ctx.startCol > 1
+
+	// Line numbers and | are always grey
+	lineNumColor := colors.GREY
+	pipeColor := colors.GREY
+
+	if hasContentBefore {
+		lineNumColor = colors.GREY
+	}
+
+	lineNumColor.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.startLine)
 	fmt.Fprintln(e.writer, sourceLine)
 
 	// Print underline for start
-	colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
-	colors.BLUE.Fprint(e.writer, " | ")
+	lineNumColor.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+	pipeColor.Fprint(e.writer, " | ")
 
 	var underlineColor colors.COLOR
 	if ctx.label.Style == Primary {
@@ -362,13 +373,13 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 	//underline the start to end of the first line. (skip the spaces before and after)
 	//underlineColor.Fprint(e.writer, "^")
 	if ctx.startCol < len(sourceLine) {
-		underlineColor.Fprint(e.writer, strings.Repeat("~", len(strings.TrimSpace(sourceLine))) + "\n")
+		underlineColor.Fprint(e.writer, strings.Repeat("~", len(strings.TrimSpace(sourceLine)))+"\n")
 	}
 
 	// Print ellipsis for middle lines if there are many
 	if ctx.endLine-ctx.startLine > 5 {
-		colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
-		colors.BLUE.Fprintln(e.writer, "...")
+		lineNumColor.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+		pipeColor.Fprintln(e.writer, "...")
 	} else {
 		// Print middle lines
 		for i := ctx.startLine + 1; i < ctx.endLine; i++ {
@@ -376,7 +387,7 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 			if err != nil {
 				continue
 			}
-			colors.BLUE.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, i)
+			lineNumColor.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, i)
 			fmt.Fprintln(e.writer, line)
 		}
 	}
@@ -384,12 +395,12 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 	// Print end line
 	endSourceLine, err := e.cache.GetLine(ctx.filepath, ctx.endLine)
 	if err == nil {
-		colors.BLUE.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.endLine)
+		lineNumColor.Fprintf(e.writer, STR_MULTIPLIER, ctx.lineNumWidth, ctx.endLine)
 		fmt.Fprintln(e.writer, endSourceLine)
 
 		// Print underline for end
-		colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
-		colors.BLUE.Fprint(e.writer, " | ")
+		lineNumColor.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+		pipeColor.Fprint(e.writer, " | ")
 		endPadding := ctx.endCol - 1
 		fmt.Fprint(e.writer, strings.Repeat(" ", endPadding))
 		underlineColor.Fprint(e.writer, "^")
@@ -401,8 +412,8 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 	}
 
 	// Print separator
-	colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
-	colors.BLUE.Fprintln(e.writer, " |")
+	lineNumColor.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
+	pipeColor.Fprintln(e.writer, " |")
 }
 
 func (e *Emitter) printNote(note Note) {

@@ -55,7 +55,7 @@ fn printShapeInfo(s: Shape) -> str {
     } else {
         //return "small shape";
         if s == 10 {
-            return "medium shape";
+            //return "medium shape";
         } else {
             //return "small shape";
         }

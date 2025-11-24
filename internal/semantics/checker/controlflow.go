@@ -1,3 +1,4 @@
+//controlflow.go
 package checker
 
 import (
@@ -42,7 +43,6 @@ func (c *Checker) checkFunctionReturns(decl *ast.FuncDecl, funcType *semantics.F
 	if funcType.ReturnType == nil {
 		return
 	}
-
 	if decl.Body == nil {
 		return
 	}
@@ -58,27 +58,43 @@ func (c *Checker) checkFunctionReturns(decl *ast.FuncDecl, funcType *semantics.F
 		return
 	}
 
-	// At least one path fails to return → build diagnostic
+	// Prune redundant parent paths if deeper child paths already explain the issue
+	originalCount := len(flow.MissingPaths)
+	missing := pruneMissingPaths(flow.MissingPaths)
+	if len(missing) == 0 {
+		// Defensive fallback (shouldn't happen)
+		missing = flow.MissingPaths
+	}
+
+	// Build diagnostic
 	diag := diagnostics.NewError(
 		fmt.Sprintf("not all code paths in function '%s' return a value of type %s",
 			decl.Name.Name, c.typeString(funcType.ReturnType)),
 	).
 		WithCode(diagnostics.ErrMissingReturn).
 		WithPrimaryLabel(c.currentFile, decl.Name.Loc(),
-			"function may exit without returning a value")
+			"missing return on some paths").
+		WithHelp("make sure every branch returns, or add a final return at the end of the function")
+
+	// If pruning hid parent paths, add a simple beginner-friendly note
+	if len(missing) < originalCount {
+		diag = diag.WithNote("fix these branches or add a final return at the end")
+	}
 
 	// Add detailed notes for failing paths (limit to 3 for readability)
-	for i, p := range flow.MissingPaths {
+	for i, p := range missing {
 		if i >= 3 {
 			diag = diag.WithNote("additional non-returning paths omitted")
 			break
 		}
 
-		desc := c.describeFlowPath(p.Steps)
+		last := p.Steps[len(p.Steps)-1]
+		desc := detectPath(last)
+
 		diag = diag.WithSecondaryLabel(
 			c.currentFile,
 			p.Loc,
-			fmt.Sprintf("this path (%s) can reach end of function without returning", desc),
+			fmt.Sprintf("missing return in %s", desc),
 		)
 	}
 
@@ -185,24 +201,28 @@ func (c *Checker) analyzeIfStmt(stmt *ast.IfStmt, basePath []FlowStep) FlowResul
 	// then branch
 	thenPath := make([]FlowStep, len(basePath))
 	copy(thenPath, basePath)
+
+	thenLoc := stmt.Body.Loc() // use THEN block's own loc
 	thenPath = append(thenPath, FlowStep{
 		Kind: StepIfThen,
-		Loc:  stmt.Cond.Loc(),
+		Loc:  thenLoc,
 	})
 
-	var thenRes FlowResult
+	thenRes := FlowResult{}
 	if stmt.Body != nil {
 		thenRes = c.analyzeBlock(stmt.Body, thenPath)
 	}
 
 	// else branch
-	var elseRes FlowResult
+	elseRes := FlowResult{}
 	if stmt.Else != nil {
 		elsePath := make([]FlowStep, len(basePath))
 		copy(elsePath, basePath)
+
+		elseLoc := stmt.Else.Loc() // use ELSE node's own loc
 		elsePath = append(elsePath, FlowStep{
 			Kind: StepIfElse,
-			Loc:  stmt.Loc(),
+			Loc:  elseLoc,
 		})
 
 		switch e := stmt.Else.(type) {
@@ -212,27 +232,27 @@ func (c *Checker) analyzeIfStmt(stmt *ast.IfStmt, basePath []FlowStep) FlowResul
 			elseRes = c.analyzeIfStmt(e, elsePath)
 		}
 	} else {
-		// implicit else that does nothing → fallthrough path
-		elseRes.AlwaysReturns = false
+		// implicit else (no node to own a location)
 		elsePath := make([]FlowStep, len(basePath))
 		copy(elsePath, basePath)
 		elsePath = append(elsePath, FlowStep{
 			Kind: StepIfElse,
-			Loc:  stmt.Loc(),
+			Loc:  stmt.Loc(), // fallback only because implicit else has no loc
 		})
+
+		elseRes.AlwaysReturns = false
 		elseRes.MissingPaths = []FlowPath{{
 			Steps: elsePath,
 			Loc:   stmt.Loc(),
 		}}
 	}
 
-	result := FlowResult{
+	return FlowResult{
 		AlwaysReturns: thenRes.AlwaysReturns && elseRes.AlwaysReturns,
 		MissingPaths:  append(thenRes.MissingPaths, elseRes.MissingPaths...),
 	}
-
-	return result
 }
+
 
 // analyzeForStmt analyzes a for loop
 func (c *Checker) analyzeForStmt(stmt *ast.ForStmt, basePath []FlowStep) FlowResult {
@@ -310,104 +330,129 @@ func (c *Checker) analyzeBlockInLoop(block *ast.Block, basePath []FlowStep) Flow
 	return res
 }
 
-// isTerminalStatement checks if a statement always exits its block
-// (either via return, break, or continue)
-func (c *Checker) isTerminalStatement(stmt ast.Node) bool {
-	if stmt == nil {
-		return false
+func detectPath(step FlowStep) string {
+	var part string
+	switch step.Kind {
+	case StepFunctionBody:
+		part = "function"
+	case StepIfThen:
+		if step.Loc != nil && step.Loc.Start != nil {
+			part = fmt.Sprintf("if at line %d", step.Loc.Start.Line)
+		} else {
+			part = "if"
+		}
+	case StepIfElse:
+		if step.Loc != nil && step.Loc.Start != nil {
+			part = fmt.Sprintf("else at line %d", step.Loc.Start.Line)
+		} else {
+			part = "else"
+		}
+	case StepLoopBody:
+		if step.Loc != nil && step.Loc.Start != nil {
+			part = fmt.Sprintf("loop at line %d", step.Loc.Start.Line)
+		} else {
+			part = "loop"
+		}
 	}
-
-	switch s := stmt.(type) {
-	case *ast.ReturnStmt:
-		return true
-	case *ast.BreakStmt:
-		return true
-	case *ast.ContinueStmt:
-		return true
-	case *ast.IfStmt:
-		// if/else is terminal only if BOTH branches are terminal
-		if s.Else == nil {
-			return false // no else means execution can fall through
-		}
-
-		thenTerminal := false
-		if s.Body != nil {
-			thenTerminal = c.blockIsTerminal(s.Body)
-		}
-
-		elseTerminal := false
-		switch e := s.Else.(type) {
-		case *ast.Block:
-			elseTerminal = c.blockIsTerminal(e)
-		case *ast.IfStmt:
-			elseTerminal = c.isTerminalStatement(e)
-		}
-
-		return thenTerminal && elseTerminal
-
-	case *ast.Block:
-		return c.blockIsTerminal(s)
-
-	default:
-		return false
-	}
+	return part
 }
 
-// blockIsTerminal checks if a block always exits (all paths are terminal)
-func (c *Checker) blockIsTerminal(block *ast.Block) bool {
-	if block == nil || len(block.Nodes) == 0 {
-		return false
+//
+// --------- Path pruning helpers ---------
+//
+// Goal: If a parent path is just a prefix of a deeper child path,
+// show only the deeper child path.
+//
+
+func pruneMissingPaths(paths []FlowPath) []FlowPath {
+	if len(paths) <= 1 {
+		return dedupeMissingPaths(paths)
 	}
 
-	for _, node := range block.Nodes {
-		if c.isTerminalStatement(node) {
-			return true // found terminal statement, rest is unreachable
+	paths = dedupeMissingPaths(paths)
+
+	out := make([]FlowPath, 0, len(paths))
+	for i, p := range paths {
+		if isPrefixOfAnyLonger(p, paths, i) {
+			// child paths already explain the fallthrough more precisely
+			continue
+		}
+		out = append(out, p)
+	}
+	return out
+}
+
+func isPrefixOfAnyLonger(p FlowPath, all []FlowPath, selfIdx int) bool {
+	for j, q := range all {
+		if j == selfIdx {
+			continue
+		}
+		if len(q.Steps) <= len(p.Steps) {
+			continue
+		}
+		if stepsIsPrefix(p.Steps, q.Steps) {
+			return true
 		}
 	}
-
 	return false
 }
 
-// describeFlowPath converts a flow path to a human-readable description
-func (c *Checker) describeFlowPath(steps []FlowStep) string {
-	if len(steps) == 0 {
-		return "function body"
+func stepsIsPrefix(a, b []FlowStep) bool {
+	if len(a) > len(b) {
+		return false
 	}
-
-	parts := []string{}
-	for _, step := range steps {
-		switch step.Kind {
-		case StepFunctionBody:
-			parts = append(parts, "function body")
-		case StepIfThen:
-			if step.Loc != nil && step.Loc.Start != nil {
-				parts = append(parts, fmt.Sprintf("if-branch at line %d", step.Loc.Start.Line))
-			} else {
-				parts = append(parts, "if-branch")
-			}
-		case StepIfElse:
-			if step.Loc != nil && step.Loc.Start != nil {
-				parts = append(parts, fmt.Sprintf("else-branch at line %d", step.Loc.Start.Line))
-			} else {
-				parts = append(parts, "else-branch")
-			}
-		case StepLoopBody:
-			if step.Loc != nil && step.Loc.Start != nil {
-				parts = append(parts, fmt.Sprintf("loop-body at line %d", step.Loc.Start.Line))
-			} else {
-				parts = append(parts, "loop-body")
-			}
+	for i := range a {
+		if !flowStepEqual(a[i], b[i]) {
+			return false
 		}
 	}
+	return true
+}
 
-	// Build chain description
-	result := ""
-	for i, part := range parts {
-		if i == 0 {
-			result = part
-		} else {
-			result += " → " + part
-		}
+func flowStepEqual(x, y FlowStep) bool {
+	if x.Kind != y.Kind {
+		return false
 	}
-	return result
+	// Compare by line number if available; otherwise both must be nil-line.
+	return stepLine(x) == stepLine(y)
+}
+
+func stepLine(s FlowStep) int {
+	if s.Loc != nil && s.Loc.Start != nil {
+		return s.Loc.Start.Line
+	}
+	return -1
+}
+
+func dedupeMissingPaths(paths []FlowPath) []FlowPath {
+	if len(paths) <= 1 {
+		return paths
+	}
+
+	seen := map[string]bool{}
+	out := make([]FlowPath, 0, len(paths))
+
+	for _, p := range paths {
+		key := serializePath(p)
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		out = append(out, p)
+	}
+	return out
+}
+
+func serializePath(p FlowPath) string {
+	// Stable key: kinds + line numbers + fallthrough loc line.
+	key := ""
+	for _, s := range p.Steps {
+		key += fmt.Sprintf("%d@%d|", s.Kind, stepLine(s))
+	}
+	locLine := -1
+	if p.Loc != nil && p.Loc.Start != nil {
+		locLine = p.Loc.Start.Line
+	}
+	key += fmt.Sprintf("loc@%d", locLine)
+	return key
 }
