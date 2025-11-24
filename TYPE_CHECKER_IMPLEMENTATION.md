@@ -72,24 +72,24 @@ Implemented complete type checking for struct and map literals with type inferen
 ## Test Results
 
 ### Successful Compilation Tests
-✅ Anonymous struct type inference  
-✅ Named struct with explicit cast  
-✅ Struct with type annotation  
-✅ Map type inference  
-✅ Map with explicit type  
-✅ Methods on named types  
-✅ Method invocation  
-✅ Nested structs  
-✅ Arrays of structs  
-✅ Maps with struct values  
-✅ Mixed type fields  
+Anonymous struct type inference  
+Named struct with explicit cast  
+Struct with type annotation  
+Map type inference  
+Map with explicit type  
+Methods on named types  
+Method invocation  
+Nested structs  
+Arrays of structs  
+Maps with struct values  
+Mixed type fields  
 
 ### Error Detection Tests
-✅ Missing required fields  
-✅ Wrong field types  
-✅ Extra fields not in type  
-✅ Map value type mismatch  
-✅ Duplicate field names  
+Missing required fields  
+Wrong field types  
+Extra fields not in type  
+Map value type mismatch  
+Duplicate field names  
 
 ## Syntax Examples
 
