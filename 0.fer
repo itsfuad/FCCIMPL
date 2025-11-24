@@ -48,7 +48,7 @@ let circle := {.radius = 3.0} as Circle;
 fn printShapeInfo(s: Shape) -> str {
     let s := 10;
     //s = "2";
-    //return "";
+    return "";
 
     if s > 10 {
         return "large shape";

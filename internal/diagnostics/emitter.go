@@ -359,12 +359,16 @@ func (e *Emitter) printMultiLineLabel(ctx labelContext) {
 
 	padding := ctx.startCol - 1
 	fmt.Fprint(e.writer, strings.Repeat(" ", padding))
-	underlineColor.Fprintln(e.writer, "^--- error starts here")
+	//underline the start to end of the first line. (skip the spaces before and after)
+	//underlineColor.Fprint(e.writer, "^")
+	if ctx.startCol < len(sourceLine) {
+		underlineColor.Fprint(e.writer, strings.Repeat("~", len(strings.TrimSpace(sourceLine))) + "\n")
+	}
 
 	// Print ellipsis for middle lines if there are many
 	if ctx.endLine-ctx.startLine > 5 {
 		colors.BLUE.Fprint(e.writer, strings.Repeat(" ", ctx.lineNumWidth))
-		colors.BLUE.Fprintln(e.writer, " | ...")
+		colors.BLUE.Fprintln(e.writer, "...")
 	} else {
 		// Print middle lines
 		for i := ctx.startLine + 1; i < ctx.endLine; i++ {

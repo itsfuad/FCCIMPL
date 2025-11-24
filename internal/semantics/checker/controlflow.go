@@ -96,7 +96,7 @@ func (c *Checker) analyzeBlock(block *ast.Block, basePath []FlowStep) FlowResult
 	var lastWasIfWithoutElse bool
 
 	for i, node := range block.Nodes {
-		// Check if previous statements already had terminal control flow
+		// Check if previous statement was terminal (return, break, continue, or if/else always exits)
 		if i > 0 && res.AlwaysReturns {
 			c.ctx.Diagnostics.Add(
 				diagnostics.NewWarning("unreachable code").
@@ -104,7 +104,8 @@ func (c *Checker) analyzeBlock(block *ast.Block, basePath []FlowStep) FlowResult
 					WithPrimaryLabel(c.currentFile, node.Loc(), "this code will never execute").
 					WithHelp("remove this code"),
 			)
-			break // Don't process unreachable statements
+			// Continue scanning for more unreachable code
+			continue
 		}
 
 		stmtRes := c.analyzeStmt(node, basePath)
@@ -121,8 +122,7 @@ func (c *Checker) analyzeBlock(block *ast.Block, basePath []FlowStep) FlowResult
 
 		if stmtRes.AlwaysReturns {
 			res.AlwaysReturns = true
-			c.currentScope = prevScope
-			return res // later statements are unreachable for "must return" purposes
+			// Don't return yet - continue to detect unreachable code
 		}
 	}
 
@@ -308,6 +308,64 @@ func (c *Checker) analyzeBlockInLoop(block *ast.Block, basePath []FlowStep) Flow
 
 	c.currentScope = prevScope
 	return res
+}
+
+// isTerminalStatement checks if a statement always exits its block
+// (either via return, break, or continue)
+func (c *Checker) isTerminalStatement(stmt ast.Node) bool {
+	if stmt == nil {
+		return false
+	}
+
+	switch s := stmt.(type) {
+	case *ast.ReturnStmt:
+		return true
+	case *ast.BreakStmt:
+		return true
+	case *ast.ContinueStmt:
+		return true
+	case *ast.IfStmt:
+		// if/else is terminal only if BOTH branches are terminal
+		if s.Else == nil {
+			return false // no else means execution can fall through
+		}
+
+		thenTerminal := false
+		if s.Body != nil {
+			thenTerminal = c.blockIsTerminal(s.Body)
+		}
+
+		elseTerminal := false
+		switch e := s.Else.(type) {
+		case *ast.Block:
+			elseTerminal = c.blockIsTerminal(e)
+		case *ast.IfStmt:
+			elseTerminal = c.isTerminalStatement(e)
+		}
+
+		return thenTerminal && elseTerminal
+
+	case *ast.Block:
+		return c.blockIsTerminal(s)
+
+	default:
+		return false
+	}
+}
+
+// blockIsTerminal checks if a block always exits (all paths are terminal)
+func (c *Checker) blockIsTerminal(block *ast.Block) bool {
+	if block == nil || len(block.Nodes) == 0 {
+		return false
+	}
+
+	for _, node := range block.Nodes {
+		if c.isTerminalStatement(node) {
+			return true // found terminal statement, rest is unreachable
+		}
+	}
+
+	return false
 }
 
 // describeFlowPath converts a flow path to a human-readable description
