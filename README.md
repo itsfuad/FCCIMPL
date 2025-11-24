@@ -1,11 +1,11 @@
 # Ferret Compiler
 
 A modern compiler for the Ferret programming language, featuring:
-- ✅ Go-style AST architecture
-- ✅ Rust-style error diagnostics
-- ✅ Rich type system with inference
-- ✅ Compile-time error detection
-- ✅ Module system
+- Go-style AST architecture
+- Rust-style error diagnostics
+- Rich type system with inference
+- Compile-time error detection
+- Module system
 
 ## Quick Start
 
@@ -182,7 +182,7 @@ go test ./...
 
 ## Status
 
-### ✅ Completed
+### Completed
 - [x] Go-style AST architecture
 - [x] Rust-style diagnostic system
 - [x] Semantic information system

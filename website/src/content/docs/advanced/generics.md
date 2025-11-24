@@ -1,6 +1,15 @@
 ---
 title: Generics
 description: Generic types and functions in Ferret
+
+sidebar:
+  badge:
+    text: Upcomming
+    variant: tip
+
+banner:
+  content: |
+    This feature is coming soon! Stay tuned for updates.
 ---
 
 We use fixed types in our programs, but sometimes we want to write code that can operate on different types without duplicating it. Generics allow you to write flexible, reusable code that works with multiple types.
@@ -60,8 +69,3 @@ fn (b: Box<T>) get() -> T {
     return b.value;
 }
 ```
-
-## Next Steps
-
-- [Learn about Modules](/modules)
-- [Explore Advanced Topics](/syntax)

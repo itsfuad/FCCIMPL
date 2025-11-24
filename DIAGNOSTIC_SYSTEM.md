@@ -59,12 +59,12 @@ error[E0502]: cannot borrow as mutable
 ### 3. **API Safety**
 
 ```go
-// ✅ CORRECT: Primary first, then secondary
+// CORRECT: Primary first, then secondary
 diag := diagnostics.NewError("cannot assign").
     WithPrimaryLabel(file, valueLoc, "type i32").
     WithSecondaryLabel(file, varLoc, "variable has type str")
 
-// ❌ WRONG: Secondary without primary - PANICS
+// WRONG: Secondary without primary - PANICS
 diag := diagnostics.NewError("cannot assign").
     WithSecondaryLabel(file, loc, "context")  // PANIC!
 ```
